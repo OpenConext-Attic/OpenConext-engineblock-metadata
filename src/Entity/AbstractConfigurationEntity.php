@@ -36,8 +36,8 @@ abstract class AbstractConfigurationEntity
 
     public $nameIdFormat;
     public $nameIdFormats = array(
-        EngineBlock_Urn::SAML2_0_NAMEID_FORMAT_TRANSIENT,
-        EngineBlock_Urn::SAML2_0_NAMEID_FORMAT_PERSISTENT,
+        \EngineBlock_Urn::SAML2_0_NAMEID_FORMAT_TRANSIENT,
+        \EngineBlock_Urn::SAML2_0_NAMEID_FORMAT_PERSISTENT,
     );
 
     public $singleLogoutService;
