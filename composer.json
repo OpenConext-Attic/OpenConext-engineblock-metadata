@@ -1,0 +1,12 @@
+{
+    "name": "openconext/engineblock-metadata",
+    "description": "OpenConext Component for EngineBlock Entity Metadata",
+    "license": "Apache-2.0",
+    "type": "library",
+    "autoload": {
+        "psr-4": { "OpenConext\\Component\\EngineBlockMetadata\\": "src/" }
+    },
+    "require": {
+        "php": ">=5.3.3"
+    }
+}
