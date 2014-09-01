@@ -22,13 +22,12 @@ class AdapterFactory
     const DEFAULT_NAMESPACE = '\\OpenConext\\Component\\EngineBlockMetadata\ServiceRegistry';
 
     /**
-     *
-     *
-     *
      * @param array $config
-     * @return AdapterInterface
+     * @param \EngineBlock_Application_DiContainer $container
+     * @return mixed
+     * @throws \RuntimeException
      */
-    public function createFromConfig(array $config)
+    public function createFromConfig(array $config, \EngineBlock_Application_DiContainer $container)
     {
         if (!isset($config['type'])) {
             throw new \RuntimeException('serviceRegistryAdapter config missing type!');
@@ -45,6 +44,6 @@ class AdapterFactory
             throw new \RuntimeException("$className does not implement AdapterInterface");
         }
 
-        return call_user_func($className . '::createFromConfig', $config);
+        return call_user_func($className . '::createFromConfig', $config, $container);
     }
 }

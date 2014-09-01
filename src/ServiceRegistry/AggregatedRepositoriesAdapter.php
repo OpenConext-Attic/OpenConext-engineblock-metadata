@@ -4,11 +4,6 @@ namespace OpenConext\Component\EngineBlockMetadata\ServiceRegistry;
 
 class AggregatedRepositoriesAdapter implements AdapterInterface
 {
-    public static function create($config)
-    {
-
-    }
-
     /**
      * Given a list of (SAML2) entities, filter out the idps that are not allowed
      * for the given Service Provider.

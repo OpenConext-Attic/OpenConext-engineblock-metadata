@@ -9,6 +9,14 @@ use OpenConext\Component\EngineBlockMetadata\Entity\ServiceProviderEntity;
 
 class RepositoryAdapter implements AdapterInterface
 {
+    /**
+     * @param array $config
+     * @return AdapterInterface
+     */
+    public static function createFromConfig(array $config)
+    {
+    }
+
     public function __construct(MetadataRepositoryInterface $repository)
     {
         $this->repository = $repository;
@@ -115,7 +123,6 @@ class RepositoryAdapter implements AdapterInterface
     public function isConnectionAllowed($spEntityId, $idpEntityId)
     {
         $spEntity = $this->repository->fetchEntityByEntityId($spEntityId);
-        $idpEntity
     }
 
     /**
@@ -125,7 +132,7 @@ class RepositoryAdapter implements AdapterInterface
      */
     public function getRemoteMetaData()
     {
-        // TODO: Implement getRemoteMetaData() method.
+        $this->repository->fetchEntities();
     }
 
     /**
@@ -136,7 +143,7 @@ class RepositoryAdapter implements AdapterInterface
      */
     public function getEntity($entityId)
     {
-        // TODO: Implement getEntity() method.
+        return $this->repository->fetchEntityByEntityId($entityId);
     }
 
     /**
@@ -147,6 +154,6 @@ class RepositoryAdapter implements AdapterInterface
      */
     public function getArp($spEntityId)
     {
-        // TODO: Implement getArp() method.
+        $spEntity = $this->repository->fetchEntityByEntityId($spEntityId);
     }
 }

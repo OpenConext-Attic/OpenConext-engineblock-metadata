@@ -32,6 +32,17 @@ class JanusRestAdapter implements AdapterInterface
      */
     protected $_serviceRegistry;
 
+    /**
+     * @param array $config
+     * @param \EngineBlock_Application_DiContainer $container
+     * @return AdapterInterface|void
+     */
+    public static function createFromConfig(array $config, \EngineBlock_Application_DiContainer $container)
+    {
+        return new self($container->getServiceRegistryClient());
+    }
+
+
     public function __construct($serviceRegistry)
     {
         $this->_serviceRegistry = $serviceRegistry;

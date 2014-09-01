@@ -11,7 +11,7 @@ interface MetadataRepositoryInterface
     public function fetchEntityByEntityId($entityId);
 
     /**
-     * @return string[]
+     * @return AbstractConfigurationEntity[]
      */
-    public function fetchEntityIds();
+    public function fetchAllEntities();
 }

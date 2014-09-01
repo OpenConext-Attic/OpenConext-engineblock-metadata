@@ -2,9 +2,9 @@
 
 namespace OpenConext\Component\EngineBlockMetadata\Configuration;
 
-class Logo
+class Organization
 {
-    public $height;
-    public $width;
+    public $name;
+    public $displayName;
     public $url;
 }

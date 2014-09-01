@@ -3,7 +3,8 @@
 namespace Surfnet\GroupService\Service;
 
 use Doctrine\ORM\EntityManagerInterface;
-use Janus\Component\ReadonlyEntities\Entities\ConnectionRepository;
+use Janus\ServiceRegistry\Entity\ConnectionRepository;
+use OpenConext\Component\EngineBlockMetadata\Entity\AbstractConfigurationEntity;
 use OpenConext\Component\EngineBlockMetadata\Entity\MetadataRepositoryInterface;
 use OpenConext\Component\EngineBlockMetadata\Translator\JanusTranslator;
 
@@ -36,8 +37,20 @@ class JanusMetadataRepository implements MetadataRepositoryInterface
         return $this->translator->translate($connections[0]);
     }
 
-    public function fetchEntityIds()
+    /**
+     * @return AbstractConfigurationEntity[]
+     */
+    public function fetchAllEntities()
     {
-        // TODO: Implement fetchEntityIds() method.
+        /** @var ConnectionRepository $connectionRepository */
+        $connectionRepository = $this->entityManager->getRepository('Janus\Component\ReadonlyEntities\Entities\Connection');
+        $connections = $connectionRepository->findAll();
+
+        /** @todo come caching here? */
+        $entities = array();
+        foreach ($connections as $connection) {
+            $entities[] = $this->translator->translate($connection);
+        }
+        return $entities;
     }
 }

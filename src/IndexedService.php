@@ -2,11 +2,15 @@
 
 namespace OpenConext\Component\EngineBlockMetadata;
 
-class IndexedService
+class IndexedService extends Service
 {
-    /** @var int */
+    /**
+     * @var int
+     */
     public $serviceIndex;
 
-    public $binding;
-    public $location;
+    /**
+     * @var bool|null
+     */
+    public $isDefault = null;
 }

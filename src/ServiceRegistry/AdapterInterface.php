@@ -6,9 +6,10 @@ interface AdapterInterface
 {
     /**
      * @param array $config
-     * @return AdapterInterface
+     * @param \EngineBlock_Application_DiContainer $container
+     * @return mixed
      */
-    public static function createFromConfig(array $config);
+    public static function createFromConfig(array $config, \EngineBlock_Application_DiContainer $container);
 
     /**
      * Given a list of (SAML2) entities, filter out the idps that are not allowed
