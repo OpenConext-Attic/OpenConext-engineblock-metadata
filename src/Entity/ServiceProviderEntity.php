@@ -2,6 +2,8 @@
 
 namespace OpenConext\Component\EngineBlockMetadata\Entity;
 
+use OpenConext\Component\EngineBlockMetadata\Configuration\AttributeReleasePolicy;
+use OpenConext\Component\EngineBlockMetadata\Configuration\RequestedAttribute;
 use OpenConext\Component\EngineBlockMetadata\IndexedService;
 
 class ServiceProviderEntity extends AbstractConfigurationEntity
@@ -9,7 +11,7 @@ class ServiceProviderEntity extends AbstractConfigurationEntity
     /**
      * @var IndexedService[]
      */
-    public $assertionConsumerServices;
+    public $assertionConsumerServices = array();
 
     /**
      * @var bool
@@ -19,7 +21,7 @@ class ServiceProviderEntity extends AbstractConfigurationEntity
     /**
      * @var string
      */
-    public $implicitVoId;
+    public $implicitVoId = null;
 
     /**
      * @var bool
@@ -34,7 +36,7 @@ class ServiceProviderEntity extends AbstractConfigurationEntity
     /**
      * @var string
      */
-    public $eula;
+    public $eula = null;
 
     /**
      * @var bool
@@ -50,4 +52,19 @@ class ServiceProviderEntity extends AbstractConfigurationEntity
      * @var array
      */
     public $allowedIdpEntityIds = array();
+
+    /**
+     * Attribute Release Policy
+     *
+     * Note that this may be NULL to indicate that there is NO release policy.
+     * Or an empty array, indicating there IS an attribute release policy to release no attributes.
+     *
+     * @var null|AttributeReleasePolicy
+     */
+    public $attributeReleasePolicy = null;
+
+    /**
+     * @var null|RequestedAttribute[]
+     */
+    public $requestedAttributes = null;
 }

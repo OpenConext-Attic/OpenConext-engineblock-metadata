@@ -164,11 +164,11 @@ class JanusRestAdapter implements AdapterInterface
                 $idP = $mapper->fromKeyValue($idP);
                 $idP['EntityID'] = $idPEntityId;
                 $metadata[$idPEntityId] = $idP;
-            } catch (Exception $e) {
+            } catch (\Exception $e) {
                 // Whoa, something went wrong trying to convert the SR entity to a Corto entity
                 // We can't use this entity, but we can continue after we've reported
                 // this serious error
-                $application = EngineBlock_ApplicationSingleton::getInstance();
+                $application = \EngineBlock_ApplicationSingleton::getInstance();
                 $application->reportError($e);
                 continue;
             }
@@ -179,7 +179,7 @@ class JanusRestAdapter implements AdapterInterface
     protected function _getRemoteSPsMetaData()
     {
         $metadata = array();
-        $mapper = new EngineBlock_Corto_Mapper_ServiceRegistry_KeyValue();
+        $mapper = new \EngineBlock_Corto_Mapper_ServiceRegistry_KeyValue();
 
         $sPs = $this->_serviceRegistry->getSPList();
         foreach ($sPs as $spEntityId => $sp) {
@@ -187,11 +187,11 @@ class JanusRestAdapter implements AdapterInterface
                 $sp = $mapper->fromKeyValue($sp);
                 $sp['EntityID'] = $spEntityId;
                 $metadata[$spEntityId] = $sp;
-            } catch (Exception $e) {
+            } catch (\Exception $e) {
                 // Whoa, something went wrong trying to convert the SR entity to a Corto entity
                 // We can't use this entity, but we can continue after we've reported
                 // this serious error
-                $application = EngineBlock_ApplicationSingleton::getInstance();
+                $application = \EngineBlock_ApplicationSingleton::getInstance();
                 $application->reportError($e);
                 continue;
             }

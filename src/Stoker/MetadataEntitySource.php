@@ -2,6 +2,10 @@
 
 namespace OpenConext\Component\EngineBlockMetadata\Stoker;
 
+/**
+ * Load and save the Entity XML.
+ * @package OpenConext\Component\EngineBlockMetadata\Stoker
+ */
 class MetadataEntitySource
 {
     /**

@@ -49,12 +49,13 @@ class StokerMetadataRepository implements MetadataRepositoryInterface
      */
     public function fetchAllEntities()
     {
-        $entityIds = $this->metadataIndex->getEntityIds();
+        $indexedEntities = $this->metadataIndex->getEntities();
 
         $entities = array();
-        foreach ($entityIds as $entityId) {
-            $entities[] = $this->translator->translate(
-                $this->metadataEntitySource->load($entityId)
+        foreach ($indexedEntities as $indexedEntityData) {
+            $this->translator->setIndexedEntity($indexedEntityData);
+            $entities[$indexedEntityData->entityId] = $this->translator->translate(
+                $this->metadataEntitySource->load($indexedEntityData->entityId)
             );
         }
         return $entities;

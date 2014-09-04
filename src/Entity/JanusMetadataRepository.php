@@ -3,6 +3,7 @@
 namespace Surfnet\GroupService\Service;
 
 use Doctrine\ORM\EntityManagerInterface;
+use Janus\ServiceRegistry\Entity\Connection;
 use Janus\ServiceRegistry\Entity\ConnectionRepository;
 use OpenConext\Component\EngineBlockMetadata\Entity\AbstractConfigurationEntity;
 use OpenConext\Component\EngineBlockMetadata\Entity\MetadataRepositoryInterface;
@@ -25,7 +26,7 @@ class JanusMetadataRepository implements MetadataRepositoryInterface
     {
         /** @var ConnectionRepository $connectionRepository */
         $connectionRepository = $this->entityManager->getRepository('Janus\Component\ReadonlyEntities\Entities\Connection');
-        $connections = $connectionRepository->findBy(array('name' => $entityId));
+        $connections = $connectionRepository->findBy(array('name' => $entityId, 'active' => true));
 
         if (empty($connections)) {
             throw new \RuntimeException("No entities found for '$entityId'");
@@ -44,12 +45,13 @@ class JanusMetadataRepository implements MetadataRepositoryInterface
     {
         /** @var ConnectionRepository $connectionRepository */
         $connectionRepository = $this->entityManager->getRepository('Janus\Component\ReadonlyEntities\Entities\Connection');
+        /** @var Connection[] $connections */
         $connections = $connectionRepository->findAll();
 
         /** @todo come caching here? */
         $entities = array();
         foreach ($connections as $connection) {
-            $entities[] = $this->translator->translate($connection);
+            $entities[$connection->getName()] = $this->translator->translate($connection);
         }
         return $entities;
     }

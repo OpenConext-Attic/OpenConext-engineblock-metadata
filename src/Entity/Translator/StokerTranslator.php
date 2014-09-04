@@ -6,11 +6,22 @@ use OpenConext\Component\EngineBlockMetadata\Entity\AbstractConfigurationEntity;
 use OpenConext\Component\EngineBlockMetadata\Entity\IdentityProviderEntity;
 use OpenConext\Component\EngineBlockMetadata\Entity\ServiceProviderEntity;
 use OpenConext\Component\EngineBlockMetadata\IndexedService;
+use OpenConext\Component\EngineBlockMetadata\Stoker\MetadataIndex\Entity;
 
 class StokerTranslator implements EntityTranslatorInterface
 {
     /**
-     * @param $entity
+     * @var Entity
+     */
+    private $indexedEntity;
+
+    public function setIndexedEntity(Entity $entity)
+    {
+        $this->indexedEntity = $entity;
+    }
+
+    /**
+     * @param string $entity
      * @return IdentityProviderEntity|ServiceProviderEntity
      * @throws \RuntimeException
      * @throws \InvalidArgumentException
@@ -59,7 +70,7 @@ class StokerTranslator implements EntityTranslatorInterface
                 $service->isDefault     = $acs->isDefault;
                 $service->binding       = $acs->Binding;
                 $service->location      = $acs->Location;
-                $singleSignOnServices[] = $service;
+                $singleSignOnServices[$acs->index] = $service;
             }
             $entity->assertionConsumerServices = $singleSignOnServices;
 
@@ -95,6 +106,8 @@ class StokerTranslator implements EntityTranslatorInterface
         }
 
         $entity->entityId = $entityDescriptor->entityID;
+        $entity->displayNameNl = $this->indexedEntity->displayNameNl;
+        $entity->displayNameEn = $this->indexedEntity->displayNameEn;
 
         return $entity;
     }

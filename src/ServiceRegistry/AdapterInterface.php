@@ -2,14 +2,18 @@
 
 namespace OpenConext\Component\EngineBlockMetadata\ServiceRegistry;
 
+use EngineBlock_Application_DiContainer;
+use OpenConext\Component\EngineBlockMetadata\Configuration\AttributeReleasePolicy;
+use OpenConext\Component\EngineBlockMetadata\Entity\AbstractConfigurationEntity;
+
 interface AdapterInterface
 {
     /**
      * @param array $config
-     * @param \EngineBlock_Application_DiContainer $container
-     * @return mixed
+     * @param EngineBlock_Application_DiContainer $container
+     * @return AdapterInterface
      */
-    public static function createFromConfig(array $config, \EngineBlock_Application_DiContainer $container);
+    public static function createFromConfig(array $config, EngineBlock_Application_DiContainer $container);
 
     /**
      * Given a list of (SAML2) entities, filter out the idps that are not allowed
@@ -17,7 +21,7 @@ interface AdapterInterface
      *
      * @param array $entities
      * @param string $spEntityId
-     * @return array Filtered entities
+     * @return AbstractConfigurationEntity[] Filtered entities
      */
     public function filterEntitiesBySp(array $entities, $spEntityId);
 
@@ -27,7 +31,7 @@ interface AdapterInterface
      *
      * @param array $entities
      * @param string $spEntityId
-     * @return array the entities
+     * @return AbstractConfigurationEntity[] the entities
      */
     public function markEntitiesBySp(array $entities, $spEntityId);
 
@@ -36,7 +40,7 @@ interface AdapterInterface
      *
      * @param array $entities
      * @param string $workflowState
-     * @return array Filtered entities
+     * @return AbstractConfigurationEntity[] Filtered entities
      */
     public function filterEntitiesByWorkflowState(array $entities, $workflowState);
 
@@ -52,7 +56,7 @@ interface AdapterInterface
     /**
      * Get the metadata for all entities.
      *
-     * @return array
+     * @return AbstractConfigurationEntity[]
      */
     public function getRemoteMetaData();
 
@@ -60,7 +64,7 @@ interface AdapterInterface
      * Get the details for a given entity.
      *
      * @param string $entityId
-     * @return array
+     * @return AbstractConfigurationEntity
      */
     public function getEntity($entityId);
 
@@ -68,7 +72,7 @@ interface AdapterInterface
      * Get the Attribute Release Policy for a given Service Provider
      *
      * @param string $spEntityId
-     * @return array
+     * @return AttributeReleasePolicy|null
      */
     public function getArp($spEntityId);
 }

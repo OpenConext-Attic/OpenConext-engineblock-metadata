@@ -24,7 +24,7 @@ class AdapterFactory
     /**
      * @param array $config
      * @param \EngineBlock_Application_DiContainer $container
-     * @return mixed
+     * @return AdapterInterface
      * @throws \RuntimeException
      */
     public function createFromConfig(array $config, \EngineBlock_Application_DiContainer $container)

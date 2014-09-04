@@ -2,9 +2,15 @@
 
 namespace OpenConext\Component\EngineBlockMetadata\Stoker;
 
+use OpenConext\Component\EngineBlockMetadata\Stoker\MetadataIndex\Entity;
+
 class MetadataIndex
 {
     const FILENAME = 'metadata.index.json';
+
+    const TYPE_SP  = 'sp';
+
+    const TYPE_IDP = 'idp';
 
     /**
      * @var string
@@ -17,7 +23,7 @@ class MetadataIndex
     private $processed;
 
     /**
-     * @var string[]
+     * @var Entity[]
      */
     private $entities = array();
 
@@ -49,13 +55,16 @@ class MetadataIndex
         return $this->validUntil !== null && $this->validUntil < new \DateTime($atDateTime);
     }
 
-    public function addEntityId($entityId)
+    public function addEntity(Entity $entity)
     {
-        $this->entities[] = $entityId;
+        $this->entities[] = $entity;
         return $this;
     }
 
-    public function getEntityIds()
+    /**
+     * @return Entity[]
+     */
+    public function getEntities()
     {
         return $this->entities;
     }

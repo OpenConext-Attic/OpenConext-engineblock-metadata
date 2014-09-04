@@ -5,6 +5,7 @@ namespace OpenConext\Component\EngineBlockMetadata\Translator;
 use Janus\ServiceRegistry\Connection\ConnectionDto;
 use Janus\ServiceRegistry\Connection\Metadata\MetadataDto;
 use Janus\ServiceRegistry\Entity\Connection;
+use OpenConext\Component\EngineBlockMetadata\Configuration\AttributeReleasePolicy;
 use OpenConext\Component\EngineBlockMetadata\Configuration\Logo;
 use OpenConext\Component\EngineBlockMetadata\Configuration\Organization;
 use OpenConext\Component\EngineBlockMetadata\Configuration\ShibMdScope;
@@ -42,20 +43,24 @@ class JanusTranslator implements EntityTranslatorInterface
 
         if ($dto->getType() === Connection::TYPE_SP) {
             $entity = new ServiceProviderEntity();
-            $entity = $this->translateCommon($metadataDto, $entity);
-            return $this->translateServiceProvider($dto, $entity);
+            $entity = $this->translateCommon($dto, $entity);
+            $entity = $this->translateServiceProvider($dto, $entity);
+            $entity = $this->translateCommonMetadata($metadataDto, $entity);
+            return $this->translateServiceProviderMetadata($dto, $entity);
         }
 
         if ($dto->getType() === Connection::TYPE_IDP) {
             $entity = new IdentityProviderEntity();
-            $entity = $this->translateCommon($metadataDto, $entity);
-            return $this->translateIdentityProvider($dto, $entity);
+            $entity = $this->translateCommon($dto, $entity);
+            $entity = $this->translateIdentityProvider($dto, $entity);
+            $entity = $this->translateCommonMetadata($metadataDto, $entity);
+            return $this->translateIdentityProviderMetadata($dto, $entity);
         }
 
         throw new \RuntimeException('Unable to translate type: "' . $dto->getType() . '"');
     }
 
-    public function translateServiceProvider(ConnectionDto $dto, ServiceProviderEntity $entity)
+    public function translateServiceProviderMetadata(ConnectionDto $dto, ServiceProviderEntity $entity)
     {
         $entity->transparentIssuer          = (bool) $dto->offsetGet('coin:transparant_issuer');
         $entity->implicitVoId               = $dto->offsetGet('coin:implicit_vo_id');
@@ -70,7 +75,7 @@ class JanusTranslator implements EntityTranslatorInterface
         return $entity;
     }
 
-    public function translateIdentityProvider(MetadataDto $dto, IdentityProviderEntity $entity)
+    public function translateIdentityProviderMetadata(MetadataDto $dto, IdentityProviderEntity $entity)
     {
         $entity->singleSignOnServices   = $this->translateIndexedServices($dto, 'SingleSignOnService');
         $entity->schacHomeOrganization  = $dto->offsetGet('coin:schachomeorganization');
@@ -81,13 +86,12 @@ class JanusTranslator implements EntityTranslatorInterface
             $entity->guestQualifier = $dto->offsetGet('coin:guest_qualifier');
         }
 
-        $entity->spsWithoutConsent  = $this->translateSpsWithoutConsent($dto);
         $entity->shibMdScopes       = $this->translateShibMdScopes($dto);
 
         return $entity;
     }
 
-    public function translateCommon(MetadataDto $dto, AbstractConfigurationEntity $entity)
+    public function translateCommonMetadata(MetadataDto $dto, AbstractConfigurationEntity $entity)
     {
         $entity->nameEn                 = $dto->offsetGet('Name:en');
         $entity->nameNl                 = $dto->offsetGet('Name:nl');
@@ -100,13 +104,14 @@ class JanusTranslator implements EntityTranslatorInterface
         $entity->keywordsEn             = $dto->offsetGet('keywords:nl') ? $dto->offsetGet('keywords:nl') : '';
 
         $entity->publishInEdugain       = (bool) $dto->offsetGet('coin:publish_in_edugain');
-        $entity->publishInEduGainDate   = $dto->offsetGet('coin:publish_in_edugain_date');
+        if ($publishDate = $dto->offsetGet('coin:publish_in_edugain_date')) {
+            $entity->publishInEduGainDate   = date_create()->setTimestamp(strtotime($publishDate));
+        }
         $entity->disableScoping         = (bool) $dto->offsetGet('coin:disable_scoping');
         $entity->additionalLogging      = (bool) $dto->offsetGet('coin:additional_logging');
 
         $entity->requestsMustBeSigned   = (bool) $dto->offsetGet('redirect.sign');
         $entity->nameIdFormat           = $dto->offsetGet('NameIDFormat');
-        $entity->workflowState          = $dto->offsetGet('workflowState');
 
         $entity->logo                   = $this->translateLogo($dto);
         $entity->organizationEn         = $this->translateOrganizationEn($dto);
@@ -174,7 +179,7 @@ class JanusTranslator implements EntityTranslatorInterface
             $service->binding = $bindingValue;
             $service->location = $locationValue;
 
-            $services[] = $service;
+            $services[$i] = $service;
         }
         return $services;
     }
@@ -207,7 +212,7 @@ class JanusTranslator implements EntityTranslatorInterface
         $organizationDisplayNameNl  = $dto->offsetGet('OrganizationDisplayName:nl');
         $organizationUrlNl          = $dto->offsetGet('OrganizationURL:nl');
 
-        if ($organizationNameNl && $organizationDisplayNameNl && $organizationUrlNl) {
+        if (!$organizationNameNl || !$organizationDisplayNameNl || !$organizationUrlNl) {
             return null;
         }
 
@@ -228,7 +233,7 @@ class JanusTranslator implements EntityTranslatorInterface
         $organizationDisplayNameEn  = $dto->offsetGet('OrganizationDisplayName:en');
         $organizationUrlEn          = $dto->offsetGet('OrganizationURL:en');
 
-        if ($organizationNameEn && $organizationDisplayNameEn && $organizationUrlEn) {
+        if (!$organizationNameEn || !$organizationDisplayNameEn || !$organizationUrlEn) {
             return null;
         }
 
@@ -307,21 +312,6 @@ class JanusTranslator implements EntityTranslatorInterface
      * @param MetadataDto $dto
      * @return array
      */
-    private function translateSpsWithoutConsent(MetadataDto $dto)
-    {
-        $spsWithoutConsent = array();
-        $i = 0;
-        while ($spWithoutConsent = $dto->offsetGet('disableConsent:' . $i)) {
-            $spsWithoutConsent[] = $spWithoutConsent;
-            $i++;
-        }
-        return $spsWithoutConsent;
-    }
-
-    /**
-     * @param MetadataDto $dto
-     * @return array
-     */
     private function translateContactPersons(MetadataDto $dto)
     {
         $contactPersons = array();
@@ -338,5 +328,50 @@ class JanusTranslator implements EntityTranslatorInterface
             }
         }
         return $contactPersons;
+    }
+
+    private function translateCommon(ConnectionDto $dto, AbstractConfigurationEntity $entity)
+    {
+        $entity->manipulationCode   = $dto->getManipulationCode();
+        $entity->workflowState      = $dto->getState();
+        $entity->allowAllEntities   = $dto->getAllowAllEntities();
+        $entity->allowedEntityIds   = array_map(
+            function(Connection $connection) {
+                return $connection->getName();
+            },
+            $dto->getAllowedConnections()
+        );
+
+        return $entity;
+    }
+
+    private function translateIdentityProvider(ConnectionDto $dto, IdentityProviderEntity $entity)
+    {
+        $entity->spsEntityIdsWithoutConsent = array_map(
+            function(Connection $connection) {
+                return $connection->getName();
+            },
+            $dto->getDisableConsentConnections()
+        );
+
+        return $entity;
+    }
+
+    private function translateServiceProvider(ConnectionDto $dto, ServiceProviderEntity $entity)
+    {
+        $entity->attributeReleasePolicy = $this->translateArp($dto);
+
+        return $entity;
+    }
+
+    private function translateArp(ConnectionDto $dto)
+    {
+        $arpAttributes = $dto->getArpAttributes();
+
+        if (!$arpAttributes) {
+            return null;
+        }
+
+        return new AttributeReleasePolicy($arpAttributes);
     }
 }

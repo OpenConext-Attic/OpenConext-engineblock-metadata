@@ -6,6 +6,7 @@ use OpenConext\Component\EngineBlockMetadata\Configuration\Logo;
 use OpenConext\Component\EngineBlockMetadata\Configuration\Organization;
 use OpenConext\Component\EngineBlockMetadata\ContactPerson;
 use OpenConext\Component\EngineBlockMetadata\IndexedService;
+use OpenConext\Component\EngineBlockMetadata\Service;
 
 abstract class AbstractConfigurationEntity
 {
@@ -14,52 +15,52 @@ abstract class AbstractConfigurationEntity
     /**
      * @var string
      */
-    public $entityId;
+    public $entityId = null;
 
     /**
      * @var string
      */
-    public $nameNl;
+    public $nameNl = '';
 
     /**
      * @var string
      */
-    public $nameEn;
+    public $nameEn = '';
 
     /**
      * @var string
      */
-    public $descriptionNl;
+    public $descriptionNl = '';
 
     /**
      * @var string
      */
-    public $descriptionEn;
+    public $descriptionEn = '';
 
     /**
      * @var string
      */
-    public $displayNameNl;
+    public $displayNameNl = '';
 
     /**
      * @var string
      */
-    public $displayNameEn;
+    public $displayNameEn = '';
 
     /**
-     * @var  Logo
+     * @var Logo
      */
-    public $logo;
+    public $logo = null;
 
     /**
      * @var Organization
      */
-    public $organizationNl;
+    public $organizationNl = null;
 
     /**
      * @var Organization
      */
-    public $organizationEn;
+    public $organizationEn = null;
 
     /**
      * @var string
@@ -94,7 +95,7 @@ abstract class AbstractConfigurationEntity
     /**
      * @var string
      */
-    public $nameIdFormat = \EngineBlock_Urn::SAML2_0_NAMEID_FORMAT_PERSISTENT;
+    public $nameIdFormat = null;
 
     /**
      * @var string[]
@@ -112,7 +113,7 @@ abstract class AbstractConfigurationEntity
     /**
      * @var \DateTime
      */
-    public $publishInEduGainDate;
+    public $publishInEduGainDate = null;
 
     /**
      * @var bool
@@ -128,4 +129,24 @@ abstract class AbstractConfigurationEntity
      * @var bool
      */
     public $requestsMustBeSigned = false;
+
+    /**
+     * @var bool
+     */
+    public $allowAllEntities = true;
+
+    /**
+     * @var string[]
+     */
+    public $allowedEntityIds = array();
+
+    /**
+     * @var string
+     */
+    public $manipulationCode = '';
+
+    /**
+     * @var Service
+     */
+    public $responseProcessingService = null;
 }

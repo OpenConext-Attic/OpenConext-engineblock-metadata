@@ -19,7 +19,7 @@ class IdentityProviderEntity extends AbstractConfigurationEntity
     /**
      * @var bool
      */
-    public $inWayf = true;
+    public $enabledInWayf = true;
 
     /**
      * @var Service[]
@@ -34,12 +34,12 @@ class IdentityProviderEntity extends AbstractConfigurationEntity
     /**
      * @var string
      */
-    public $schacHomeOrganization;
+    public $schacHomeOrganization = null;
 
     /**
      * @var string[]
      */
-    public $spsWithoutConsent = array();
+    public $spsEntityIdsWithoutConsent = array();
 
     /**
      * @var bool

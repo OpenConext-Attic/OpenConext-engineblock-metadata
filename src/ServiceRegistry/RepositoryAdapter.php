@@ -2,6 +2,7 @@
 
 namespace OpenConext\Component\EngineBlockMetadata\ServiceRegistry;
 
+use OpenConext\Component\EngineBlockMetadata\Configuration\AttributeReleasePolicy;
 use OpenConext\Component\EngineBlockMetadata\Entity\AbstractConfigurationEntity;
 use OpenConext\Component\EngineBlockMetadata\Entity\IdentityProviderEntity;
 use OpenConext\Component\EngineBlockMetadata\Entity\MetadataRepositoryInterface;
@@ -11,10 +12,30 @@ class RepositoryAdapter implements AdapterInterface
 {
     /**
      * @param array $config
-     * @return AdapterInterface
+     * @param \EngineBlock_Application_DiContainer $container
+     * @return mixed
      */
-    public static function createFromConfig(array $config)
+    public static function createFromConfig(array $config, \EngineBlock_Application_DiContainer $container)
     {
+        if (!isset($config['repository'])) {
+            throw new \RuntimeException('No repository configuration?');
+        }
+        $repositoryConfigs = $config['repository'];
+        if (!is_array($repositoryConfigs) || empty($repositoryConfigs)) {
+            throw new \RuntimeException("No Repository configured!");
+        }
+        if (count($repositoryConfigs) > 1) {
+            // @todo warn
+        }
+        $repositoryConfig = array_shift($repositoryConfigs);
+        if (!isset($repositoryConfig['type'])) {
+            throw new \RuntimeException('');
+        }
+        $type = $repositoryConfig['type'];
+
+        if (!in_array($type, array('Janus', 'Stoker'))) {
+
+        }
     }
 
     public function __construct(MetadataRepositoryInterface $repository)
@@ -55,7 +76,7 @@ class RepositoryAdapter implements AdapterInterface
             $spEntityId,
             $entities,
             function($entities, $entityId, IdentityProviderEntity $entity) {
-                $entity->inWayf = false;
+                $entity->enabledInWayf = false;
             }
         );
     }
@@ -111,6 +132,7 @@ class RepositoryAdapter implements AdapterInterface
                 unset($entities[$entityId]);
             }
         }
+        return $entities;
     }
 
     /**
@@ -122,7 +144,13 @@ class RepositoryAdapter implements AdapterInterface
      */
     public function isConnectionAllowed($spEntityId, $idpEntityId)
     {
-        $spEntity = $this->repository->fetchEntityByEntityId($spEntityId);
+        $spEntity  = $this->repository->fetchEntityByEntityId($spEntityId);
+        $idpEntity = $this->repository->fetchEntityByEntityId($idpEntityId);
+
+        $idpAllowed = $idpEntity->allowAllEntities || in_array($spEntityId, $idpEntity->allowedEntityIds);
+        $spAllowed  = $spEntity->allowAllEntities  || in_array($idpEntityId, $spEntity->allowedEntityIds);
+
+        return $spAllowed && $idpAllowed;
     }
 
     /**
@@ -132,14 +160,14 @@ class RepositoryAdapter implements AdapterInterface
      */
     public function getRemoteMetaData()
     {
-        $this->repository->fetchEntities();
+        return $this->repository->fetchAllEntities();
     }
 
     /**
      * Get the details for a given entity.
      *
      * @param string $entityId
-     * @return array
+     * @return AbstractConfigurationEntity
      */
     public function getEntity($entityId)
     {
@@ -150,10 +178,18 @@ class RepositoryAdapter implements AdapterInterface
      * Get the Attribute Release Policy for a given Service Provider
      *
      * @param string $spEntityId
-     * @return array
+     * @return null|AttributeReleasePolicy
+     * @throws \RuntimeException
      */
     public function getArp($spEntityId)
     {
+        /** @var ServiceProviderEntity $spEntity */
         $spEntity = $this->repository->fetchEntityByEntityId($spEntityId);
+
+        if (!$spEntity instanceof ServiceProviderEntity) {
+            throw new \RuntimeException("Unable to get ARP for Identity Provider!");
+        }
+
+        return $spEntity->attributeReleasePolicy;
     }
 }
