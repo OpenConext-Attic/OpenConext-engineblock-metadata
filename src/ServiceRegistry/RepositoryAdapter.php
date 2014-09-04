@@ -13,7 +13,8 @@ class RepositoryAdapter implements AdapterInterface
     /**
      * @param array $config
      * @param \EngineBlock_Application_DiContainer $container
-     * @return mixed
+     * @return AdapterInterface|void
+     * @throws \RuntimeException
      */
     public static function createFromConfig(array $config, \EngineBlock_Application_DiContainer $container)
     {
@@ -34,8 +35,9 @@ class RepositoryAdapter implements AdapterInterface
         $type = $repositoryConfig['type'];
 
         if (!in_array($type, array('Janus', 'Stoker'))) {
-
+            throw new \RuntimeException("Unknown repository type '$type'");
         }
+
     }
 
     public function __construct(MetadataRepositoryInterface $repository)

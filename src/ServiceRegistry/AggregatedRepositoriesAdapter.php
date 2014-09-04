@@ -2,15 +2,27 @@
 
 namespace OpenConext\Component\EngineBlockMetadata\ServiceRegistry;
 
+use EngineBlock_Application_DiContainer;
+
 class AggregatedRepositoriesAdapter implements AdapterInterface
 {
+    /**
+     * @param array $config
+     * @param EngineBlock_Application_DiContainer $container
+     * @return AdapterInterface
+     */
+    public static function createFromConfig(array $config, EngineBlock_Application_DiContainer $container)
+    {
+        // TODO: Implement createFromConfig() method.
+    }
+
     /**
      * Given a list of (SAML2) entities, filter out the idps that are not allowed
      * for the given Service Provider.
      *
      * @param array $entities
      * @param string $spEntityId
-     * @return array Filtered entities
+     * @return AbstractConfigurationEntity[] Filtered entities
      */
     public function filterEntitiesBySp(array $entities, $spEntityId)
     {
@@ -23,7 +35,7 @@ class AggregatedRepositoriesAdapter implements AdapterInterface
      *
      * @param array $entities
      * @param string $spEntityId
-     * @return array the entities
+     * @return AbstractConfigurationEntity[] the entities
      */
     public function markEntitiesBySp(array $entities, $spEntityId)
     {
@@ -35,7 +47,7 @@ class AggregatedRepositoriesAdapter implements AdapterInterface
      *
      * @param array $entities
      * @param string $workflowState
-     * @return array Filtered entities
+     * @return AbstractConfigurationEntity[] Filtered entities
      */
     public function filterEntitiesByWorkflowState(array $entities, $workflowState)
     {
@@ -57,7 +69,7 @@ class AggregatedRepositoriesAdapter implements AdapterInterface
     /**
      * Get the metadata for all entities.
      *
-     * @return array
+     * @return AbstractConfigurationEntity[]
      */
     public function getRemoteMetaData()
     {
@@ -68,7 +80,7 @@ class AggregatedRepositoriesAdapter implements AdapterInterface
      * Get the details for a given entity.
      *
      * @param string $entityId
-     * @return array
+     * @return AbstractConfigurationEntity
      */
     public function getEntity($entityId)
     {
@@ -79,7 +91,7 @@ class AggregatedRepositoriesAdapter implements AdapterInterface
      * Get the Attribute Release Policy for a given Service Provider
      *
      * @param string $spEntityId
-     * @return array
+     * @return AttributeReleasePolicy|null
      */
     public function getArp($spEntityId)
     {
