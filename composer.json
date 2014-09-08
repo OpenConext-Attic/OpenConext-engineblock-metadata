@@ -8,6 +8,12 @@
     },
     "require": {
         "php": ">=5.3.3",
-        "ad7six/dsn": "0.3.0"
-    }
+        "ad7six/dsn": "dev-master"
+    },
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/relaxnow/php-dsn"
+        }
+    ]
 }
