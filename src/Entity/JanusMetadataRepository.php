@@ -1,15 +1,13 @@
 <?php
 
-namespace Surfnet\GroupService\Service;
+namespace OpenConext\Component\EngineBlockMetadata\Entity;;
 
+use AD7six\Dsn\Dsn;
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\Tools\Setup;
 use Janus\ServiceRegistry\Entity\Connection;
 use Janus\ServiceRegistry\Entity\ConnectionRepository;
-use OpenConext\Component\EngineBlockMetadata\Entity\AbstractConfigurationEntity;
-use OpenConext\Component\EngineBlockMetadata\Entity\IdentityProviderEntity;
-use OpenConext\Component\EngineBlockMetadata\Entity\MetadataRepositoryInterface;
 use OpenConext\Component\EngineBlockMetadata\Entity\Repository\Filter\FilterInterface;
-use OpenConext\Component\EngineBlockMetadata\Entity\ServiceProviderEntity;
 use OpenConext\Component\EngineBlockMetadata\Translator\JanusTranslator;
 
 class JanusMetadataRepository implements MetadataRepositoryInterface
@@ -20,16 +18,23 @@ class JanusMetadataRepository implements MetadataRepositoryInterface
     /**
      * @param array $repositoryConfig
      * @param \EngineBlock_Application_DiContainer $container
-     * @return mixed
+     * @return mixed|JanusMetadataRepository
+     * @throws \RuntimeException
      */
     public static function createFromConfig(array $repositoryConfig, \EngineBlock_Application_DiContainer $container)
     {
         if (!isset($repositoryConfig['dsn'])) {
             throw new \RuntimeException('No dsn configured for JanusMetadataRepository');
         }
-        $dsn = $repositoryConfig['dsn'];
 
+        /** @var Dsn $dsn */
+        $dsn = Dsn::parse($repositoryConfig['dsn']);
+        $dsnArray = $dsn->toArray();
 
+        $config = Setup::createAnnotationMetadataConfiguration(array(__DIR__), isset($repositoryConfig['dev']) ? true : false);
+        $entityManager = EntityManager::create($dsnArray, $config);
+
+        return new self($entityManager, new JanusTranslator());
     }
 
     public function __construct(
