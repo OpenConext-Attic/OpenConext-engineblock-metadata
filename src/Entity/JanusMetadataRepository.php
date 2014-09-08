@@ -2,11 +2,14 @@
 
 namespace Surfnet\GroupService\Service;
 
-use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\EntityManager;
 use Janus\ServiceRegistry\Entity\Connection;
 use Janus\ServiceRegistry\Entity\ConnectionRepository;
 use OpenConext\Component\EngineBlockMetadata\Entity\AbstractConfigurationEntity;
+use OpenConext\Component\EngineBlockMetadata\Entity\IdentityProviderEntity;
 use OpenConext\Component\EngineBlockMetadata\Entity\MetadataRepositoryInterface;
+use OpenConext\Component\EngineBlockMetadata\Entity\Repository\Filter\FilterInterface;
+use OpenConext\Component\EngineBlockMetadata\Entity\ServiceProviderEntity;
 use OpenConext\Component\EngineBlockMetadata\Translator\JanusTranslator;
 
 class JanusMetadataRepository implements MetadataRepositoryInterface
@@ -14,8 +17,23 @@ class JanusMetadataRepository implements MetadataRepositoryInterface
     private $entityManager;
     private $translator;
 
+    /**
+     * @param array $repositoryConfig
+     * @param \EngineBlock_Application_DiContainer $container
+     * @return mixed
+     */
+    public static function createFromConfig(array $repositoryConfig, \EngineBlock_Application_DiContainer $container)
+    {
+        if (!isset($repositoryConfig['dsn'])) {
+            throw new \RuntimeException('No dsn configured for JanusMetadataRepository');
+        }
+        $dsn = $repositoryConfig['dsn'];
+
+
+    }
+
     public function __construct(
-        EntityManagerInterface $entityManager,
+        EntityManager $entityManager,
         JanusTranslator $translator
     ) {
         $this->entityManager = $entityManager;
@@ -44,9 +62,11 @@ class JanusMetadataRepository implements MetadataRepositoryInterface
     public function fetchAllEntities()
     {
         /** @var ConnectionRepository $connectionRepository */
-        $connectionRepository = $this->entityManager->getRepository('Janus\Component\ReadonlyEntities\Entities\Connection');
+        $connectionRepository = $this->entityManager->getRepository(
+            'Janus\Component\ReadonlyEntities\Entities\Connection'
+        );
         /** @var Connection[] $connections */
-        $connections = $connectionRepository->findAll();
+        $connections = $connectionRepository->findBy(array('active' => true));
 
         /** @todo come caching here? */
         $entities = array();
@@ -55,4 +75,110 @@ class JanusMetadataRepository implements MetadataRepositoryInterface
         }
         return $entities;
     }
+
+    /**
+     * @param string $idpEntityId
+     * @return IdentityProviderEntity
+     */
+    public function fetchIdentityProviderByEntityId($idpEntityId)
+    {
+        // TODO: Implement fetchIdentityProviderByEntityId() method.
+    }
+
+    /**
+     * @param string $spEntityId
+     * @return ServiceProviderEntity|null
+     */
+    public function findIdentityProviderByEntityId($spEntityId)
+    {
+        // TODO: Implement findIdentityProviderByEntityId() method.
+    }
+
+    /**
+     * @param string $spEntityId
+     * @return ServiceProviderEntity
+     */
+    public function fetchServiceProviderByEntityId($spEntityId)
+    {
+        // TODO: Implement fetchServiceProviderByEntityId() method.
+    }
+
+    /**
+     * @param $spEntityId
+     * @return ServiceProviderEntity|null
+     */
+    public function findServiceProviderByEntityId($spEntityId)
+    {
+        // TODO: Implement findServiceProviderByEntityId() method.
+    }
+
+    /**
+     * @return ServiceProviderEntity[]
+     */
+    public function findServiceProviders()
+    {
+        // TODO: Implement findServiceProviders() method.
+    }
+
+    /**
+     * @return IdentityProviderEntity[]
+     */
+    public function findIdentityProviders()
+    {
+        // TODO: Implement findIdentityProviders() method.
+    }
+
+    /**
+     * @return string[]
+     */
+    public function findAllIdentityProviderEntityIds()
+    {
+        // TODO: Implement findAllIdentityProviderEntityIds() method.
+    }
+
+    /**
+     * @return string[]
+     */
+    public function findReservedSchacHomeOrganizations()
+    {
+        // TODO: Implement findReservedSchacHomeOrganizations() method.
+    }
+
+    /**
+     * @return AbstractConfigurationEntity[]
+     */
+    public function findEntitiesPublishableInEdugain()
+    {
+        // TODO: Implement findEntitiesPublishableInEdugain() method.
+    }
+
+    /**
+     * @param ServiceProviderEntity $serviceProvider
+     * @param IdentityProviderEntity $identityProvider
+     * @return bool
+     */
+    public function isConnectionAllowed(ServiceProviderEntity $serviceProvider, IdentityProviderEntity $identityProvider)
+    {
+        // TODO: Implement isConnectionAllowed() method.
+    }
+
+    /**
+     * @param FilterInterface $filter
+     * @return $this
+     */
+    public function filter(FilterInterface $filter)
+    {
+        // TODO: Implement filter() method.
+    }
+
+    /**
+     * @param string $entityId
+     * @return AbstractConfigurationEntity|null
+     */
+    public function findEntityByEntityId($entityId)
+    {
+        // TODO: Implement findEntityByEntityId() method.
+    }
+
+
 }

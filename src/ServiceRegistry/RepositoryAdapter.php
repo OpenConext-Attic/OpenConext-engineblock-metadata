@@ -10,6 +10,8 @@ use OpenConext\Component\EngineBlockMetadata\Entity\ServiceProviderEntity;
 
 class RepositoryAdapter implements AdapterInterface
 {
+    const DEFAULT_REPOSITORY_NAMESPACE = '\\OpenConext\\Component\\EngineBlockMetadata\\Entity';
+
     /**
      * @param array $config
      * @param \EngineBlock_Application_DiContainer $container
@@ -38,6 +40,23 @@ class RepositoryAdapter implements AdapterInterface
             throw new \RuntimeException("Unknown repository type '$type'");
         }
 
+        $namespace = self::DEFAULT_REPOSITORY_NAMESPACE;
+        if (isset($repositoryConfig['namespace'])) {
+            $namespace = $repositoryConfig['namespace'];
+        }
+
+        $className = $namespace . $type . 'MetadataRepository';
+
+        if (!class_exists($className, true)) {
+            throw new \RuntimeException("Configuration error, unable to find: '$className'");
+        }
+
+        $class = new \ReflectionClass($className);
+        if (!$class->implementsInterface(self::DEFAULT_REPOSITORY_NAMESPACE . '\\MetadataRepositoryInterface')) {
+            throw new \RuntimeException("$className does not implement MetadataRepositoryInterface");
+        }
+
+        return $class::createFromConfig($repositoryConfig, $container);
     }
 
     public function __construct(MetadataRepositoryInterface $repository)
