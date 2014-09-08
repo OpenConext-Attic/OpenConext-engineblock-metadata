@@ -8,7 +8,7 @@
     },
     "require": {
         "php": ">=5.3.3",
-        "ad7six/dsn": "dev-master"
+        "ad7six/dsn": "dev-master#f3347baa588abed5c3d2fd5d0a057842d26c1a48 as 0.4.0"
     },
     "repositories": [
         {
