@@ -6,7 +6,7 @@ $diContainer = new EngineBlock_Application_DiContainer();
 
 $repo = \OpenConext\Component\EngineBlockMetadata\Entity\JanusMetadataRepository::createFromConfig(
     array(
-        'dsn' => 'mysq:host=root:c0n3xt@localhost;port=3306;dbname=serviceregistry',
+        'dsn' => 'mysql://root:c0n3xt@localhost:3306/serviceregistry',
     ),
     $diContainer
 );

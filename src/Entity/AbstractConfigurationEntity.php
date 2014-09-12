@@ -2,10 +2,9 @@
 
 namespace OpenConext\Component\EngineBlockMetadata\Entity;
 
-use OpenConext\Component\EngineBlockMetadata\Configuration\Logo;
-use OpenConext\Component\EngineBlockMetadata\Configuration\Organization;
+use OpenConext\Component\EngineBlockMetadata\Logo;
+use OpenConext\Component\EngineBlockMetadata\Organization;
 use OpenConext\Component\EngineBlockMetadata\ContactPerson;
-use OpenConext\Component\EngineBlockMetadata\IndexedService;
 use OpenConext\Component\EngineBlockMetadata\Service;
 
 abstract class AbstractConfigurationEntity
@@ -15,7 +14,7 @@ abstract class AbstractConfigurationEntity
     /**
      * @var string
      */
-    public $entityId = null;
+    public $entityId;
 
     /**
      * @var string
@@ -106,7 +105,7 @@ abstract class AbstractConfigurationEntity
     );
 
     /**
-     * @var IndexedService[]
+     * @var Service[]
      */
     public $singleLogoutServices = array();
 
@@ -131,22 +130,12 @@ abstract class AbstractConfigurationEntity
     public $requestsMustBeSigned = false;
 
     /**
-     * @var bool
-     */
-    public $allowAllEntities = true;
-
-    /**
-     * @var string[]
-     */
-    public $allowedEntityIds = array();
-
-    /**
-     * @var string
-     */
-    public $manipulationCode = '';
-
-    /**
      * @var Service
      */
     public $responseProcessingService = null;
+
+    public function __construct($entityId)
+    {
+        $this->entityId = $entityId;
+    }
 }

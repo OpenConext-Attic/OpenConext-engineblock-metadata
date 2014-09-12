@@ -1,39 +1,26 @@
 <?php
 
-namespace OpenConext\Component\EngineBlockMetadata\Translator;
+namespace OpenConext\Component\EngineBlockMetadata\Entity\Translator;
 
 use OpenConext\Component\EngineBlockMetadata\Entity\AbstractConfigurationEntity;
 use OpenConext\Component\EngineBlockMetadata\Entity\IdentityProviderEntity;
 use OpenConext\Component\EngineBlockMetadata\Entity\ServiceProviderEntity;
 use OpenConext\Component\EngineBlockMetadata\IndexedService;
+use OpenConext\Component\EngineBlockMetadata\Service;
 use OpenConext\Component\EngineBlockMetadata\Stoker\MetadataIndex\Entity;
 
-class StokerTranslator implements EntityTranslatorInterface
+class StokerTranslator
 {
     /**
-     * @var Entity
-     */
-    private $indexedEntity;
-
-    public function setIndexedEntity(Entity $entity)
-    {
-        $this->indexedEntity = $entity;
-    }
-
-    /**
-     * @param string $entity
+     * @param $entityXml
+     * @param Entity $metadataIndexEntity
      * @return IdentityProviderEntity|ServiceProviderEntity
      * @throws \RuntimeException
-     * @throws \InvalidArgumentException
      */
-    public function translate($entity)
+    public function translate($entityXml, Entity $metadataIndexEntity)
     {
-        if (!$this->accept($entity)) {
-            throw new \InvalidArgumentException('Not a string: '. $entity);
-        }
-
         $document = new \DOMDocument();
-        $document->loadXML($entity);
+        $document->loadXML($entityXml);
 
         $entityDescriptor = new \SAML2_XML_md_EntityDescriptor($document->documentElement);
 
@@ -61,18 +48,13 @@ class StokerTranslator implements EntityTranslatorInterface
             throw new \RuntimeException('Entity is both SP and IdP, we do not support this');
         }
         if ($spDescriptor) {
-            $entity = new ServiceProviderEntity();
+            $entityXml = new ServiceProviderEntity();
 
             $singleSignOnServices = array();
             foreach ($spDescriptor->AssertionConsumerService as $acs) {
-                $service = new IndexedService();
-                $service->serviceIndex  = $acs->index;
-                $service->isDefault     = $acs->isDefault;
-                $service->binding       = $acs->Binding;
-                $service->location      = $acs->Location;
-                $singleSignOnServices[$acs->index] = $service;
+                $singleSignOnServices[$acs->index] = new IndexedService($acs->Location, $acs->Binding, $acs->index, $acs->isDefault);
             }
-            $entity->assertionConsumerServices = $singleSignOnServices;
+            $entityXml->assertionConsumerServices = $singleSignOnServices;
 
 //            /** @var \SAML2_XML_mdui_UIInfo[] $mdUiInfoExtensions */
 //            $mdUiInfoExtensions = array_filter(
@@ -90,30 +72,22 @@ class StokerTranslator implements EntityTranslatorInterface
 //            $mdUiInfoExtension = $mdUiInfoExtensions[0];
 
 
-            return $entity;
+            return $entityXml;
         }
         if ($idpDescriptor) {
-            $entity = new IdentityProviderEntity();
+            $entityXml = new IdentityProviderEntity();
 
             $singleSignOnServices = array();
             foreach ($idpDescriptor->SingleSignOnService as $ssos) {
-                $service = new IndexedService();
-                $service->binding   = $ssos->Binding;
-                $service->location  = $ssos->Location;
-                $singleSignOnServices[] = $service;
+                $singleSignOnServices[] = new Service($ssos->Location, $ssos->Binding);
             }
-            $entity->singleSignOnServices = $singleSignOnServices;
+            $entityXml->singleSignOnServices = $singleSignOnServices;
         }
 
-        $entity->entityId = $entityDescriptor->entityID;
-        $entity->displayNameNl = $this->indexedEntity->displayNameNl;
-        $entity->displayNameEn = $this->indexedEntity->displayNameEn;
+        $entityXml->entityId = $entityDescriptor->entityID;
+        $entityXml->displayNameNl = $metadataIndexEntity->displayNameNl;
+        $entityXml->displayNameEn = $metadataIndexEntity->displayNameEn;
 
-        return $entity;
-    }
-
-    public function accept($entity)
-    {
-        return is_string($entity);
+        return $entityXml;
     }
 }

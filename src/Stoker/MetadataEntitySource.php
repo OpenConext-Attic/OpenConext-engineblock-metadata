@@ -27,7 +27,13 @@ class MetadataEntitySource
      */
     public function load($entityId)
     {
-        return file_get_contents($this->getFilePathForEntityId($entityId));
+        $filePath = $this->getFilePathForEntityId($entityId);
+
+        if (!file_exists($filePath)) {
+            return '';
+        }
+
+        return file_get_contents($filePath);
     }
 
     /**

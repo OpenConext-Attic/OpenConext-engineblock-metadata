@@ -1,16 +1,17 @@
 <?php
 
-namespace OpenConext\Component\EngineBlockMetadata\Entity\Repository\Filter;
+namespace OpenConext\Component\EngineBlockMetadata\Entity\MetadataRepository\Filter;
 
 use OpenConext\Component\EngineBlockMetadata\Entity\AbstractConfigurationEntity;
+use OpenConext\Component\EngineBlockMetadata\Entity\ServiceProviderEntity;
 
-class RemoveOtherWorkflowStatesFilter implements FilterInterface
+class RemoveOtherWorkflowStatesFilter extends AbstractFilter
 {
     private $workflowState;
 
-    public function __construct($workflowState)
+    public function __construct(ServiceProviderEntity $serviceProvider)
     {
-        $this->workflowState = $workflowState;
+        $this->workflowState = $serviceProvider->workflowState;
     }
 
     /**
@@ -28,5 +29,10 @@ class RemoveOtherWorkflowStatesFilter implements FilterInterface
     public function getWorkflowState()
     {
         return $this->workflowState;
+    }
+
+    public function __toString()
+    {
+        return parent::__toString() . ' -> ' . $this->workflowState;
     }
 }

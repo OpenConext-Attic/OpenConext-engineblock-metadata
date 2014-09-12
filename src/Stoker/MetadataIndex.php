@@ -2,6 +2,7 @@
 
 namespace OpenConext\Component\EngineBlockMetadata\Stoker;
 
+use DateTime;
 use OpenConext\Component\EngineBlockMetadata\Stoker\MetadataIndex\Entity;
 
 class MetadataIndex
@@ -18,7 +19,7 @@ class MetadataIndex
     private $file;
 
     /**
-     * @var \DateTime
+     * @var DateTime
      */
     private $processed;
 
@@ -28,16 +29,16 @@ class MetadataIndex
     private $entities = array();
 
     /**
-     * @var \DateTime
+     * @var DateTime
      */
     private $cacheUntil;
 
     /**
-     * @var \DateTime
+     * @var DateTime
      */
     private $validUntil = null;
 
-    public function __construct($path, \DateTime $cacheUntil, \DateTime $processed, \DateTime $validUntil)
+    public function __construct($path, DateTime $cacheUntil, DateTime $processed, DateTime $validUntil)
     {
         $this->file = $path . DIRECTORY_SEPARATOR . self::FILENAME;
         $this->cacheUntil = $cacheUntil;
@@ -47,17 +48,17 @@ class MetadataIndex
 
     public function isCacheExpired($atDateTime = 'now')
     {
-        return $this->cacheUntil < new \DateTime($atDateTime);
+        return $this->cacheUntil < new DateTime($atDateTime);
     }
 
     public function isValidityExpired($atDateTime = 'now')
     {
-        return $this->validUntil !== null && $this->validUntil < new \DateTime($atDateTime);
+        return $this->validUntil !== null && $this->validUntil < new DateTime($atDateTime);
     }
 
     public function addEntity(Entity $entity)
     {
-        $this->entities[] = $entity;
+        $this->entities[$entity->entityId] = $entity;
         return $this;
     }
 
@@ -67,6 +68,19 @@ class MetadataIndex
     public function getEntities()
     {
         return $this->entities;
+    }
+
+    /**
+     * @param $entityId
+     * @return null|Entity
+     */
+    public function getEntityByEntityId($entityId)
+    {
+        if (!isset($this->entities[$entityId])) {
+            return null;
+        }
+
+        return $this->entities[$entityId];
     }
 
     /**

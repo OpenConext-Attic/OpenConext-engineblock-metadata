@@ -1,10 +1,10 @@
 <?php
 
-namespace OpenConext\Component\EngineBlockMetadata\Entity\Repository\Filter;
+namespace OpenConext\Component\EngineBlockMetadata\Entity\MetadataRepository\Filter;
 
 use OpenConext\Component\EngineBlockMetadata\Entity\AbstractConfigurationEntity;
 
-class RemoveEntityByEntityId implements FilterInterface
+class RemoveEntityByEntityId extends AbstractFilter
 {
     /**
      * @var string
@@ -34,5 +34,10 @@ class RemoveEntityByEntityId implements FilterInterface
     public function getEntityId()
     {
         return $this->entityId;
+    }
+
+    public function __toString()
+    {
+        return parent::__toString() . ' -> ' . $this->entityId;
     }
 }

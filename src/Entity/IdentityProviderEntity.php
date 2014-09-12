@@ -2,7 +2,7 @@
 
 namespace OpenConext\Component\EngineBlockMetadata\Entity;
 
-use OpenConext\Component\EngineBlockMetadata\Configuration\ShibMdScope;
+use OpenConext\Component\EngineBlockMetadata\ShibMdScope;
 use OpenConext\Component\EngineBlockMetadata\Service;
 
 class IdentityProviderEntity extends AbstractConfigurationEntity
@@ -50,9 +50,4 @@ class IdentityProviderEntity extends AbstractConfigurationEntity
      * @var ShibMdScope[]
      */
     public $shibMdScopes = array();
-
-    /**
-     * @var string[]
-     */
-    public $allowedServiceProviderEntityIds = array();
 }

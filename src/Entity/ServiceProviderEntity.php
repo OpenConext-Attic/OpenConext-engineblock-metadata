@@ -2,8 +2,8 @@
 
 namespace OpenConext\Component\EngineBlockMetadata\Entity;
 
-use OpenConext\Component\EngineBlockMetadata\Configuration\AttributeReleasePolicy;
-use OpenConext\Component\EngineBlockMetadata\Configuration\RequestedAttribute;
+use OpenConext\Component\EngineBlockMetadata\AttributeReleasePolicy;
+use OpenConext\Component\EngineBlockMetadata\RequestedAttribute;
 use OpenConext\Component\EngineBlockMetadata\IndexedService;
 
 class ServiceProviderEntity extends AbstractConfigurationEntity
@@ -16,7 +16,7 @@ class ServiceProviderEntity extends AbstractConfigurationEntity
     /**
      * @var bool
      */
-    public $transparentIssuer = false;
+    public $isTransparentIssuer = false;
 
     /**
      * @var string
@@ -31,17 +31,12 @@ class ServiceProviderEntity extends AbstractConfigurationEntity
     /**
      * @var bool
      */
-    public $noConsentRequired = false;
+    public $isConsentRequired = true;
 
     /**
      * @var string
      */
     public $eula = null;
-
-    /**
-     * @var bool
-     */
-    public $provideIsMemberOf = false;
 
     /**
      * @var bool
@@ -61,7 +56,7 @@ class ServiceProviderEntity extends AbstractConfigurationEntity
      *
      * @var null|AttributeReleasePolicy
      */
-    public $attributeReleasePolicy = null;
+    private $attributeReleasePolicy;
 
     /**
      * @var null|RequestedAttribute[]

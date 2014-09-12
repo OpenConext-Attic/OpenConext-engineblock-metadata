@@ -1,6 +1,6 @@
 <?php
 
-namespace OpenConext\Component\EngineBlockMetadata\Configuration;
+namespace OpenConext\Component\EngineBlockMetadata;
 
 class RequestedAttribute
 {

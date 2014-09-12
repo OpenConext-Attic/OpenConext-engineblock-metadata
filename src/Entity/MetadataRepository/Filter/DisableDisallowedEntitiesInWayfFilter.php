@@ -1,13 +1,19 @@
 <?php
 
-namespace OpenConext\Component\EngineBlockMetadata\Entity\Repository\Filter;
+namespace OpenConext\Component\EngineBlockMetadata\Entity\MetadataRepository\Filter;
 
 use OpenConext\Component\EngineBlockMetadata\Entity\AbstractConfigurationEntity;
 use OpenConext\Component\EngineBlockMetadata\Entity\IdentityProviderEntity;
+use OpenConext\Component\EngineBlockMetadata\Entity\MetadataRepository\MetadataRepositoryInterface;
 use OpenConext\Component\EngineBlockMetadata\Entity\ServiceProviderEntity;
 
-class RemoveDisallowedIdentityProvidersFilter implements FilterInterface
+class DisableDisallowedEntitiesInWayfFilter extends AbstractFilter
 {
+    /**
+     * @var MetadataRepositoryInterface
+     */
+    private $repository;
+
     /**
      * @var ServiceProviderEntity
      */
@@ -16,8 +22,9 @@ class RemoveDisallowedIdentityProvidersFilter implements FilterInterface
     /**
      *
      */
-    public function __construct(ServiceProviderEntity $serviceProviderEntity)
+    public function __construct(MetadataRepositoryInterface $repository, ServiceProviderEntity $serviceProviderEntity)
     {
+        $this->repository = $repository;
         $this->serviceProviderEntity = $serviceProviderEntity;
     }
 
@@ -31,19 +38,23 @@ class RemoveDisallowedIdentityProvidersFilter implements FilterInterface
             return $entity;
         }
 
-        if ($this->serviceProviderEntity->allowAllEntities) {
+        if ($this->repository->isConnectionAllowed($this->serviceProviderEntity, $entity)) {
             return $entity;
         }
 
-        if (in_array($entity->entityId, $this->serviceProviderEntity->allowedEntityIds)) {
-            return $entity;
-        }
+        $entity->enabledInWayf = false;
 
-        return null;
+        return $entity;
+    }
+
+    public function setRepository(MetadataRepositoryInterface $repository)
+    {
+        $this->repository = $repository;
+        return $this;
     }
 
     /**
-     * @return string
+     * @return ServiceProviderEntity
      */
     public function getServiceProviderEntity()
     {

@@ -1,6 +1,6 @@
 <?php
 
-namespace OpenConext\Component\EngineBlockMetadata\Entity\Repository\Filter;
+namespace OpenConext\Component\EngineBlockMetadata\Entity\MetadataRepository\Filter;
 
 use OpenConext\Component\EngineBlockMetadata\Entity\AbstractConfigurationEntity;
 
@@ -11,4 +11,6 @@ interface FilterInterface
      * @return AbstractConfigurationEntity
      */
     public function filter(AbstractConfigurationEntity $entity);
+
+    public function __toString();
 }

@@ -8,4 +8,9 @@ class ContactPerson
     public $emailAddress;
     public $givenName;
     public $surName;
+
+    public function __construct($contactType)
+    {
+        $this->contactType = $contactType;
+    }
 }
