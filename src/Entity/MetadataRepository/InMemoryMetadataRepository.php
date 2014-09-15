@@ -124,33 +124,4 @@ class InMemoryMetadataRepository extends AbstractMetadataRepository
         }
         return $publishableEntities;
     }
-
-    /**
-     * @param AbstractConfigurationEntity $entity
-     * @return string
-     */
-    public function fetchEntityManipulation(AbstractConfigurationEntity $entity)
-    {
-        return '';
-    }
-
-    /**
-     * @param ServiceProviderEntity $serviceProvider
-     * @return AttributeReleasePolicy
-     */
-    public function fetchServiceProviderArp(ServiceProviderEntity $serviceProvider)
-    {
-        return null;
-    }
-
-    /**
-     * @param ServiceProviderEntity $serviceProvider
-     * @param IdentityProviderEntity $identityProvider
-     * @return bool
-     */
-    public function isConnectionAllowed(ServiceProviderEntity $serviceProvider, IdentityProviderEntity $identityProvider)
-    {
-        return false;
-    }
-
 }

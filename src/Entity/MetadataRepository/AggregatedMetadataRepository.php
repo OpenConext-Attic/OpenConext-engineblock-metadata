@@ -2,13 +2,10 @@
 
 namespace OpenConext\Component\EngineBlockMetadata\Entity\MetadataRepository;
 
-use Janus\ServiceRegistry\Entity\Connection\Revision\Metadata;
 use OpenConext\Component\EngineBlockMetadata\AttributeReleasePolicy;
 use OpenConext\Component\EngineBlockMetadata\Entity\AbstractConfigurationEntity;;
 use OpenConext\Component\EngineBlockMetadata\Entity\IdentityProviderEntity;
-use OpenConext\Component\EngineBlockMetadata\Entity\MetadataRepository\Filter\DisableDisallowedEntitiesInWayfFilter;
 use OpenConext\Component\EngineBlockMetadata\Entity\MetadataRepository\Filter\FilterInterface;
-use OpenConext\Component\EngineBlockMetadata\Entity\MetadataRepository\Filter\RemoveDisallowedIdentityProvidersFilter;
 use OpenConext\Component\EngineBlockMetadata\Entity\ServiceProviderEntity;
 
 class AggregatedMetadataRepository extends AbstractMetadataRepository
@@ -211,14 +208,7 @@ class AggregatedMetadataRepository extends AbstractMetadataRepository
     public function filter(FilterInterface $filter)
     {
         foreach ($this->orderedRepositories as $repository) {
-            $filter = clone $filter;
-            if ($filter instanceof RemoveDisallowedIdentityProvidersFilter) {
-                $filter->setRepository($repository);
-            }
-            if ($filter instanceof DisableDisallowedEntitiesInWayfFilter) {
-                $filter->setRepository($repository);
-            }
-            $repository->filter($filter);
+            $repository->filter(clone $filter);
         }
         return $this;
     }
@@ -265,31 +255,16 @@ class AggregatedMetadataRepository extends AbstractMetadataRepository
 
     /**
      * @param ServiceProviderEntity $serviceProvider
-     * @param IdentityProviderEntity $identityProvider
-     * @return bool
+     * @return array|bool
      * @throws \RuntimeException
      */
-    public function isConnectionAllowed(ServiceProviderEntity $serviceProvider, IdentityProviderEntity $identityProvider)
+    public function findAllowedIdpEntityIdsForSp(ServiceProviderEntity $serviceProvider)
     {
+        $allowed = array();
         foreach ($this->orderedRepositories as $repository) {
-            $hasServiceProvider = $repository->findServiceProviderByEntityId($serviceProvider->entityId);
-
-            if (!$hasServiceProvider) {
-                continue;
-            }
-
-            $hasIdentityProvider = $repository->findIdentityProviderByEntityId($identityProvider->entityId);
-
-            if (!$hasIdentityProvider) {
-                continue;
-            }
-
-            return $repository->isConnectionAllowed($serviceProvider, $identityProvider);
+            $allowed = array_merge($allowed, $repository->findAllowedIdpEntityIdsForSp($serviceProvider));
         }
 
-        throw new \RuntimeException(
-            __METHOD__ . ' was unable to find a repository for SP: ' . $serviceProvider->entityId .
-                ' and IdP: ' . $identityProvider->entityId
-        );
+        return $allowed;
     }
 }

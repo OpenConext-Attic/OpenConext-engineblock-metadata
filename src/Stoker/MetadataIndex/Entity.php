@@ -14,11 +14,11 @@ class Entity
     public $displayNameNl;
     public $displayNameEn;
 
-    public function __construct($entityId, $types, $displayNameEn, $displayNameNl)
+    public function __construct($entityId, array $types, $displayNameEn, $displayNameNl)
     {
         $this->displayNameEn = $displayNameEn;
         $this->displayNameNl = $displayNameNl;
-        $this->entityId = $entityId;
-        $this->types = $types;
+        $this->entityId     = $entityId;
+        $this->types        = $types;
     }
 }

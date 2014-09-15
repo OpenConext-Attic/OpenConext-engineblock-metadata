@@ -259,14 +259,17 @@ class JanusRestV1MetadataRepository extends AbstractMetadataRepository
 
     /**
      * @param ServiceProviderEntity $serviceProvider
-     * @param IdentityProviderEntity $identityProvider
      * @return bool
      */
-    public function isConnectionAllowed(ServiceProviderEntity $serviceProvider, IdentityProviderEntity $identityProvider)
+    public function findAllowedIdpEntityIdsForSp(ServiceProviderEntity $serviceProvider)
     {
-        $allowedIdps = $this->fetchAllowedIdpsForServiceProvider($serviceProvider->entityId);
+        static $s_allowedIdpsPerSp = array();
 
-        return in_array($identityProvider->entityId, $allowedIdps);
+        if (!isset($s_allowedIdpsPerSp[$serviceProvider->entityId])) {
+            $s_allowedIdpsPerSp[$serviceProvider->entityId] = $this->client->getAllowedIdps($serviceProvider->entityId);
+        }
+
+        return $s_allowedIdpsPerSp[$serviceProvider->entityId];
     }
 
     /**
@@ -282,21 +285,6 @@ class JanusRestV1MetadataRepository extends AbstractMetadataRepository
         }
 
         return $s_entities[$entityId];
-    }
-
-    /**
-     * @param string $entityId
-     * @return mixed
-     */
-    private function fetchAllowedIdpsForServiceProvider($entityId)
-    {
-        static $s_allowedIdpsPerSp = array();
-
-        if (!isset($s_allowedIdpsPerSp[$entityId])) {
-            $s_allowedIdpsPerSp[$entityId] = $this->client->getAllowedIdps($entityId);
-        }
-
-        return $s_allowedIdpsPerSp[$entityId];
     }
 
     private function loadEntitiesMetadataCache()

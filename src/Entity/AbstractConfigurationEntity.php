@@ -9,7 +9,7 @@ use OpenConext\Component\EngineBlockMetadata\Service;
 
 abstract class AbstractConfigurationEntity
 {
-    const WORKFLOW_STATE_DEFAULT = 'production';
+    const WORKFLOW_STATE_DEFAULT = 'prodaccepted';
 
     /**
      * @var string

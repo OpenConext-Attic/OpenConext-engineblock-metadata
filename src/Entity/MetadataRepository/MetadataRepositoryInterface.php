@@ -33,13 +33,14 @@ interface MetadataRepositoryInterface
     public function fetchServiceProviderByEntityId($entityId);
 
     /**
-     * @param string $spEntityId
-     * @return IdentityProviderEntity
-     * @throws EntityNotFoundException
+     * @param string $entityId
+     * @return mixed
      */
     public function fetchIdentityProviderByEntityId($entityId);
 
     /**
+     * @deprecated depends on repository implementation.
+     *
      * @param string $entityId
      * @return AbstractConfigurationEntity|null
      */
@@ -103,8 +104,7 @@ interface MetadataRepositoryInterface
 
     /**
      * @param ServiceProviderEntity $serviceProvider
-     * @param IdentityProviderEntity $identityProvider
-     * @return bool
+     * @return array
      */
-    public function isConnectionAllowed(ServiceProviderEntity $serviceProvider, IdentityProviderEntity $identityProvider);
+    public function findAllowedIdpEntityIdsForSp(ServiceProviderEntity $serviceProvider);
 }

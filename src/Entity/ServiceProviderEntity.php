@@ -49,16 +49,6 @@ class ServiceProviderEntity extends AbstractConfigurationEntity
     public $allowedIdpEntityIds = array();
 
     /**
-     * Attribute Release Policy
-     *
-     * Note that this may be NULL to indicate that there is NO release policy.
-     * Or an empty array, indicating there IS an attribute release policy to release no attributes.
-     *
-     * @var null|AttributeReleasePolicy
-     */
-    private $attributeReleasePolicy;
-
-    /**
      * @var null|RequestedAttribute[]
      */
     public $requestedAttributes = null;

@@ -18,20 +18,15 @@ class JanusRestV1Translator
     /**
      * @param $entityId
      * @param array $metadata
-     * @param array $entityData
      * @return IdentityProviderEntity|ServiceProviderEntity
      * @throws \RuntimeException
      */
-    public function translate($entityId, array $metadata, array $entityData = array())
+    public function translate($entityId, array $metadata)
     {
         if (isset($metadata['AssertionConsumerService:0:Location'])) {
             $entity = new ServiceProviderEntity($entityId);
             $entity = $this->translateCommonMetadata($metadata, $entity);
             $entity = $this->translateServiceProviderMetadata($metadata, $entity);
-            if (!empty($entityData)) {
-                $entity = $this->translateCommonEntityData($entityData, $entity);
-                $entity = $this->translateServiceProviderEntityData($entityData, $entity);
-            }
             return $entity;
         }
 
@@ -302,13 +297,6 @@ class JanusRestV1Translator
             }
         }
         return $contactPersons;
-    }
-
-    private function translateCommonEntityData(array $entityData, AbstractConfigurationEntity $entity)
-    {
-        $entity->workflowState = $entityData['workflowState'];
-
-        return $entity;
     }
 
     private function translateSpEntityIdsWithoutConsent(array $metadata)

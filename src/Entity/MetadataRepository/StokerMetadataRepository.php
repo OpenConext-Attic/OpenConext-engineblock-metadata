@@ -43,11 +43,17 @@ class StokerMetadataRepository extends AbstractMetadataRepository
     /**
      * @param string $metadataDirectory
      * @param StokerTranslator $translator
+     * @throws \RuntimeException
      */
     public function __construct($metadataDirectory, StokerTranslator $translator)
     {
         $this->metadataEntitySource = new MetadataEntitySource($metadataDirectory);
         $this->metadataIndex = MetadataIndex::load($metadataDirectory);
+        if (!$this->metadataIndex) {
+            throw new \RuntimeException(
+                "Unable to load $metadataDirectory" . DIRECTORY_SEPARATOR . MetadataIndex::FILENAME
+            );
+        }
         $this->metadataDirectory = $metadataDirectory;
         $this->translator = $translator;
     }
@@ -181,7 +187,7 @@ class StokerMetadataRepository extends AbstractMetadataRepository
                 continue;
             }
 
-            $identityProviders[] = $entity;
+            $identityProviders[$entity->entityId] = $entity;
         }
         return $identityProviders;
     }

@@ -2,6 +2,7 @@
 
 namespace OpenConext\Component\EngineBlockMetadata\Entity\MetadataRepository;
 
+use OpenConext\Component\EngineBlockMetadata\AttributeReleasePolicy;
 use OpenConext\Component\EngineBlockMetadata\Entity\AbstractConfigurationEntity;
 use OpenConext\Component\EngineBlockMetadata\Entity\IdentityProviderEntity;
 use OpenConext\Component\EngineBlockMetadata\Entity\MetadataRepository\Filter\FilterInterface;
@@ -34,12 +35,13 @@ abstract class AbstractMetadataRepository implements MetadataRepositoryInterface
      */
     public function findAllIdentityProviderEntityIds()
     {
-        return array_map(
-            function (IdentityProviderEntity $entity) {
-                return $entity->entityId;
-            },
-            $this->findIdentityProviders()
-        );
+        $identityProviders = $this->findIdentityProviders();
+
+        $entityIds = array();
+        foreach ($identityProviders as $identityProvider) {
+            $entityIds[] = $identityProvider->entityId;
+        }
+        return $entityIds;
     }
 
     /**
@@ -146,6 +148,33 @@ abstract class AbstractMetadataRepository implements MetadataRepositoryInterface
         }
 
         return null;
+    }
+
+    /**
+     * @param AbstractConfigurationEntity $entity
+     * @return string
+     */
+    public function fetchEntityManipulation(AbstractConfigurationEntity $entity)
+    {
+        return '';
+    }
+
+    /**
+     * @param ServiceProviderEntity $serviceProvider
+     * @return AttributeReleasePolicy
+     */
+    public function fetchServiceProviderArp(ServiceProviderEntity $serviceProvider)
+    {
+        return null;
+    }
+
+    /**
+     * @param ServiceProviderEntity $serviceProvider
+     * @return \string[]
+     */
+    public function findAllowedIdpEntityIdsForSp(ServiceProviderEntity $serviceProvider)
+    {
+        return $this->findAllIdentityProviderEntityIds();
     }
 
     /**

@@ -38,12 +38,18 @@ class MetadataIndex
      */
     private $validUntil = null;
 
-    public function __construct($path, DateTime $cacheUntil, DateTime $processed, DateTime $validUntil)
-    {
+    public function __construct(
+        $path,
+        DateTime $cacheUntil,
+        DateTime $processed,
+        DateTime $validUntil,
+        array $entities = array()
+    ) {
         $this->file = $path . DIRECTORY_SEPARATOR . self::FILENAME;
         $this->cacheUntil = $cacheUntil;
         $this->processed = $processed;
         $this->validUntil = $validUntil;
+        $this->entities = $entities;
     }
 
     public function isCacheExpired($atDateTime = 'now')
@@ -90,7 +96,7 @@ class MetadataIndex
      */
     public static function load($path)
     {
-        $file = $path . static::FILENAME;
+        $file = $path . DIRECTORY_SEPARATOR . static::FILENAME;
         if (!file_exists($file)) {
             return null;
         }
@@ -114,11 +120,22 @@ class MetadataIndex
             $validUntil = static::fromJsonDateTime($decoded, 'validUntil');
         }
 
+        $entities = array();
+        foreach ($decoded['entities'] as $entity) {
+            $entities[$entity['entityId']] = new Entity(
+                $entity['entityId'],
+                $entity['types'],
+                $entity['displayNameEn'],
+                $entity['displayNameNl']
+            );
+        }
+
         return new static(
             $file,
             static::fromJsonDateTime($decoded, 'cacheUntil'),
             static::fromJsonDateTime($decoded, 'processed'),
-            $validUntil
+            $validUntil,
+            $entities
         );
     }
 

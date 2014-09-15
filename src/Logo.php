@@ -4,9 +4,9 @@ namespace OpenConext\Component\EngineBlockMetadata;
 
 class Logo
 {
-    public $height;
-    public $width;
-    public $url;
+    public $height = null;
+    public $width = null;
+    public $url = null;
 
     public function __construct($url)
     {
