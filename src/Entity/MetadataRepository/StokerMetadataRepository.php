@@ -6,8 +6,8 @@ use OpenConext\Component\EngineBlockMetadata\Entity\AbstractConfigurationEntity;
 use OpenConext\Component\EngineBlockMetadata\Entity\IdentityProviderEntity;
 use OpenConext\Component\EngineBlockMetadata\Entity\ServiceProviderEntity;
 use OpenConext\Component\EngineBlockMetadata\Entity\Translator\StokerTranslator;
-use OpenConext\Component\EngineBlockMetadata\Stoker\MetadataEntitySource;
-use OpenConext\Component\EngineBlockMetadata\Stoker\MetadataIndex;
+use OpenConext\Component\StokerMetadata\MetadataEntitySource;
+use OpenConext\Component\StokerMetadata\MetadataIndex;
 
 class StokerMetadataRepository extends AbstractMetadataRepository
 {

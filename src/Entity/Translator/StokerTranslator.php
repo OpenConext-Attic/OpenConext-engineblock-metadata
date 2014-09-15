@@ -8,7 +8,7 @@ use OpenConext\Component\EngineBlockMetadata\Entity\ServiceProviderEntity;
 use OpenConext\Component\EngineBlockMetadata\IndexedService;
 use OpenConext\Component\EngineBlockMetadata\Logo;
 use OpenConext\Component\EngineBlockMetadata\Service;
-use OpenConext\Component\EngineBlockMetadata\Stoker\MetadataIndex\Entity;
+use OpenConext\Component\StokerMetadata\MetadataIndex;
 
 class StokerTranslator
 {
