@@ -4,9 +4,14 @@
     "license": "Apache-2.0",
     "type": "library",
     "autoload": {
-        "psr-4": { "OpenConext\\Component\\EngineBlockMetadata\\": "src/" }
+        "psr-4": { "OpenConext\\Component\\StokerMetadata\\": "src/" }
     },
     "require": {
-        "php": ">=5.3.3"
-    }
+        "php": ">=5.3.3",
+        "openconext/stoker-metadata": "dev-master"
+    },
+    "repositories": [{
+        "type": "vcs",
+        "url": "https://github.com/ibuildingsnl/OpenConext-stoker-metadata"
+    }]
 }
