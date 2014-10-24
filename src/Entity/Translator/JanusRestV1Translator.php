@@ -79,6 +79,7 @@ class JanusRestV1Translator
     public function translateServiceProviderMetadata(array $metadata, ServiceProviderEntity $entity)
     {
         $entity->isTransparentIssuer        = (bool) self::ifsetor($metadata, 'coin:transparant_issuer'             , $entity->isTransparentIssuer);
+        $entity->isTrustedProxy             = (bool) self::ifsetor($metadata, 'coin:trusted_proxy'                  , $entity->isTrustedProxy);
         $entity->implicitVoId               =        self::ifsetor($metadata, 'coin:implicit_vo_id'                 , $entity->implicitVoId);
         $entity->displayUnconnectedIdpsWayf = (bool) self::ifsetor($metadata, 'coin:display_unconnected_idps_wayf'  , $entity->displayUnconnectedIdpsWayf);
         $entity->isConsentRequired          = (bool) self::ifsetor($metadata, 'coin:no_consent_required'            , $entity->isConsentRequired);

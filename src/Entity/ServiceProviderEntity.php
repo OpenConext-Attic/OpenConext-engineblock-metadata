@@ -19,6 +19,11 @@ class ServiceProviderEntity extends AbstractConfigurationEntity
     public $isTransparentIssuer = false;
 
     /**
+     * @var bool
+     */
+    public $isTrustedProxy = false;
+
+    /**
      * @var string
      */
     public $implicitVoId = null;
