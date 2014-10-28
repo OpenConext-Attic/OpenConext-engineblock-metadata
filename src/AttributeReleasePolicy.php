@@ -4,6 +4,8 @@ namespace OpenConext\Component\EngineBlockMetadata;
 
 class AttributeReleasePolicy
 {
+    const WILDCARD_CHARACTER = '*';
+
     /**
      * @var array
      */
@@ -36,11 +38,17 @@ class AttributeReleasePolicy
                 return true;
             }
 
+            if ($allowedValue === self::WILDCARD_CHARACTER) {
+                // Only a single wildcard character, all values are permitted.
+                return true;
+            }
+
             // We support wildcard matching at the end only, like 'some*' would match 'someValue' or 'somethingElse'
-            if (substr($allowedValue, -1) !== '*') {
+            if (substr($allowedValue, -1) !== self::WILDCARD_CHARACTER) {
                 // Not a supported pattern
                 continue;
             }
+
             // Would contain 'some'
             $patternStart = substr($allowedValue, 0, -1);
 
