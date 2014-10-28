@@ -5,6 +5,10 @@ namespace OpenConext\Component\EngineBlockMetadata\Entity\MetadataRepository\Fil
 use OpenConext\Component\EngineBlockMetadata\Entity\AbstractConfigurationEntity;
 use OpenConext\Component\EngineBlockMetadata\Entity\IdentityProviderEntity;
 
+/**
+ * Class AbstractDisallowedIdentityProviderFilter
+ * @package OpenConext\Component\EngineBlockMetadata\Entity\MetadataRepository\Filter
+ */
 abstract class AbstractDisallowedIdentityProviderFilter extends AbstractFilter
 {
     private $serviceProviderEntityId;
@@ -37,8 +41,15 @@ abstract class AbstractDisallowedIdentityProviderFilter extends AbstractFilter
         return $this->onDisallowedIdentityProvider($entity);
     }
 
+    /**
+     * @param IdentityProviderEntity $entity
+     * @return mixed
+     */
     abstract protected function onDisallowedIdentityProvider(IdentityProviderEntity $entity);
 
+    /**
+     * @return string
+     */
     public function __toString()
     {
         return parent::__toString() . ' -> ' . $this->serviceProviderEntityId;

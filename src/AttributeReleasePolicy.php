@@ -2,6 +2,10 @@
 
 namespace OpenConext\Component\EngineBlockMetadata;
 
+/**
+ * Class AttributeReleasePolicy
+ * @package OpenConext\Component\EngineBlockMetadata
+ */
 class AttributeReleasePolicy
 {
     const WILDCARD_CHARACTER = '*';
@@ -11,21 +15,36 @@ class AttributeReleasePolicy
      */
     private $attributesWithValues;
 
+    /**
+     * @param array $attributesWithValues
+     */
     public function __construct(array $attributesWithValues)
     {
         $this->attributesWithValues = $attributesWithValues;
     }
 
+    /**
+     * @return array
+     */
     public function getAttributeNames()
     {
         return array_keys($this->attributesWithValues);
     }
 
+    /**
+     * @param $attributeName
+     * @return bool
+     */
     public function hasAttribute($attributeName)
     {
         return isset($this->attributesWithValues[$attributeName]);
     }
 
+    /**
+     * @param $attributeName
+     * @param $attributeValue
+     * @return bool
+     */
     public function isAllowed($attributeName, $attributeValue)
     {
         if (!$this->hasAttribute($attributeName)) {

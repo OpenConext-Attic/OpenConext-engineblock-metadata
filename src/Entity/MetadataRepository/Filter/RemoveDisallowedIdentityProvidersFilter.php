@@ -4,7 +4,6 @@ namespace OpenConext\Component\EngineBlockMetadata\Entity\MetadataRepository\Fil
 
 use OpenConext\Component\EngineBlockMetadata\Entity\IdentityProviderEntity;
 
-
 /**
  * Class RemoveDisallowedIdentityProvidersFilter
  *
@@ -14,6 +13,10 @@ use OpenConext\Component\EngineBlockMetadata\Entity\IdentityProviderEntity;
  */
 class RemoveDisallowedIdentityProvidersFilter extends AbstractDisallowedIdentityProviderFilter
 {
+    /**
+     * @param IdentityProviderEntity $entity
+     * @return mixed
+     */
     protected function onDisallowedIdentityProvider(IdentityProviderEntity $entity)
     {
         return null;

@@ -5,6 +5,11 @@ namespace OpenConext\Component\EngineBlockMetadata\Entity;
 use OpenConext\Component\EngineBlockMetadata\ShibMdScope;
 use OpenConext\Component\EngineBlockMetadata\Service;
 
+/**
+ * Class IdentityProviderEntity
+ * @package OpenConext\Component\EngineBlockMetadata\Entity
+ * @SuppressWarnings(PHPMD.CamelCasePropertyName)
+ */
 class IdentityProviderEntity extends AbstractConfigurationEntity
 {
     const GUEST_QUALIFIER_ALL = 'All';
@@ -12,6 +17,8 @@ class IdentityProviderEntity extends AbstractConfigurationEntity
     const GUEST_QUALIFIER_NONE = 'None';
 
     /**
+     * In all-caps to indicate that though the language doesn't allow it, this should be an array constant.
+     *
      * @var string[]
      */
     public $GUEST_QUALIFIERS = array(self::GUEST_QUALIFIER_ALL, self::GUEST_QUALIFIER_SOME, self::GUEST_QUALIFIER_NONE);

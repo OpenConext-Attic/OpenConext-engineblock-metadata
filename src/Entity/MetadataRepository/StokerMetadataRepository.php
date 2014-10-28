@@ -9,6 +9,12 @@ use OpenConext\Component\EngineBlockMetadata\Entity\Translator\StokerTranslator;
 use OpenConext\Component\StokerMetadata\MetadataEntitySource;
 use OpenConext\Component\StokerMetadata\MetadataIndex;
 
+/**
+ * Class StokerMetadataRepository
+ * @package OpenConext\Component\EngineBlockMetadata\Entity\MetadataRepository
+ * @SuppressWarnings(PMD.TooManyMethods)
+ * @SuppressWarnings(PMD.CouplingBetweenObjects)
+ */
 class StokerMetadataRepository extends AbstractMetadataRepository
 {
     /**

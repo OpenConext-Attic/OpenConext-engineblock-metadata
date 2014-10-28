@@ -6,6 +6,10 @@ use OpenConext\Component\EngineBlockMetadata\AttributeReleasePolicy;
 use OpenConext\Component\EngineBlockMetadata\RequestedAttribute;
 use OpenConext\Component\EngineBlockMetadata\IndexedService;
 
+/**
+ * Class ServiceProviderEntity
+ * @package OpenConext\Component\EngineBlockMetadata\Entity
+ */
 class ServiceProviderEntity extends AbstractConfigurationEntity
 {
     /**

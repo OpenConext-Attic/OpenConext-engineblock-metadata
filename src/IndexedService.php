@@ -2,6 +2,10 @@
 
 namespace OpenConext\Component\EngineBlockMetadata;
 
+/**
+ * An indexed service is a Service definition with an explicit ordering in the form of an index.
+ * @package OpenConext\Component\EngineBlockMetadata
+ */
 class IndexedService extends Service
 {
     /**
@@ -16,11 +20,18 @@ class IndexedService extends Service
      */
     public $isDefault = null;
 
-    function __construct($location, $binding, $serviceIndex, $isDefault = null)
+    /**
+     * @param string $location
+     * @param string $binding
+     * @param $serviceIndex
+     * @param bool|null $isDefault
+     */
+    public function __construct($location, $binding, $serviceIndex, $isDefault = null)
     {
-        $this->isDefault = $isDefault;
+        $this->isDefault    = $isDefault;
         $this->serviceIndex = $serviceIndex;
-        $this->isDefault = $isDefault;
+        $this->isDefault    = $isDefault;
+
         parent::__construct($location, $binding);
     }
 }

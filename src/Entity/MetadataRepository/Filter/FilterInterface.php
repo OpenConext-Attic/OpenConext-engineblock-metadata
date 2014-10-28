@@ -4,6 +4,10 @@ namespace OpenConext\Component\EngineBlockMetadata\Entity\MetadataRepository\Fil
 
 use OpenConext\Component\EngineBlockMetadata\Entity\AbstractConfigurationEntity;
 
+/**
+ * Interface FilterInterface
+ * @package OpenConext\Component\EngineBlockMetadata\Entity\MetadataRepository\Filter
+ */
 interface FilterInterface
 {
     /**

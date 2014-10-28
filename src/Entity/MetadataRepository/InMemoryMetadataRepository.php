@@ -8,6 +8,10 @@ use OpenConext\Component\EngineBlockMetadata\Entity\AbstractConfigurationEntity;
 use OpenConext\Component\EngineBlockMetadata\Entity\IdentityProviderEntity;
 use OpenConext\Component\EngineBlockMetadata\Entity\ServiceProviderEntity;
 
+/**
+ * Class InMemoryMetadataRepository
+ * @package OpenConext\Component\EngineBlockMetadata\Entity\MetadataRepository
+ */
 class InMemoryMetadataRepository extends AbstractMetadataRepository
 {
     /**

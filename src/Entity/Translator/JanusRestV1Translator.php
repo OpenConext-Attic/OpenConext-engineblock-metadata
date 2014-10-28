@@ -11,8 +11,16 @@ use OpenConext\Component\EngineBlockMetadata\Entity\AbstractConfigurationEntity;
 use OpenConext\Component\EngineBlockMetadata\Entity\IdentityProviderEntity;
 use OpenConext\Component\EngineBlockMetadata\Entity\ServiceProviderEntity;
 use OpenConext\Component\EngineBlockMetadata\IndexedService;
+use OpenConext\Component\EngineBlockMetadata\X509CertificateFactory;
+use OpenConext\Component\EngineBlockMetadata\X509CertificateLazyProxy;
 use RuntimeException;
 
+/**
+ * Class JanusRestV1Translator
+ * @package OpenConext\Component\EngineBlockMetadata\Entity\Translator
+ * @SuppressWarnings(PMD.TooManyMethods)
+ * @SuppressWarnings(PMD.CouplingBetweenObjects)
+ */
 class JanusRestV1Translator
 {
     /**
@@ -42,6 +50,13 @@ class JanusRestV1Translator
         );
     }
 
+    // @codingStandardsIgnoreStart
+
+    /**
+     * @param array $metadata
+     * @param AbstractConfigurationEntity $entity
+     * @return AbstractConfigurationEntity
+     */
     public function translateCommonMetadata(array $metadata, AbstractConfigurationEntity $entity)
     {
         $entity->nameEn                 =        self::ifsetor($metadata, 'Name:en'                 , $entity->nameEn);
@@ -55,7 +70,8 @@ class JanusRestV1Translator
         $entity->keywordsNl             =        self::ifsetor($metadata, 'keywords:nl'             , $entity->keywordsNl);
 
         $entity->publishInEdugain       = (bool) self::ifsetor($metadata, 'coin:publish_in_edugain' , $entity->publishInEdugain);
-        if ($publishDate = self::ifsetor($metadata, 'coin:publish_in_edugain_date')) {
+        $publishDate = self::ifsetor($metadata, 'coin:publish_in_edugain_date');
+        if ($publishDate) {
             $entity->publishInEduGainDate   = date_create()->setTimestamp(strtotime($publishDate));
         }
         $entity->disableScoping         = (bool) self::ifsetor($metadata, 'coin:disable_scoping'    , $entity->disableScoping);
@@ -76,6 +92,11 @@ class JanusRestV1Translator
         return $entity;
     }
 
+    /**
+     * @param array $metadata
+     * @param ServiceProviderEntity $entity
+     * @return ServiceProviderEntity
+     */
     public function translateServiceProviderMetadata(array $metadata, ServiceProviderEntity $entity)
     {
         $entity->isTransparentIssuer        = (bool) self::ifsetor($metadata, 'coin:transparant_issuer'             , $entity->isTransparentIssuer);
@@ -91,6 +112,13 @@ class JanusRestV1Translator
         return $entity;
     }
 
+    // @codingStandardsIgnoreEnd
+
+    /**
+     * @param array $metadata
+     * @param IdentityProviderEntity $entity
+     * @return IdentityProviderEntity
+     */
     public function translateIdentityProviderMetadata(array $metadata, IdentityProviderEntity $entity)
     {
         $entity->singleSignOnServices   = $this->translateIndexedServices($metadata, 'SingleSignOnService');
@@ -108,9 +136,13 @@ class JanusRestV1Translator
         return $entity;
     }
 
+    /**
+     * @param array $metadata
+     * @return array
+     */
     private function translateCertificates(array $metadata)
     {
-        $certificateFactory = new \EngineBlock_X509_CertificateFactory();
+        $certificateFactory = new X509CertificateFactory();
         $certificates = array();
 
         // Try the primary certificate.
@@ -119,7 +151,7 @@ class JanusRestV1Translator
             return $certificates;
         }
 
-        $certificates[] = new \EngineBlock_X509_CertificateLazyProxy($certificateFactory, $certData);
+        $certificates[] = new X509CertificateLazyProxy($certificateFactory, $certData);
 
         // If we have a primary we may have a secondary.
         $certData2 = self::ifsetor($metadata, 'certData2');
@@ -127,7 +159,7 @@ class JanusRestV1Translator
             return $certificates;
         }
 
-        $certificates[] = new \EngineBlock_X509_CertificateLazyProxy($certificateFactory, $certData2);
+        $certificates[] = new X509CertificateLazyProxy($certificateFactory, $certData2);
 
         // If we have a secondary we may have a tertiary.
         $certData3 = self::ifsetor($metadata, 'certData3');
@@ -135,11 +167,17 @@ class JanusRestV1Translator
             return $certificates;
         }
 
-        $certificates[] = new \EngineBlock_X509_CertificateLazyProxy($certificateFactory, $certData3);
+        $certificates[] = new X509CertificateLazyProxy($certificateFactory, $certData3);
 
         return $certificates;
     }
 
+    /**
+     * @param array $metadata
+     * @param $type
+     * @return array
+     * @throws \RuntimeException
+     */
     private function translateIndexedServices(array $metadata, $type)
     {
         $services = array();
@@ -184,6 +222,8 @@ class JanusRestV1Translator
         return $logo;
     }
 
+    // @codingStandardsIgnoreStart
+
     /**
      * @param array $metadata
      * @return null|Organization
@@ -217,6 +257,8 @@ class JanusRestV1Translator
 
         return new Organization($organizationNameEn, $organizationDisplayNameEn, $organizationUrlEn);
     }
+
+    // @codingStandardsIgnoreEnd
 
     /**
      * @param array $metadata
@@ -300,10 +342,15 @@ class JanusRestV1Translator
         return $contactPersons;
     }
 
+    /**
+     * @param array $metadata
+     * @return array
+     */
     private function translateSpEntityIdsWithoutConsent(array $metadata)
     {
         $i = 0;
         $spsEntityIdsWithoutConsent = array();
+        /** @noinspection PhpAssignmentInConditionInspection */
         while ($disableConsentEntityId = self::ifsetor($metadata, 'disableConsent:' . $i)) {
             $spsEntityIdsWithoutConsent[] = $disableConsentEntityId;
         }
@@ -311,13 +358,14 @@ class JanusRestV1Translator
         return $spsEntityIdsWithoutConsent;
     }
 
+    /**
+     * @param $entity
+     * @param $property
+     * @param null $default
+     * @return null
+     */
     private static function ifsetor($entity, $property, $default = null)
     {
-        if (isset($entity[$property])) {
-            return $entity[$property];
-        }
-        else {
-            return $default;
-        }
+        return isset($entity[$property]) ? $entity[$property] : $default;
     }
 }

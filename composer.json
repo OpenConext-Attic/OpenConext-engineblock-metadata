@@ -1,14 +1,18 @@
 {
     "name": "openconext/engineblock-metadata",
-    "description": "OpenConext Component for EngineBlock Entity Metadata",
+    "description": "OpenConext component for EngineBlock Entity Metadata",
     "license": "Apache-2.0",
-    "type": "library",
     "autoload": {
         "psr-4": { "OpenConext\\Component\\EngineBlockMetadata\\": "src/" }
     },
     "require": {
         "php": ">=5.3.3",
-        "openconext/stoker-metadata": "dev-master"
+        "openconext/stoker-metadata": "dev-master",
+        "simplesamlphp/saml2": "~0.5"
+    },
+    "require-dev": {
+        "ibuildings/qa-tools": "~1.1",
+        "sebastian/phpcpd": "dev-master"
     },
     "repositories": [{
         "type": "vcs",

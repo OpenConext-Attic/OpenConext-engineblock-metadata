@@ -8,6 +8,10 @@ use OpenConext\Component\EngineBlockMetadata\Entity\IdentityProviderEntity;
 use OpenConext\Component\EngineBlockMetadata\Entity\MetadataRepository\Filter\FilterInterface;
 use OpenConext\Component\EngineBlockMetadata\Entity\ServiceProviderEntity;
 
+/**
+ * Interface MetadataRepositoryInterface
+ * @package OpenConext\Component\EngineBlockMetadata\Entity\MetadataRepository
+ */
 interface MetadataRepositoryInterface
 {
     /**

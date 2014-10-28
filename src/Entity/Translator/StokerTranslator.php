@@ -19,6 +19,11 @@ use SAML2_XML_md_SPSSODescriptor;
 use SAML2_XML_mdui_Logo;
 use SAML2_XML_mdui_UIInfo;
 
+/**
+ * Class StokerTranslator
+ * @package OpenConext\Component\EngineBlockMetadata\Entity\Translator
+ * @SuppressWarnings(PMD.CouplingBetweenObjects)
+ */
 class StokerTranslator
 {
     /**
@@ -26,6 +31,8 @@ class StokerTranslator
      * @param MetadataIndex\Entity $metadataIndexEntity
      * @return IdentityProviderEntity|ServiceProviderEntity
      * @throws RuntimeException
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.NPathComplexity)
      */
     public function translate($entityXml, MetadataIndex\Entity $metadataIndexEntity)
     {
@@ -68,6 +75,12 @@ class StokerTranslator
         throw new RuntimeException('Boolean logic no longer works, assume running as part of the Heart of Gold.');
     }
 
+    /**
+     * @param MetadataIndex\Entity $metadataIndexEntity
+     * @param AbstractConfigurationEntity $entity
+     * @param SAML2_XML_md_RoleDescriptor $role
+     * @return AbstractConfigurationEntity
+     */
     private function translateCommon(
         MetadataIndex\Entity $metadataIndexEntity,
         AbstractConfigurationEntity $entity,

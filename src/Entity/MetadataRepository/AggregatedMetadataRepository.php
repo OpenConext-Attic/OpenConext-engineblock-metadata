@@ -3,11 +3,17 @@
 namespace OpenConext\Component\EngineBlockMetadata\Entity\MetadataRepository;
 
 use OpenConext\Component\EngineBlockMetadata\AttributeReleasePolicy;
-use OpenConext\Component\EngineBlockMetadata\Entity\AbstractConfigurationEntity;;
+use OpenConext\Component\EngineBlockMetadata\Entity\AbstractConfigurationEntity;
 use OpenConext\Component\EngineBlockMetadata\Entity\IdentityProviderEntity;
 use OpenConext\Component\EngineBlockMetadata\Entity\MetadataRepository\Filter\FilterInterface;
 use OpenConext\Component\EngineBlockMetadata\Entity\ServiceProviderEntity;
 
+/**
+ * Class AggregatedMetadataRepository
+ * @package OpenConext\Component\EngineBlockMetadata\Entity\MetadataRepository
+ * @SuppressWarnings(PMD.TooManyMethods)
+ * @SuppressWarnings(PMD.CouplingBetweenObjects)
+ */
 class AggregatedMetadataRepository extends AbstractMetadataRepository
 {
     /**
@@ -172,7 +178,10 @@ class AggregatedMetadataRepository extends AbstractMetadataRepository
     {
         $identityProviderEntityIds = array();
         foreach ($this->orderedRepositories as $repository) {
-            $identityProviderEntityIds = array_merge($identityProviderEntityIds, $repository->findAllIdentityProviderEntityIds());
+            $identityProviderEntityIds = array_merge(
+                $identityProviderEntityIds,
+                $repository->findAllIdentityProviderEntityIds()
+            );
         }
         return $identityProviderEntityIds;
     }
@@ -184,7 +193,10 @@ class AggregatedMetadataRepository extends AbstractMetadataRepository
     {
         $schacHomeOrganizations = array();
         foreach ($this->orderedRepositories as $repository) {
-            $schacHomeOrganizations = array_merge($schacHomeOrganizations, $repository->findReservedSchacHomeOrganizations());
+            $schacHomeOrganizations = array_merge(
+                $schacHomeOrganizations,
+                $repository->findReservedSchacHomeOrganizations()
+            );
         }
         return $schacHomeOrganizations;
     }

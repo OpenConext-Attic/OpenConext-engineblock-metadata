@@ -3,7 +3,7 @@
 namespace OpenConext\Component\EngineBlockMetadata\Entity\MetadataRepository;
 
 use EngineBlock_Application_DiContainer;
-use EngineBlock_Exception;
+use RuntimeException;
 use Janus_Client;
 use OpenConext\Component\EngineBlockMetadata\AttributeReleasePolicy;
 use OpenConext\Component\EngineBlockMetadata\Entity\AbstractConfigurationEntity;
@@ -11,6 +11,12 @@ use OpenConext\Component\EngineBlockMetadata\Entity\IdentityProviderEntity;
 use OpenConext\Component\EngineBlockMetadata\Entity\ServiceProviderEntity;
 use OpenConext\Component\EngineBlockMetadata\Entity\Translator\JanusRestV1Translator;
 
+/**
+ * Class JanusRestV1MetadataRepository
+ * @package OpenConext\Component\EngineBlockMetadata\Entity\MetadataRepository
+ * @SuppressWarnings(PMD.TooManyMethods)
+ * @SuppressWarnings(PMD.CouplingBetweenObjects)
+ */
 class JanusRestV1MetadataRepository extends AbstractMetadataRepository
 {
     /**
@@ -24,12 +30,16 @@ class JanusRestV1MetadataRepository extends AbstractMetadataRepository
     private $translator;
 
     /**
-     * @var EngineBlock_Exception
+     * @var RuntimeException
      */
     private $prevClientException = null;
 
     private $entityCache = array();
 
+    /**
+     * @param \Janus_Client_CacheProxy $client
+     * @param JanusRestV1Translator $translator
+     */
     public function __construct(\Janus_Client_CacheProxy $client, JanusRestV1Translator $translator)
     {
         $this->client = $client;
@@ -262,13 +272,13 @@ class JanusRestV1MetadataRepository extends AbstractMetadataRepository
      */
     public function findAllowedIdpEntityIdsForSp(ServiceProviderEntity $serviceProvider)
     {
-        static $s_allowedIdpsPerSp = array();
+        static $allowedIdpsPerSp = array();
 
-        if (!isset($s_allowedIdpsPerSp[$serviceProvider->entityId])) {
-            $s_allowedIdpsPerSp[$serviceProvider->entityId] = $this->client->getAllowedIdps($serviceProvider->entityId);
+        if (!isset($allowedIdpsPerSp[$serviceProvider->entityId])) {
+            $allowedIdpsPerSp[$serviceProvider->entityId] = $this->client->getAllowedIdps($serviceProvider->entityId);
         }
 
-        return $s_allowedIdpsPerSp[$serviceProvider->entityId];
+        return $allowedIdpsPerSp[$serviceProvider->entityId];
     }
 
     /**
@@ -277,23 +287,26 @@ class JanusRestV1MetadataRepository extends AbstractMetadataRepository
      */
     private function fetchEntityDataForEntityId($entityId)
     {
-        static $s_entities = array();
+        static $entities = array();
 
-        if (!isset($s_entities[$entityId])) {
-            $s_entities[$entityId] = $this->client->getEntity($entityId);
+        if (!isset($entities[$entityId])) {
+            $entities[$entityId] = $this->client->getEntity($entityId);
         }
 
-        return $s_entities[$entityId];
+        return $entities[$entityId];
     }
 
+    /**
+     * @return JanusRestV1\Cache
+     */
     private function loadEntitiesMetadataCache()
     {
-        static $s_cache;
+        static $cache;
 
-        if (!$s_cache) {
-            $s_cache = new JanusRestV1\Cache($this->client->getIdpList(), $this->client->getSpList());
+        if (!$cache) {
+            $cache = new JanusRestV1\Cache($this->client->getIdpList(), $this->client->getSpList());
         }
 
-        return $s_cache;
+        return $cache;
     }
 }

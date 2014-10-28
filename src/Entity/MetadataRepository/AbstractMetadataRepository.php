@@ -8,6 +8,11 @@ use OpenConext\Component\EngineBlockMetadata\Entity\IdentityProviderEntity;
 use OpenConext\Component\EngineBlockMetadata\Entity\MetadataRepository\Filter\FilterInterface;
 use OpenConext\Component\EngineBlockMetadata\Entity\ServiceProviderEntity;
 
+/**
+ * Class AbstractMetadataRepository
+ * @package OpenConext\Component\EngineBlockMetadata\Entity\MetadataRepository
+ * @SuppressWarnings(PMD.TooManyMethods)
+ */
 abstract class AbstractMetadataRepository implements MetadataRepositoryInterface
 {
     /**
@@ -194,6 +199,11 @@ abstract class AbstractMetadataRepository implements MetadataRepositoryInterface
         return $entity;
     }
 
+    /**
+     * @param FilterInterface $filter
+     * @param $entity
+     * @return AbstractConfigurationEntity
+     */
     protected function applyFilter(FilterInterface $filter, $entity)
     {
         return $filter->filter($entity);

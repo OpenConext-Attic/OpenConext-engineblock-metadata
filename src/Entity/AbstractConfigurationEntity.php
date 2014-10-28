@@ -6,7 +6,15 @@ use OpenConext\Component\EngineBlockMetadata\Logo;
 use OpenConext\Component\EngineBlockMetadata\Organization;
 use OpenConext\Component\EngineBlockMetadata\ContactPerson;
 use OpenConext\Component\EngineBlockMetadata\Service;
+use OpenConext\Component\EngineBlockMetadata\X509Certificate;
+use SAML2_Const;
 
+/**
+ * Abstract base class for configuration entities.
+ *
+ * @package OpenConext\Component\EngineBlockMetadata\Entity
+ * @SuppressWarnings(PHPMD.TooManyFields)
+ */
 abstract class AbstractConfigurationEntity
 {
     const WORKFLOW_STATE_PROD = 'prodaccepted';
@@ -79,7 +87,7 @@ abstract class AbstractConfigurationEntity
     public $publishInEdugain = false;
 
     /**
-     * @var \EngineBlock_X509_Certificate[]
+     * @var X509Certificate[]
      */
     public $certificates = array();
 
@@ -102,8 +110,8 @@ abstract class AbstractConfigurationEntity
      * @var string[]
      */
     public $nameIdFormats = array(
-        \EngineBlock_Urn::SAML2_0_NAMEID_FORMAT_TRANSIENT,
-        \EngineBlock_Urn::SAML2_0_NAMEID_FORMAT_PERSISTENT,
+        SAML2_Const::NAMEID_TRANSIENT,
+        SAML2_Const::NAMEID_PERSISTENT,
     );
 
     /**
@@ -136,6 +144,9 @@ abstract class AbstractConfigurationEntity
      */
     public $responseProcessingService = null;
 
+    /**
+     * @param $entityId
+     */
     public function __construct($entityId)
     {
         $this->entityId = $entityId;

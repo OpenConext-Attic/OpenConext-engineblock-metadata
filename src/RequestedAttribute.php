@@ -2,6 +2,10 @@
 
 namespace OpenConext\Component\EngineBlockMetadata;
 
+/**
+ * Class RequestedAttribute
+ * @package OpenConext\Component\EngineBlockMetadata
+ */
 class RequestedAttribute
 {
     const NAME_FORMAT_URI = 'urn:oasis:names:tc:SAML:2.0:attrname-format:uri';
@@ -21,6 +25,11 @@ class RequestedAttribute
      */
     public $required = null;
 
+    /**
+     * @param $name
+     * @param bool $isRequired
+     * @param string $nameFormat
+     */
     public function __construct($name, $isRequired = false, $nameFormat = self::NAME_FORMAT_URI)
     {
         $this->name = $name;

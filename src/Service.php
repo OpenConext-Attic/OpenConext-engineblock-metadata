@@ -2,6 +2,10 @@
 
 namespace OpenConext\Component\EngineBlockMetadata;
 
+/**
+ * Class Service
+ * @package OpenConext\Component\EngineBlockMetadata
+ */
 class Service
 {
     /**
