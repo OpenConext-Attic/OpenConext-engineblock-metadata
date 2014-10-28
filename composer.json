@@ -13,9 +13,5 @@
     "require-dev": {
         "ibuildings/qa-tools": "~1.1",
         "sebastian/phpcpd": "dev-master"
-    },
-    "repositories": [{
-        "type": "vcs",
-        "url": "https://github.com/ibuildingsnl/OpenConext-stoker-metadata"
-    }]
+    }
 }

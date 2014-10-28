@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "59bbafc018602c5c293e7068b1351eff",
+    "hash": "eeaf30215d3647d62a34d2ba3d620c62",
     "packages": [
         {
             "name": "openconext/stoker-metadata",
