@@ -13,7 +13,7 @@ interface MetadataRepositoryInterface
     /**
      * @param array $repositoryConfig
      * @param \EngineBlock_Application_DiContainer $container
-     * @return mixed
+     * @return MetadataRepositoryInterface
      */
     public static function createFromConfig(array $repositoryConfig, \EngineBlock_Application_DiContainer $container);
 
@@ -34,7 +34,7 @@ interface MetadataRepositoryInterface
 
     /**
      * @param string $entityId
-     * @return mixed
+     * @return IdentityProviderEntity
      */
     public function fetchIdentityProviderByEntityId($entityId);
 
