@@ -2,7 +2,6 @@
 
 namespace OpenConext\Component\EngineBlockMetadata\Entity\MetadataRepository;
 
-use Doctrine\Common\Annotations\Annotation\Attribute;
 use EngineBlock_Application_DiContainer;
 use EngineBlock_Exception;
 use Janus_Client;

@@ -11,12 +11,12 @@ use OpenConext\Component\EngineBlockMetadata\Entity\ServiceProviderEntity;
 class InMemoryMetadataRepository extends AbstractMetadataRepository
 {
     /**
-     * @var array
+     * @var ServiceProviderEntity[]
      */
     private $serviceProviders = array();
 
     /**
-     * @var array
+     * @var IdentityProviderEntity[]
      */
     private $identityProviders = array();
 
