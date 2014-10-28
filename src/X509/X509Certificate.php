@@ -41,7 +41,7 @@ class X509Certificate
 
     /**
      * @return string
-     * @throws \SensioLabs\Security\Exception\RuntimeException
+     * @throws RuntimeException
      */
     public function toPem()
     {
