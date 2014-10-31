@@ -2,11 +2,13 @@
 
 namespace OpenConext\Component\EngineBlockMetadata\Entity;
 
+use DateTime;
 use OpenConext\Component\EngineBlockMetadata\Logo;
 use OpenConext\Component\EngineBlockMetadata\Organization;
 use OpenConext\Component\EngineBlockMetadata\ContactPerson;
 use OpenConext\Component\EngineBlockMetadata\Service;
 use OpenConext\Component\EngineBlockMetadata\X509Certificate;
+use SAML2_Certificate_X509;
 use SAML2_Const;
 
 /**
@@ -87,7 +89,7 @@ abstract class AbstractConfigurationEntity
     public $publishInEdugain = false;
 
     /**
-     * @var X509Certificate[]
+     * @var SAML2_Certificate_X509[]
      */
     public $certificates = array();
 
@@ -120,7 +122,7 @@ abstract class AbstractConfigurationEntity
     public $singleLogoutServices = array();
 
     /**
-     * @var \DateTime
+     * @var DateTime
      */
     public $publishInEduGainDate = null;
 

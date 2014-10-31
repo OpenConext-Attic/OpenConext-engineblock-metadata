@@ -15,13 +15,6 @@ use OpenConext\Component\EngineBlockMetadata\Entity\ServiceProviderEntity;
 interface MetadataRepositoryInterface
 {
     /**
-     * @param array $repositoryConfig
-     * @param \EngineBlock_Application_DiContainer $container
-     * @return MetadataRepositoryInterface
-     */
-    public static function createFromConfig(array $repositoryConfig, \EngineBlock_Application_DiContainer $container);
-
-    /**
      *
      * @param string $entityId
      * @return AbstractConfigurationEntity

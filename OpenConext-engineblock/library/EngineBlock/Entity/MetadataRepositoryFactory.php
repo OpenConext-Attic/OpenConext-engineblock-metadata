@@ -5,7 +5,7 @@ namespace OpenConext\Component\EngineBlockMetadata\Entity\MetadataRepository;
 /**
  * @package OpenConext\Component\EngineBlockMetadata\ServiceRegistry
  */
-class RepositoryFactory
+class MetadataRepositoryFactory
 {
     const DEFAULT_NAMESPACE = '\\OpenConext\\Component\\EngineBlockMetadata\\Entity\\MetadataRepository';
 

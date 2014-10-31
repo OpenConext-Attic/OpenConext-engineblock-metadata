@@ -28,7 +28,6 @@ class IndexedService extends Service
      */
     public function __construct($location, $binding, $serviceIndex, $isDefault = null)
     {
-        $this->isDefault    = $isDefault;
         $this->serviceIndex = $serviceIndex;
         $this->isDefault    = $isDefault;
 

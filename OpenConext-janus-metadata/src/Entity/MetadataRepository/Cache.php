@@ -2,6 +2,10 @@
 
 namespace OpenConext\Component\EngineBlockMetadata\Entity\MetadataRepository\JanusRestV1;
 
+/**
+ * Class Cache
+ * @package OpenConext\Component\EngineBlockMetadata\Entity\MetadataRepository\JanusRestV1
+ */
 class Cache
 {
     /**
