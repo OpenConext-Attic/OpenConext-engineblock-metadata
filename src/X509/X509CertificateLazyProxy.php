@@ -1,6 +1,6 @@
 <?php
 
-namespace OpenConext\Component\EngineBlockMetadata;
+namespace OpenConext\Component\EngineBlockMetadata\X509;
 
 /**
  * Lazy Proxy for X509 Certificate.

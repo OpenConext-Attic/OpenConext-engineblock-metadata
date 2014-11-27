@@ -6,7 +6,7 @@ use OpenConext\Component\EngineBlockMetadata\Logo;
 use OpenConext\Component\EngineBlockMetadata\Organization;
 use OpenConext\Component\EngineBlockMetadata\ContactPerson;
 use OpenConext\Component\EngineBlockMetadata\Service;
-use OpenConext\Component\EngineBlockMetadata\X509Certificate;
+use OpenConext\Component\EngineBlockMetadata\X509\X509Certificate;
 use SAML2_Const;
 
 /**

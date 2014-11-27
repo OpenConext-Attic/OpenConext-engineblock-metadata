@@ -11,8 +11,8 @@ use OpenConext\Component\EngineBlockMetadata\Entity\AbstractConfigurationEntity;
 use OpenConext\Component\EngineBlockMetadata\Entity\IdentityProviderEntity;
 use OpenConext\Component\EngineBlockMetadata\Entity\ServiceProviderEntity;
 use OpenConext\Component\EngineBlockMetadata\IndexedService;
-use OpenConext\Component\EngineBlockMetadata\X509CertificateFactory;
-use OpenConext\Component\EngineBlockMetadata\X509CertificateLazyProxy;
+use OpenConext\Component\EngineBlockMetadata\X509\X509CertificateFactory;
+use OpenConext\Component\EngineBlockMetadata\X509\X509CertificateLazyProxy;
 use RuntimeException;
 
 /**
