@@ -129,10 +129,13 @@ class JanusRestV1MetadataRepository extends AbstractMetadataRepository
 
         $metadata = $this->loadEntitiesMetadataCache()->findMetadataByEntityId($entityId);
         if (!$metadata) {
-            return $metadata;
+            return null;
         }
 
         $entity = $this->translator->translate($entityId, $metadata);
+        if (!$entity) {
+            return null;
+        }
 
         $this->entityCache[$entityId] = $entity;
         return $this->applyFilters($this->entityCache[$entityId]);
@@ -156,6 +159,10 @@ class JanusRestV1MetadataRepository extends AbstractMetadataRepository
         }
 
         $entity = $this->translator->translate($entityId, $metadata);
+        if (!$entity) {
+            $this->entityCache[$entityId] = null;
+            return $this->entityCache[$entityId];
+        }
 
         if (!$entity instanceof IdentityProviderEntity) {
             $this->entityCache[$entityId] = null;
@@ -180,6 +187,11 @@ class JanusRestV1MetadataRepository extends AbstractMetadataRepository
 
         $entity = $this->translator->translate($entityId, $metadata);
 
+        if (!$entity) {
+            $this->entityCache[$entityId] = null;
+            return $this->entityCache[$entityId];
+        }
+
         if (!$entity instanceof ServiceProviderEntity) {
             $this->entityCache[$entityId] = null;
             return $this->entityCache[$entityId];
@@ -203,7 +215,7 @@ class JanusRestV1MetadataRepository extends AbstractMetadataRepository
             if (!isset($this->entityCache[$entityId])) {
                 $entity = $this->translator->translate($entityId, $entity);
 
-                if (!$entity instanceof IdentityProviderEntity) {
+                if (!is_null($entity) && !$entity instanceof IdentityProviderEntity) {
                     throw new \RuntimeException('Service Registry returned a non-idp from getIdpList?');
                 }
 

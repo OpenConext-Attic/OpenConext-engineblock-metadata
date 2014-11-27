@@ -45,9 +45,8 @@ class JanusRestV1Translator
             return $entity;
         }
 
-        throw new RuntimeException(
-            'Unrecognized JANUS entity type (neither SP nor IDP)'
-        );
+        // @todo log warning
+        return null;
     }
 
     // @codingStandardsIgnoreStart

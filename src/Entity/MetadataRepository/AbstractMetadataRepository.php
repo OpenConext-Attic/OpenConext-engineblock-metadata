@@ -77,9 +77,8 @@ abstract class AbstractMetadataRepository implements MetadataRepositoryInterface
         $filteredIdentityProviders = array();
         foreach ($identityProviderEntityIds as $identityProviderEntityId) {
             if (!isset($identityProviders[$identityProviderEntityId])) {
-                throw new EntityNotFoundException(
-                    "Did not find an Identity Provider with entityId '$identityProviderEntityId'"
-                );
+                // @todo warn
+                continue;
             }
 
             $filteredIdentityProviders[$identityProviderEntityId] = $identityProviders[$identityProviderEntityId];
