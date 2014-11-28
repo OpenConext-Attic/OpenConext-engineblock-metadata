@@ -1,16 +1,16 @@
 <?php
 
-namespace OpenConext\Component\EngineBlockMetadata\Entity\MetadataRepository;
+namespace OpenConext\Component\EngineBlockMetadata\MetadataRepository;
 
 use OpenConext\Component\EngineBlockMetadata\AttributeReleasePolicy;
-use OpenConext\Component\EngineBlockMetadata\Entity\AbstractConfigurationEntity;
-use OpenConext\Component\EngineBlockMetadata\Entity\IdentityProviderEntity;
-use OpenConext\Component\EngineBlockMetadata\Entity\MetadataRepository\Filter\FilterInterface;
-use OpenConext\Component\EngineBlockMetadata\Entity\ServiceProviderEntity;
+use OpenConext\Component\EngineBlockMetadata\Entity\AbstractRole;
+use OpenConext\Component\EngineBlockMetadata\Entity\IdentityProvider;
+use OpenConext\Component\EngineBlockMetadata\MetadataRepository\Filter\FilterInterface;
+use OpenConext\Component\EngineBlockMetadata\Entity\ServiceProvider;
 
 /**
  * Class AggregatedMetadataRepository
- * @package OpenConext\Component\EngineBlockMetadata\Entity\MetadataRepository
+ * @package OpenConext\Component\EngineBlockMetadata\MetadataRepository
  * @SuppressWarnings(PMD.TooManyMethods)
  * @SuppressWarnings(PMD.CouplingBetweenObjects)
  */
@@ -59,7 +59,7 @@ class AggregatedMetadataRepository extends AbstractMetadataRepository
     /**
      *
      * @param string $entityId
-     * @return AbstractConfigurationEntity
+     * @return AbstractRole
      * @throws EntityNotFoundException
      */
     public function fetchEntityByEntityId($entityId)
@@ -77,7 +77,7 @@ class AggregatedMetadataRepository extends AbstractMetadataRepository
 
     /**
      * @param string $entityId
-     * @return ServiceProviderEntity
+     * @return ServiceProvider
      * @throws EntityNotFoundException
      */
     public function fetchServiceProviderByEntityId($entityId)
@@ -95,7 +95,7 @@ class AggregatedMetadataRepository extends AbstractMetadataRepository
 
     /**
      * @param string $entityId
-     * @return IdentityProviderEntity
+     * @return IdentityProvider
      * @throws EntityNotFoundException
      */
     public function fetchIdentityProviderByEntityId($entityId)
@@ -113,7 +113,7 @@ class AggregatedMetadataRepository extends AbstractMetadataRepository
 
     /**
      * @param string $entityId
-     * @return AbstractConfigurationEntity|null
+     * @return AbstractRole|null
      */
     public function findEntityByEntityId($entityId)
     {
@@ -129,7 +129,7 @@ class AggregatedMetadataRepository extends AbstractMetadataRepository
 
     /**
      * @param string $entityId
-     * @return ServiceProviderEntity|null
+     * @return ServiceProvider|null
      */
     public function findIdentityProviderByEntityId($entityId)
     {
@@ -145,7 +145,7 @@ class AggregatedMetadataRepository extends AbstractMetadataRepository
 
     /**
      * @param $entityId
-     * @return ServiceProviderEntity|null
+     * @return ServiceProvider|null
      */
     public function findServiceProviderByEntityId($entityId)
     {
@@ -160,7 +160,7 @@ class AggregatedMetadataRepository extends AbstractMetadataRepository
     }
 
     /**
-     * @return IdentityProviderEntity[]
+     * @return IdentityProvider[]
      */
     public function findIdentityProviders()
     {
@@ -202,7 +202,7 @@ class AggregatedMetadataRepository extends AbstractMetadataRepository
     }
 
     /**
-     * @return AbstractConfigurationEntity[]
+     * @return AbstractRole[]
      */
     public function findEntitiesPublishableInEdugain()
     {
@@ -226,11 +226,11 @@ class AggregatedMetadataRepository extends AbstractMetadataRepository
     }
 
     /**
-     * @param AbstractConfigurationEntity $entity
+     * @param AbstractRole $entity
      * @return string
      * @throws \RuntimeException
      */
-    public function fetchEntityManipulation(AbstractConfigurationEntity $entity)
+    public function fetchEntityManipulation(AbstractRole $entity)
     {
         foreach ($this->orderedRepositories as $repository) {
             if (!$repository->findEntityByEntityId($entity->entityId)) {
@@ -246,11 +246,11 @@ class AggregatedMetadataRepository extends AbstractMetadataRepository
     }
 
     /**
-     * @param ServiceProviderEntity $serviceProvider
+     * @param ServiceProvider $serviceProvider
      * @return AttributeReleasePolicy
      * @throws \RuntimeException
      */
-    public function fetchServiceProviderArp(ServiceProviderEntity $serviceProvider)
+    public function fetchServiceProviderArp(ServiceProvider $serviceProvider)
     {
         foreach ($this->orderedRepositories as $repository) {
             if (!$repository->findServiceProviderByEntityId($serviceProvider->entityId)) {
@@ -266,11 +266,11 @@ class AggregatedMetadataRepository extends AbstractMetadataRepository
     }
 
     /**
-     * @param ServiceProviderEntity $serviceProvider
+     * @param ServiceProvider $serviceProvider
      * @return array|bool
      * @throws \RuntimeException
      */
-    public function findAllowedIdpEntityIdsForSp(ServiceProviderEntity $serviceProvider)
+    public function findAllowedIdpEntityIdsForSp(ServiceProvider $serviceProvider)
     {
         $allowed = array();
         foreach ($this->orderedRepositories as $repository) {

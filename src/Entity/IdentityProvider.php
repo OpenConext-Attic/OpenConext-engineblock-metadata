@@ -6,11 +6,11 @@ use OpenConext\Component\EngineBlockMetadata\ShibMdScope;
 use OpenConext\Component\EngineBlockMetadata\Service;
 
 /**
- * Class IdentityProviderEntity
+ * Class IdentityProvider
  * @package OpenConext\Component\EngineBlockMetadata\Entity
  * @SuppressWarnings(PHPMD.CamelCasePropertyName)
  */
-class IdentityProviderEntity extends AbstractConfigurationEntity
+class IdentityProvider extends AbstractConfigurationEntity
 {
     const GUEST_QUALIFIER_ALL = 'All';
     const GUEST_QUALIFIER_SOME = 'Some';

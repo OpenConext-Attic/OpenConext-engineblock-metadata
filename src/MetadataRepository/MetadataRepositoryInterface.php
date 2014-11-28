@@ -1,16 +1,16 @@
 <?php
 
-namespace OpenConext\Component\EngineBlockMetadata\Entity\MetadataRepository;
+namespace OpenConext\Component\EngineBlockMetadata\MetadataRepository;
 
 use OpenConext\Component\EngineBlockMetadata\AttributeReleasePolicy;
-use OpenConext\Component\EngineBlockMetadata\Entity\AbstractConfigurationEntity;
-use OpenConext\Component\EngineBlockMetadata\Entity\IdentityProviderEntity;
-use OpenConext\Component\EngineBlockMetadata\Entity\MetadataRepository\Filter\FilterInterface;
-use OpenConext\Component\EngineBlockMetadata\Entity\ServiceProviderEntity;
+use OpenConext\Component\EngineBlockMetadata\Entity\AbstractRole;
+use OpenConext\Component\EngineBlockMetadata\Entity\IdentityProvider;
+use OpenConext\Component\EngineBlockMetadata\MetadataRepository\Filter\FilterInterface;
+use OpenConext\Component\EngineBlockMetadata\Entity\ServiceProvider;
 
 /**
  * Interface MetadataRepositoryInterface
- * @package OpenConext\Component\EngineBlockMetadata\Entity\MetadataRepository
+ * @package OpenConext\Component\EngineBlockMetadata\MetadataRepository
  */
 interface MetadataRepositoryInterface
 {
@@ -24,21 +24,21 @@ interface MetadataRepositoryInterface
     /**
      *
      * @param string $entityId
-     * @return AbstractConfigurationEntity
+     * @return AbstractRole
      * @throws EntityNotFoundException
      */
     public function fetchEntityByEntityId($entityId);
 
     /**
      * @param string $entityId
-     * @return ServiceProviderEntity
+     * @return ServiceProvider
      * @throws EntityNotFoundException
      */
     public function fetchServiceProviderByEntityId($entityId);
 
     /**
      * @param string $entityId
-     * @return IdentityProviderEntity
+     * @return IdentityProvider
      */
     public function fetchIdentityProviderByEntityId($entityId);
 
@@ -46,30 +46,30 @@ interface MetadataRepositoryInterface
      * @deprecated depends on repository implementation.
      *
      * @param string $entityId
-     * @return AbstractConfigurationEntity|null
+     * @return AbstractRole|null
      */
     public function findEntityByEntityId($entityId);
 
     /**
      * @param string $entityId
-     * @return ServiceProviderEntity|null
+     * @return ServiceProvider|null
      */
     public function findIdentityProviderByEntityId($entityId);
 
     /**
      * @param $entityId
-     * @return ServiceProviderEntity|null
+     * @return ServiceProvider|null
      */
     public function findServiceProviderByEntityId($entityId);
 
     /**
-     * @return IdentityProviderEntity[]
+     * @return IdentityProvider[]
      */
     public function findIdentityProviders();
 
     /**
      * @param array $identityProviderEntityIds
-     * @return IdentityProviderEntity[]
+     * @return IdentityProvider[]
      */
     public function fetchIdentityProvidersByEntityId(array $identityProviderEntityIds);
 
@@ -84,7 +84,7 @@ interface MetadataRepositoryInterface
     public function findReservedSchacHomeOrganizations();
 
     /**
-     * @return AbstractConfigurationEntity[]
+     * @return AbstractRole[]
      */
     public function findEntitiesPublishableInEdugain();
 
@@ -95,20 +95,20 @@ interface MetadataRepositoryInterface
     public function filter(FilterInterface $filter);
 
     /**
-     * @param AbstractConfigurationEntity $entity
+     * @param AbstractRole $entity
      * @return string
      */
-    public function fetchEntityManipulation(AbstractConfigurationEntity $entity);
+    public function fetchEntityManipulation(AbstractRole $entity);
 
     /**
-     * @param ServiceProviderEntity $serviceProvider
+     * @param ServiceProvider $serviceProvider
      * @return AttributeReleasePolicy
      */
-    public function fetchServiceProviderArp(ServiceProviderEntity $serviceProvider);
+    public function fetchServiceProviderArp(ServiceProvider $serviceProvider);
 
     /**
-     * @param ServiceProviderEntity $serviceProvider
+     * @param ServiceProvider $serviceProvider
      * @return array
      */
-    public function findAllowedIdpEntityIdsForSp(ServiceProviderEntity $serviceProvider);
+    public function findAllowedIdpEntityIdsForSp(ServiceProvider $serviceProvider);
 }

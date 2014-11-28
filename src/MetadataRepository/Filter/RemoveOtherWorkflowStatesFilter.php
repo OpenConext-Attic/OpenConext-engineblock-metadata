@@ -1,31 +1,31 @@
 <?php
 
-namespace OpenConext\Component\EngineBlockMetadata\Entity\MetadataRepository\Filter;
+namespace OpenConext\Component\EngineBlockMetadata\MetadataRepository\Filter;
 
-use OpenConext\Component\EngineBlockMetadata\Entity\AbstractConfigurationEntity;
-use OpenConext\Component\EngineBlockMetadata\Entity\ServiceProviderEntity;
+use OpenConext\Component\EngineBlockMetadata\Entity\AbstractRole;
+use OpenConext\Component\EngineBlockMetadata\Entity\ServiceProvider;
 
 /**
  * Class RemoveOtherWorkflowStatesFilter
- * @package OpenConext\Component\EngineBlockMetadata\Entity\MetadataRepository\Filter
+ * @package OpenConext\Component\EngineBlockMetadata\MetadataRepository\Filter
  */
 class RemoveOtherWorkflowStatesFilter extends AbstractFilter
 {
     private $workflowState;
 
     /**
-     * @param ServiceProviderEntity $serviceProvider
+     * @param ServiceProvider $serviceProvider
      */
-    public function __construct(ServiceProviderEntity $serviceProvider)
+    public function __construct(ServiceProvider $serviceProvider)
     {
         $this->workflowState = $serviceProvider->workflowState;
     }
 
     /**
-     * @param AbstractConfigurationEntity $entity
-     * @return AbstractConfigurationEntity
+     * @param AbstractRole $entity
+     * @return AbstractRole
      */
-    public function filter(AbstractConfigurationEntity $entity)
+    public function filter(AbstractRole $entity)
     {
         return $entity->workflowState === $this->workflowState ? $entity : null;
     }

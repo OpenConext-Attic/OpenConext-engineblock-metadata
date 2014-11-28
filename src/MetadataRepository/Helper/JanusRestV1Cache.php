@@ -1,8 +1,8 @@
 <?php
 
-namespace OpenConext\Component\EngineBlockMetadata\Entity\MetadataRepository\JanusRestV1;
+namespace OpenConext\Component\EngineBlockMetadata\MetadataRepository\Helper;
 
-class Cache
+class JanusRestV1Cache
 {
     /**
      * @var array

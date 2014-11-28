@@ -1,45 +1,45 @@
 <?php
 
-namespace OpenConext\Component\EngineBlockMetadata\Entity\Translator;
+namespace OpenConext\Component\EngineBlockMetadata\Entity\Assembler;
 
 use OpenConext\Component\EngineBlockMetadata\Logo;
 use OpenConext\Component\EngineBlockMetadata\Organization;
 use OpenConext\Component\EngineBlockMetadata\Service;
 use OpenConext\Component\EngineBlockMetadata\ShibMdScope;
 use OpenConext\Component\EngineBlockMetadata\ContactPerson;
-use OpenConext\Component\EngineBlockMetadata\Entity\AbstractConfigurationEntity;
-use OpenConext\Component\EngineBlockMetadata\Entity\IdentityProviderEntity;
-use OpenConext\Component\EngineBlockMetadata\Entity\ServiceProviderEntity;
+use OpenConext\Component\EngineBlockMetadata\Entity\AbstractRole;
+use OpenConext\Component\EngineBlockMetadata\Entity\IdentityProvider;
+use OpenConext\Component\EngineBlockMetadata\Entity\ServiceProvider;
 use OpenConext\Component\EngineBlockMetadata\IndexedService;
 use OpenConext\Component\EngineBlockMetadata\X509\X509CertificateFactory;
 use OpenConext\Component\EngineBlockMetadata\X509\X509CertificateLazyProxy;
 use RuntimeException;
 
 /**
- * Class JanusRestV1Translator
+ * Class JanusRestV1Assembler
  * @package OpenConext\Component\EngineBlockMetadata\Entity\Translator
  * @SuppressWarnings(PMD.TooManyMethods)
  * @SuppressWarnings(PMD.CouplingBetweenObjects)
  */
-class JanusRestV1Translator
+class JanusRestV1Assembler
 {
     /**
      * @param $entityId
      * @param array $metadata
-     * @return IdentityProviderEntity|ServiceProviderEntity
+     * @return IdentityProvider|ServiceProvider
      * @throws \RuntimeException
      */
     public function translate($entityId, array $metadata)
     {
         if (isset($metadata['AssertionConsumerService:0:Location'])) {
-            $entity = new ServiceProviderEntity($entityId);
+            $entity = new ServiceProvider($entityId);
             $entity = $this->translateCommonMetadata($metadata, $entity);
             $entity = $this->translateServiceProviderMetadata($metadata, $entity);
             return $entity;
         }
 
         if (isset($metadata['SingleSignOnService:0:Location'])) {
-            $entity = new IdentityProviderEntity($entityId);
+            $entity = new IdentityProvider($entityId);
             $entity = $this->translateCommonMetadata($metadata, $entity);
             $entity = $this->translateIdentityProviderMetadata($metadata, $entity);
             return $entity;
@@ -53,10 +53,10 @@ class JanusRestV1Translator
 
     /**
      * @param array $metadata
-     * @param AbstractConfigurationEntity $entity
-     * @return AbstractConfigurationEntity
+     * @param AbstractRole $entity
+     * @return AbstractRole
      */
-    public function translateCommonMetadata(array $metadata, AbstractConfigurationEntity $entity)
+    public function translateCommonMetadata(array $metadata, AbstractRole $entity)
     {
         $entity->nameEn                 =        self::ifsetor($metadata, 'Name:en'                 , $entity->nameEn);
         $entity->nameNl                 =        self::ifsetor($metadata, 'Name:nl'                 , $entity->nameNl);
@@ -84,7 +84,7 @@ class JanusRestV1Translator
         $entity->organizationEn         = $this->translateOrganizationEn($metadata);
         $entity->organizationNl         = $this->translateOrganizationNl($metadata);
         $entity->certificates           = $this->translateCertificates($metadata);
-        $entity->singleLogoutServices   = $this->translateSloServices($metadata);
+        $entity->singleLogoutService    = $this->translateSloServices($metadata);
         $entity->nameIdFormats          = $this->translateNameIdFormats($metadata, $entity->nameIdFormats);
         $entity->contactPersons         = $this->translateContactPersons($metadata);
 
@@ -93,10 +93,10 @@ class JanusRestV1Translator
 
     /**
      * @param array $metadata
-     * @param ServiceProviderEntity $entity
-     * @return ServiceProviderEntity
+     * @param ServiceProvider $entity
+     * @return ServiceProvider
      */
-    public function translateServiceProviderMetadata(array $metadata, ServiceProviderEntity $entity)
+    public function translateServiceProviderMetadata(array $metadata, ServiceProvider $entity)
     {
         $entity->isTransparentIssuer        = (bool) self::ifsetor($metadata, 'coin:transparant_issuer'             , $entity->isTransparentIssuer);
         $entity->isTrustedProxy             = (bool) self::ifsetor($metadata, 'coin:trusted_proxy'                  , $entity->isTrustedProxy);
@@ -115,10 +115,10 @@ class JanusRestV1Translator
 
     /**
      * @param array $metadata
-     * @param IdentityProviderEntity $entity
-     * @return IdentityProviderEntity
+     * @param IdentityProvider $entity
+     * @return IdentityProvider
      */
-    public function translateIdentityProviderMetadata(array $metadata, IdentityProviderEntity $entity)
+    public function translateIdentityProviderMetadata(array $metadata, IdentityProvider $entity)
     {
         $entity->singleSignOnServices   = $this->translateIndexedServices($metadata, 'SingleSignOnService');
         $entity->schacHomeOrganization  = self::ifsetor($metadata, 'coin:schachomeorganization');

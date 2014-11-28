@@ -1,16 +1,16 @@
 <?php
 
-namespace OpenConext\Component\EngineBlockMetadata\Entity\MetadataRepository;
+namespace OpenConext\Component\EngineBlockMetadata\MetadataRepository;
 
 use OpenConext\Component\EngineBlockMetadata\AttributeReleasePolicy;
-use OpenConext\Component\EngineBlockMetadata\Entity\AbstractConfigurationEntity;
-use OpenConext\Component\EngineBlockMetadata\Entity\IdentityProviderEntity;
-use OpenConext\Component\EngineBlockMetadata\Entity\MetadataRepository\Filter\FilterInterface;
-use OpenConext\Component\EngineBlockMetadata\Entity\ServiceProviderEntity;
+use OpenConext\Component\EngineBlockMetadata\Entity\AbstractRole;
+use OpenConext\Component\EngineBlockMetadata\Entity\IdentityProvider;
+use OpenConext\Component\EngineBlockMetadata\MetadataRepository\Filter\FilterInterface;
+use OpenConext\Component\EngineBlockMetadata\Entity\ServiceProvider;
 
 /**
  * Class AbstractMetadataRepository
- * @package OpenConext\Component\EngineBlockMetadata\Entity\MetadataRepository
+ * @package OpenConext\Component\EngineBlockMetadata\MetadataRepository
  * @SuppressWarnings(PMD.TooManyMethods)
  */
 abstract class AbstractMetadataRepository implements MetadataRepositoryInterface
@@ -56,7 +56,7 @@ abstract class AbstractMetadataRepository implements MetadataRepositoryInterface
     {
         return array_unique(
             array_map(
-                function (IdentityProviderEntity $entity) {
+                function (IdentityProvider $entity) {
                     return $entity->schacHomeOrganization;
                 },
                 $this->findIdentityProviders()
@@ -67,7 +67,7 @@ abstract class AbstractMetadataRepository implements MetadataRepositoryInterface
 
     /**
      * @param array $identityProviderEntityIds
-     * @return array|IdentityProviderEntity[]
+     * @return array|IdentityProvider[]
      * @throws EntityNotFoundException
      */
     public function fetchIdentityProvidersByEntityId(array $identityProviderEntityIds)
@@ -88,7 +88,7 @@ abstract class AbstractMetadataRepository implements MetadataRepositoryInterface
 
     /**
      * @param string $entityId
-     * @return ServiceProviderEntity
+     * @return ServiceProvider
      * @throws EntityNotFoundException
      */
     public function fetchServiceProviderByEntityId($entityId)
@@ -104,7 +104,7 @@ abstract class AbstractMetadataRepository implements MetadataRepositoryInterface
 
     /**
      * @param $entityId
-     * @return null|IdentityProviderEntity|ServiceProviderEntity
+     * @return null|IdentityProvider|ServiceProvider
      * @throws EntityNotFoundException
      */
     public function fetchIdentityProviderByEntityId($entityId)
@@ -121,7 +121,7 @@ abstract class AbstractMetadataRepository implements MetadataRepositoryInterface
     /**
      *
      * @param string $entityId
-     * @return AbstractConfigurationEntity
+     * @return AbstractRole
      * @throws EntityNotFoundException
      */
     public function fetchEntityByEntityId($entityId)
@@ -137,7 +137,7 @@ abstract class AbstractMetadataRepository implements MetadataRepositoryInterface
 
     /**
      * @param string $entityId
-     * @return AbstractConfigurationEntity|null
+     * @return AbstractRole|null
      */
     public function findEntityByEntityId($entityId)
     {
@@ -155,35 +155,35 @@ abstract class AbstractMetadataRepository implements MetadataRepositoryInterface
     }
 
     /**
-     * @param AbstractConfigurationEntity $entity
+     * @param AbstractRole $entity
      * @return string
      */
-    public function fetchEntityManipulation(AbstractConfigurationEntity $entity)
+    public function fetchEntityManipulation(AbstractRole $entity)
     {
         return '';
     }
 
     /**
-     * @param ServiceProviderEntity $serviceProvider
+     * @param ServiceProvider $serviceProvider
      * @return AttributeReleasePolicy
      */
-    public function fetchServiceProviderArp(ServiceProviderEntity $serviceProvider)
+    public function fetchServiceProviderArp(ServiceProvider $serviceProvider)
     {
         return null;
     }
 
     /**
-     * @param ServiceProviderEntity $serviceProvider
+     * @param ServiceProvider $serviceProvider
      * @return \string[]
      */
-    public function findAllowedIdpEntityIdsForSp(ServiceProviderEntity $serviceProvider)
+    public function findAllowedIdpEntityIdsForSp(ServiceProvider $serviceProvider)
     {
         return $this->findAllIdentityProviderEntityIds();
     }
 
     /**
      * @param $entity
-     * @return AbstractConfigurationEntity
+     * @return AbstractRole
      */
     protected function applyFilters($entity)
     {
@@ -201,7 +201,7 @@ abstract class AbstractMetadataRepository implements MetadataRepositoryInterface
     /**
      * @param FilterInterface $filter
      * @param $entity
-     * @return AbstractConfigurationEntity
+     * @return AbstractRole
      */
     protected function applyFilter(FilterInterface $filter, $entity)
     {

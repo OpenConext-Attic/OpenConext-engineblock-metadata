@@ -7,10 +7,10 @@ use OpenConext\Component\EngineBlockMetadata\RequestedAttribute;
 use OpenConext\Component\EngineBlockMetadata\IndexedService;
 
 /**
- * Class ServiceProviderEntity
+ * Class ServiceProvider
  * @package OpenConext\Component\EngineBlockMetadata\Entity
  */
-class ServiceProviderEntity extends AbstractConfigurationEntity
+class ServiceProvider extends AbstractConfigurationEntity
 {
     /**
      * @var IndexedService[]

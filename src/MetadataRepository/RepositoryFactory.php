@@ -1,6 +1,6 @@
 <?php
 
-namespace OpenConext\Component\EngineBlockMetadata\Entity\MetadataRepository;
+namespace OpenConext\Component\EngineBlockMetadata\MetadataRepository;
 
 /**
  * @package OpenConext\Component\EngineBlockMetadata\ServiceRegistry

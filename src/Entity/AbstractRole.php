@@ -15,7 +15,7 @@ use SAML2_Const;
  * @package OpenConext\Component\EngineBlockMetadata\Entity
  * @SuppressWarnings(PHPMD.TooManyFields)
  */
-abstract class AbstractConfigurationEntity
+abstract class AbstractRole
 {
     const WORKFLOW_STATE_PROD = 'prodaccepted';
     const WORKFLOW_STATE_TEST = 'testaccepted';

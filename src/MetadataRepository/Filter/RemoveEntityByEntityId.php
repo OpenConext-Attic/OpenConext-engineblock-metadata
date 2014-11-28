@@ -1,12 +1,12 @@
 <?php
 
-namespace OpenConext\Component\EngineBlockMetadata\Entity\MetadataRepository\Filter;
+namespace OpenConext\Component\EngineBlockMetadata\MetadataRepository\Filter;
 
-use OpenConext\Component\EngineBlockMetadata\Entity\AbstractConfigurationEntity;
+use OpenConext\Component\EngineBlockMetadata\Entity\AbstractRole;
 
 /**
  * Class RemoveEntityByEntityId
- * @package OpenConext\Component\EngineBlockMetadata\Entity\MetadataRepository\Filter
+ * @package OpenConext\Component\EngineBlockMetadata\MetadataRepository\Filter
  */
 class RemoveEntityByEntityId extends AbstractFilter
 {
@@ -24,10 +24,10 @@ class RemoveEntityByEntityId extends AbstractFilter
     }
 
     /**
-     * @param AbstractConfigurationEntity $entity
-     * @return AbstractConfigurationEntity
+     * @param AbstractRole $entity
+     * @return AbstractRole
      */
-    public function filter(AbstractConfigurationEntity $entity)
+    public function filter(AbstractRole $entity)
     {
         return $entity->entityId === $this->entityId ? null : $entity;
     }

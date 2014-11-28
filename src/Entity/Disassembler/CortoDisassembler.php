@@ -1,24 +1,24 @@
 <?php
 
-namespace OpenConext\Component\EngineBlockMetadata\Legacy;
+namespace OpenConext\Component\EngineBlockMetadata\Entity\Disassembler;
 
 use DateTime;
-use OpenConext\Component\EngineBlockMetadata\Entity\AbstractConfigurationEntity;
-use OpenConext\Component\EngineBlockMetadata\Entity\IdentityProviderEntity;
-use OpenConext\Component\EngineBlockMetadata\Entity\ServiceProviderEntity;
+use OpenConext\Component\EngineBlockMetadata\Entity\AbstractRole;
+use OpenConext\Component\EngineBlockMetadata\Entity\IdentityProvider;
+use OpenConext\Component\EngineBlockMetadata\Entity\ServiceProvider;
 
 /**
- * Class EntityTranslator
+ * Class CortoDisassembler
  * @package OpenConext\Component\EngineBlockMetadata\Legacy
  * @SuppressWarnings(PMD.TooManyMethods)
  */
-class EntityTranslator
+class CortoDisassembler
 {
     /**
-     * @param ServiceProviderEntity $entity
+     * @param ServiceProvider $entity
      * @return array
      */
-    public function translateServiceProvider(ServiceProviderEntity $entity)
+    public function translateServiceProvider(ServiceProvider $entity)
     {
         $cortoEntity = array();
 
@@ -54,10 +54,10 @@ class EntityTranslator
     }
 
     /**
-     * @param IdentityProviderEntity $entity
+     * @param IdentityProvider $entity
      * @return array
      */
-    public function translateIdentityProvider(IdentityProviderEntity $entity)
+    public function translateIdentityProvider(IdentityProvider $entity)
     {
         $cortoEntity = array();
 
@@ -95,11 +95,11 @@ class EntityTranslator
     }
 
     /**
-     * @param AbstractConfigurationEntity $entity
+     * @param AbstractRole $entity
      * @param array $cortoEntity
      * @return array
      */
-    private function translateCommon(AbstractConfigurationEntity $entity, array $cortoEntity)
+    private function translateCommon(AbstractRole $entity, array $cortoEntity)
     {
         if ($entity->publishInEdugain) {
             $cortoEntity['PublishInEdugain'] = true;
@@ -141,11 +141,11 @@ class EntityTranslator
     }
 
     /**
-     * @param AbstractConfigurationEntity $entity
+     * @param AbstractRole $entity
      * @param array $cortoEntity
      * @return array
      */
-    private function translateCommonCertificates(AbstractConfigurationEntity $entity, array $cortoEntity)
+    private function translateCommonCertificates(AbstractRole $entity, array $cortoEntity)
     {
         $cortoEntity['certificates'] = array();
         if (isset($entity->certificates[0])) {
@@ -162,11 +162,11 @@ class EntityTranslator
     }
 
     /**
-     * @param AbstractConfigurationEntity $entity
+     * @param AbstractRole $entity
      * @param array $cortoEntity
      * @return mixed
      */
-    private function translateOrganization(AbstractConfigurationEntity $entity, array $cortoEntity)
+    private function translateOrganization(AbstractRole $entity, array $cortoEntity)
     {
         // @codingStandardsIgnoreStart
         if ($entity->organizationEn) {
@@ -185,11 +185,11 @@ class EntityTranslator
     }
 
     /**
-     * @param AbstractConfigurationEntity $entity
+     * @param AbstractRole $entity
      * @param array $cortoEntity
      * @return mixed
      */
-    private function translateKeywords(AbstractConfigurationEntity $entity, array $cortoEntity)
+    private function translateKeywords(AbstractRole $entity, array $cortoEntity)
     {
         if ($entity->keywordsNl) {
             $this->mapMultilang($entity->keywordsNl, $cortoEntity, 'Keywords', 'nl');
@@ -202,11 +202,11 @@ class EntityTranslator
     }
 
     /**
-     * @param AbstractConfigurationEntity $entity
+     * @param AbstractRole $entity
      * @param array $cortoEntity
      * @return mixed
      */
-    private function translateName(AbstractConfigurationEntity $entity, array $cortoEntity)
+    private function translateName(AbstractRole $entity, array $cortoEntity)
     {
         if ($entity->nameNl) {
             $this->mapMultilang($entity->keywordsNl, $cortoEntity, 'Name', 'nl');
@@ -219,11 +219,11 @@ class EntityTranslator
     }
 
     /**
-     * @param AbstractConfigurationEntity $entity
+     * @param AbstractRole $entity
      * @param array $cortoEntity
      * @return mixed
      */
-    private function translateDescription(AbstractConfigurationEntity $entity, array $cortoEntity)
+    private function translateDescription(AbstractRole $entity, array $cortoEntity)
     {
         if ($entity->descriptionNl) {
             $this->mapMultilang($entity->keywordsNl, $cortoEntity, 'Description', 'nl');
@@ -236,11 +236,11 @@ class EntityTranslator
     }
 
     /**
-     * @param AbstractConfigurationEntity $entity
+     * @param AbstractRole $entity
      * @param array $cortoEntity
      * @return array
      */
-    private function translateDisplayName(AbstractConfigurationEntity $entity, array $cortoEntity)
+    private function translateDisplayName(AbstractRole $entity, array $cortoEntity)
     {
         if ($entity->displayNameNl) {
             $this->mapMultilang($entity->keywordsNl, $cortoEntity, 'DisplayName', 'nl');
@@ -253,32 +253,33 @@ class EntityTranslator
     }
 
     /**
-     * @param AbstractConfigurationEntity $entity
+     * @param AbstractRole $entity
      * @param array $cortoEntity
      * @return array
      */
-    private function translateSingleLogoutServices(AbstractConfigurationEntity $entity, array $cortoEntity)
+    private function translateSingleLogoutServices(AbstractRole $entity, array $cortoEntity)
     {
-        foreach ($entity->singleLogoutServices as $service) {
-            if (!isset($cortoEntity['SingleLogoutService'])) {
-                $cortoEntity['SingleLogoutService'] = array();
-            }
+        $service = $entity->singleLogoutService;
 
-            $cortoEntity[] = array(
-                'Binding' => $service->binding,
-                'Location' => $service->location,
-            );
+        if (!isset($cortoEntity['SingleLogoutService'])) {
+            $cortoEntity['SingleLogoutService'] = array();
         }
+
+        $cortoEntity[] = array(
+            'Binding' => $service->binding,
+            'Location' => $service->location,
+        );
+
         return $cortoEntity;
     }
 
 
     /**
-     * @param AbstractConfigurationEntity $entity
+     * @param AbstractRole $entity
      * @param array $cortoEntity
      * @return array
      */
-    private function translateContactPersons(AbstractConfigurationEntity $entity, array $cortoEntity)
+    private function translateContactPersons(AbstractRole $entity, array $cortoEntity)
     {
         $cortoEntity['ContactPersons'] = array();
         foreach ($entity->contactPersons as $contactPerson) {

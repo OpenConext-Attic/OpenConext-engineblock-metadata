@@ -1,13 +1,13 @@
 <?php
 
-namespace OpenConext\Component\EngineBlockMetadata\Entity\MetadataRepository\Filter;
+namespace OpenConext\Component\EngineBlockMetadata\MetadataRepository\Filter;
 
-use OpenConext\Component\EngineBlockMetadata\Entity\AbstractConfigurationEntity;
-use OpenConext\Component\EngineBlockMetadata\Entity\IdentityProviderEntity;
+use OpenConext\Component\EngineBlockMetadata\Entity\AbstractRole;
+use OpenConext\Component\EngineBlockMetadata\Entity\IdentityProvider;
 
 /**
  * Class AbstractDisallowedIdentityProviderFilter
- * @package OpenConext\Component\EngineBlockMetadata\Entity\MetadataRepository\Filter
+ * @package OpenConext\Component\EngineBlockMetadata\MetadataRepository\Filter
  */
 abstract class AbstractDisallowedIdentityProviderFilter extends AbstractFilter
 {
@@ -25,12 +25,12 @@ abstract class AbstractDisallowedIdentityProviderFilter extends AbstractFilter
     }
 
     /**
-     * @param AbstractConfigurationEntity $entity
-     * @return AbstractConfigurationEntity
+     * @param AbstractRole $entity
+     * @return AbstractRole
      */
-    public function filter(AbstractConfigurationEntity $entity)
+    public function filter(AbstractRole $entity)
     {
-        if (!$entity instanceof IdentityProviderEntity) {
+        if (!$entity instanceof IdentityProvider) {
             return $entity;
         }
 
@@ -42,10 +42,10 @@ abstract class AbstractDisallowedIdentityProviderFilter extends AbstractFilter
     }
 
     /**
-     * @param IdentityProviderEntity $entity
+     * @param IdentityProvider $entity
      * @return mixed
      */
-    abstract protected function onDisallowedIdentityProvider(IdentityProviderEntity $entity);
+    abstract protected function onDisallowedIdentityProvider(IdentityProvider $entity);
 
     /**
      * @return string

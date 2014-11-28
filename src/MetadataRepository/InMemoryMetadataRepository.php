@@ -1,45 +1,45 @@
 <?php
 
-namespace OpenConext\Component\EngineBlockMetadata\Entity\MetadataRepository;
+namespace OpenConext\Component\EngineBlockMetadata\MetadataRepository;
 
 use InvalidArgumentException;
 use OpenConext\Component\EngineBlockMetadata\AttributeReleasePolicy;
-use OpenConext\Component\EngineBlockMetadata\Entity\AbstractConfigurationEntity;
-use OpenConext\Component\EngineBlockMetadata\Entity\IdentityProviderEntity;
-use OpenConext\Component\EngineBlockMetadata\Entity\ServiceProviderEntity;
+use OpenConext\Component\EngineBlockMetadata\Entity\AbstractRole;
+use OpenConext\Component\EngineBlockMetadata\Entity\IdentityProvider;
+use OpenConext\Component\EngineBlockMetadata\Entity\ServiceProvider;
 
 /**
  * Class InMemoryMetadataRepository
- * @package OpenConext\Component\EngineBlockMetadata\Entity\MetadataRepository
+ * @package OpenConext\Component\EngineBlockMetadata\MetadataRepository
  */
 class InMemoryMetadataRepository extends AbstractMetadataRepository
 {
     /**
-     * @var ServiceProviderEntity[]
+     * @var ServiceProvider[]
      */
     private $serviceProviders = array();
 
     /**
-     * @var IdentityProviderEntity[]
+     * @var IdentityProvider[]
      */
     private $identityProviders = array();
 
     /**
-     * @param IdentityProviderEntity[] $identityProviders
-     * @param ServiceProviderEntity[] $serviceProviders
+     * @param IdentityProvider[] $identityProviders
+     * @param ServiceProvider[] $serviceProviders
      * @throws InvalidArgumentException
      */
     public function __construct(array $identityProviders, array $serviceProviders)
     {
         foreach ($identityProviders as $identityProvider) {
-            if (!$identityProvider instanceof IdentityProviderEntity) {
+            if (!$identityProvider instanceof IdentityProvider) {
                 throw new InvalidArgumentException("Gave a non-idp to InMemoryMetadataRepository idps");
             }
             $this->identityProviders[$identityProvider->entityId] = $identityProvider;
         }
 
         foreach ($serviceProviders as $serviceProvider) {
-            if (!$serviceProvider instanceof ServiceProviderEntity) {
+            if (!$serviceProvider instanceof ServiceProvider) {
                 throw new InvalidArgumentException("Gave a non-sp to InMemoryMetadataRepository sps");
             }
             $this->serviceProviders[$serviceProvider->entityId] = $serviceProvider;
@@ -57,20 +57,20 @@ class InMemoryMetadataRepository extends AbstractMetadataRepository
     }
 
     /**
-     * @param ServiceProviderEntity $serviceProvider
+     * @param ServiceProvider $serviceProvider
      * @return $this
      */
-    public function registerServiceProvider(ServiceProviderEntity $serviceProvider)
+    public function registerServiceProvider(ServiceProvider $serviceProvider)
     {
         $this->serviceProviders[$serviceProvider->entityId] = $serviceProvider;
         return $this;
     }
 
     /**
-     * @param IdentityProviderEntity $identityProviderEntity
+     * @param IdentityProvider $identityProviderEntity
      * @return $this
      */
-    public function registerIdentityProvider(IdentityProviderEntity $identityProviderEntity)
+    public function registerIdentityProvider(IdentityProvider $identityProviderEntity)
     {
         $this->identityProviders[$identityProviderEntity->entityId] = $identityProviderEntity;
         return $this;
@@ -78,7 +78,7 @@ class InMemoryMetadataRepository extends AbstractMetadataRepository
 
     /**
      * @param string $entityId
-     * @return ServiceProviderEntity|null
+     * @return ServiceProvider|null
      */
     public function findIdentityProviderByEntityId($entityId)
     {
@@ -91,7 +91,7 @@ class InMemoryMetadataRepository extends AbstractMetadataRepository
 
     /**
      * @param $entityId
-     * @return ServiceProviderEntity|null
+     * @return ServiceProvider|null
      */
     public function findServiceProviderByEntityId($entityId)
     {
@@ -103,7 +103,7 @@ class InMemoryMetadataRepository extends AbstractMetadataRepository
     }
 
     /**
-     * @return IdentityProviderEntity[]
+     * @return IdentityProvider[]
      */
     public function findIdentityProviders()
     {
@@ -111,11 +111,11 @@ class InMemoryMetadataRepository extends AbstractMetadataRepository
     }
 
     /**
-     * @return AbstractConfigurationEntity[]
+     * @return AbstractRole[]
      */
     public function findEntitiesPublishableInEdugain()
     {
-        /** @var AbstractConfigurationEntity[] $entities */
+        /** @var AbstractRole[] $entities */
         $entities = $this->identityProviders + $this->serviceProviders;
 
         $publishableEntities = array();

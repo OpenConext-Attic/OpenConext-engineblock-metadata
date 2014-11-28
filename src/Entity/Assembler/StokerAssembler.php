@@ -1,11 +1,11 @@
 <?php
 
-namespace OpenConext\Component\EngineBlockMetadata\Entity\Translator;
+namespace OpenConext\Component\EngineBlockMetadata\Entity\Assembler;
 
 use DOMDocument;
-use OpenConext\Component\EngineBlockMetadata\Entity\AbstractConfigurationEntity;
-use OpenConext\Component\EngineBlockMetadata\Entity\IdentityProviderEntity;
-use OpenConext\Component\EngineBlockMetadata\Entity\ServiceProviderEntity;
+use OpenConext\Component\EngineBlockMetadata\Entity\AbstractRole;
+use OpenConext\Component\EngineBlockMetadata\Entity\IdentityProvider;
+use OpenConext\Component\EngineBlockMetadata\Entity\ServiceProvider;
 use OpenConext\Component\EngineBlockMetadata\IndexedService;
 use OpenConext\Component\EngineBlockMetadata\Logo;
 use OpenConext\Component\EngineBlockMetadata\Service;
@@ -20,16 +20,16 @@ use SAML2_XML_mdui_Logo;
 use SAML2_XML_mdui_UIInfo;
 
 /**
- * Class StokerTranslator
+ * Class StokerAssembler
  * @package OpenConext\Component\EngineBlockMetadata\Entity\Translator
  * @SuppressWarnings(PMD.CouplingBetweenObjects)
  */
-class StokerTranslator
+class StokerAssembler
 {
     /**
      * @param $entityXml
      * @param MetadataIndex\Entity $metadataIndexEntity
-     * @return IdentityProviderEntity|ServiceProviderEntity
+     * @return IdentityProvider|ServiceProvider
      * @throws RuntimeException
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      * @SuppressWarnings(PHPMD.NPathComplexity)
@@ -77,13 +77,13 @@ class StokerTranslator
 
     /**
      * @param MetadataIndex\Entity $metadataIndexEntity
-     * @param AbstractConfigurationEntity $entity
+     * @param AbstractRole $entity
      * @param SAML2_XML_md_RoleDescriptor $role
-     * @return AbstractConfigurationEntity
+     * @return AbstractRole
      */
     private function translateCommon(
         MetadataIndex\Entity $metadataIndexEntity,
-        AbstractConfigurationEntity $entity,
+        AbstractRole $entity,
         SAML2_XML_md_RoleDescriptor $role
     ) {
         $entity->displayNameNl = $metadataIndexEntity->displayNameNl;
@@ -112,14 +112,14 @@ class StokerTranslator
      * @param MetadataIndex\Entity $metadataIndexEntity
      * @param SAML2_XML_md_EntityDescriptor $entityDescriptor
      * @param SAML2_XML_md_IDPSSODescriptor $idpDescriptor
-     * @return AbstractConfigurationEntity|IdentityProviderEntity
+     * @return AbstractRole|IdentityProvider
      */
     protected function translateIdentityProvider(
         MetadataIndex\Entity $metadataIndexEntity,
         SAML2_XML_md_EntityDescriptor $entityDescriptor,
         SAML2_XML_md_IDPSSODescriptor $idpDescriptor
     ) {
-        $entity = new IdentityProviderEntity($entityDescriptor->entityID);
+        $entity = new IdentityProvider($entityDescriptor->entityID);
 
         $entity = $this->translateCommon($metadataIndexEntity, $entity, $idpDescriptor);
 
@@ -138,13 +138,13 @@ class StokerTranslator
     /**
      * @param SAML2_XML_md_EntityDescriptor $entityDescriptor
      * @param SAML2_XML_md_SPSSODescriptor $spDescriptor
-     * @return ServiceProviderEntity
+     * @return ServiceProvider
      */
     protected function translateServiceProvider(
         SAML2_XML_md_EntityDescriptor $entityDescriptor,
         SAML2_XML_md_SPSSODescriptor $spDescriptor
     ) {
-        $entity = new ServiceProviderEntity($entityDescriptor->entityID);
+        $entity = new ServiceProvider($entityDescriptor->entityID);
 
         $singleSignOnServices = array();
         foreach ($spDescriptor->AssertionConsumerService as $acs) {

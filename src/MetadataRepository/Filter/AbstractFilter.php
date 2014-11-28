@@ -1,10 +1,10 @@
 <?php
 
-namespace OpenConext\Component\EngineBlockMetadata\Entity\MetadataRepository\Filter;
+namespace OpenConext\Component\EngineBlockMetadata\MetadataRepository\Filter;
 
 /**
  * Class AbstractFilter
- * @package OpenConext\Component\EngineBlockMetadata\Entity\MetadataRepository\Filter
+ * @package OpenConext\Component\EngineBlockMetadata\MetadataRepository\Filter
  */
 abstract class AbstractFilter implements FilterInterface
 {

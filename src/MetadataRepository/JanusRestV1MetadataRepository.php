@@ -1,19 +1,19 @@
 <?php
 
-namespace OpenConext\Component\EngineBlockMetadata\Entity\MetadataRepository;
+namespace OpenConext\Component\EngineBlockMetadata\MetadataRepository;
 
 use EngineBlock_Application_DiContainer;
 use RuntimeException;
 use Janus_Client;
 use OpenConext\Component\EngineBlockMetadata\AttributeReleasePolicy;
-use OpenConext\Component\EngineBlockMetadata\Entity\AbstractConfigurationEntity;
-use OpenConext\Component\EngineBlockMetadata\Entity\IdentityProviderEntity;
-use OpenConext\Component\EngineBlockMetadata\Entity\ServiceProviderEntity;
-use OpenConext\Component\EngineBlockMetadata\Entity\Translator\JanusRestV1Translator;
+use OpenConext\Component\EngineBlockMetadata\Entity\AbstractRole;
+use OpenConext\Component\EngineBlockMetadata\Entity\IdentityProvider;
+use OpenConext\Component\EngineBlockMetadata\Entity\ServiceProvider;
+use OpenConext\Component\EngineBlockMetadata\Entity\Assembler\JanusRestV1Assembler;
 
 /**
  * Class JanusRestV1MetadataRepository
- * @package OpenConext\Component\EngineBlockMetadata\Entity\MetadataRepository
+ * @package OpenConext\Component\EngineBlockMetadata\MetadataRepository
  * @SuppressWarnings(PMD.TooManyMethods)
  * @SuppressWarnings(PMD.CouplingBetweenObjects)
  */
@@ -25,7 +25,7 @@ class JanusRestV1MetadataRepository extends AbstractMetadataRepository
     private $client;
 
     /**
-     * @var JanusRestV1Translator
+     * @var JanusRestV1Assembler
      */
     private $translator;
 
@@ -38,9 +38,9 @@ class JanusRestV1MetadataRepository extends AbstractMetadataRepository
 
     /**
      * @param \Janus_Client_CacheProxy $client
-     * @param JanusRestV1Translator $translator
+     * @param JanusRestV1Assembler $translator
      */
-    public function __construct(\Janus_Client_CacheProxy $client, JanusRestV1Translator $translator)
+    public function __construct(\Janus_Client_CacheProxy $client, JanusRestV1Assembler $translator)
     {
         $this->client = $client;
         $this->translator = $translator;
@@ -53,13 +53,13 @@ class JanusRestV1MetadataRepository extends AbstractMetadataRepository
      */
     public static function createFromConfig(array $repositoryConfig, EngineBlock_Application_DiContainer $container)
     {
-        return new static($container->getServiceRegistryClient(), new JanusRestV1Translator());
+        return new static($container->getServiceRegistryClient(), new JanusRestV1Assembler());
     }
 
     /**
      *
      * @param string $entityId
-     * @return AbstractConfigurationEntity
+     * @return AbstractRole
      * @throws EntityNotFoundException
      */
     public function fetchEntityByEntityId($entityId)
@@ -79,7 +79,7 @@ class JanusRestV1MetadataRepository extends AbstractMetadataRepository
 
     /**
      * @param string $entityId
-     * @return ServiceProviderEntity
+     * @return ServiceProvider
      * @throws EntityNotFoundException
      */
     public function fetchServiceProviderByEntityId($entityId)
@@ -99,7 +99,7 @@ class JanusRestV1MetadataRepository extends AbstractMetadataRepository
 
     /**
      * @param $entityId
-     * @return null|IdentityProviderEntity|ServiceProviderEntity
+     * @return null|IdentityProvider|ServiceProvider
      * @throws EntityNotFoundException
      */
     public function fetchIdentityProviderByEntityId($entityId)
@@ -119,7 +119,7 @@ class JanusRestV1MetadataRepository extends AbstractMetadataRepository
 
     /**
      * @param string $entityId
-     * @return AbstractConfigurationEntity|null
+     * @return AbstractRole|null
      */
     public function findEntityByEntityId($entityId)
     {
@@ -143,7 +143,7 @@ class JanusRestV1MetadataRepository extends AbstractMetadataRepository
 
     /**
      * @param string $entityId
-     * @return null|AbstractConfigurationEntity|ServiceProviderEntity
+     * @return null|AbstractRole|ServiceProvider
      * @throws EntityNotFoundException
      */
     public function findIdentityProviderByEntityId($entityId)
@@ -164,7 +164,7 @@ class JanusRestV1MetadataRepository extends AbstractMetadataRepository
             return $this->entityCache[$entityId];
         }
 
-        if (!$entity instanceof IdentityProviderEntity) {
+        if (!$entity instanceof IdentityProvider) {
             $this->entityCache[$entityId] = null;
             return $this->entityCache[$entityId];
         }
@@ -175,7 +175,7 @@ class JanusRestV1MetadataRepository extends AbstractMetadataRepository
 
     /**
      * @param $entityId
-     * @return ServiceProviderEntity|null
+     * @return ServiceProvider|null
      */
     public function findServiceProviderByEntityId($entityId)
     {
@@ -192,7 +192,7 @@ class JanusRestV1MetadataRepository extends AbstractMetadataRepository
             return $this->entityCache[$entityId];
         }
 
-        if (!$entity instanceof ServiceProviderEntity) {
+        if (!$entity instanceof ServiceProvider) {
             $this->entityCache[$entityId] = null;
             return $this->entityCache[$entityId];
         }
@@ -203,7 +203,7 @@ class JanusRestV1MetadataRepository extends AbstractMetadataRepository
     }
 
     /**
-     * @return array|IdentityProviderEntity[]
+     * @return array|IdentityProvider[]
      * @throws \RuntimeException
      */
     public function findIdentityProviders()
@@ -215,7 +215,7 @@ class JanusRestV1MetadataRepository extends AbstractMetadataRepository
             if (!isset($this->entityCache[$entityId])) {
                 $entity = $this->translator->translate($entityId, $entity);
 
-                if (!is_null($entity) && !$entity instanceof IdentityProviderEntity) {
+                if (!is_null($entity) && !$entity instanceof IdentityProvider) {
                     throw new \RuntimeException('Service Registry returned a non-idp from getIdpList?');
                 }
 
@@ -238,7 +238,7 @@ class JanusRestV1MetadataRepository extends AbstractMetadataRepository
     }
 
     /**
-     * @return AbstractConfigurationEntity[]
+     * @return AbstractRole[]
      */
     public function findEntitiesPublishableInEdugain()
     {
@@ -252,11 +252,11 @@ class JanusRestV1MetadataRepository extends AbstractMetadataRepository
     }
 
     /**
-     * @param AbstractConfigurationEntity $entity
+     * @param AbstractRole $entity
      * @return string
      * @throws EntityNotFoundException
      */
-    public function fetchEntityManipulation(AbstractConfigurationEntity $entity)
+    public function fetchEntityManipulation(AbstractRole $entity)
     {
         $entityData = $this->fetchEntityDataForEntityId($entity->entityId);
 
@@ -264,10 +264,10 @@ class JanusRestV1MetadataRepository extends AbstractMetadataRepository
     }
 
     /**
-     * @param ServiceProviderEntity $serviceProvider
+     * @param ServiceProvider $serviceProvider
      * @return AttributeReleasePolicy
      */
-    public function fetchServiceProviderArp(ServiceProviderEntity $serviceProvider)
+    public function fetchServiceProviderArp(ServiceProvider $serviceProvider)
     {
         $entityData = $this->fetchEntityDataForEntityId($serviceProvider->entityId);
 
@@ -279,10 +279,10 @@ class JanusRestV1MetadataRepository extends AbstractMetadataRepository
     }
 
     /**
-     * @param ServiceProviderEntity $serviceProvider
+     * @param ServiceProvider $serviceProvider
      * @return bool
      */
-    public function findAllowedIdpEntityIdsForSp(ServiceProviderEntity $serviceProvider)
+    public function findAllowedIdpEntityIdsForSp(ServiceProvider $serviceProvider)
     {
         static $allowedIdpsPerSp = array();
 
@@ -309,14 +309,14 @@ class JanusRestV1MetadataRepository extends AbstractMetadataRepository
     }
 
     /**
-     * @return JanusRestV1\Cache
+     * @return Helper\JanusRestV1Cache
      */
     private function loadEntitiesMetadataCache()
     {
         static $cache;
 
         if (!$cache) {
-            $cache = new JanusRestV1\Cache($this->client->getIdpList(), $this->client->getSpList());
+            $cache = new Helper\JanusRestV1Cache($this->client->getIdpList(), $this->client->getSpList());
         }
 
         return $cache;
