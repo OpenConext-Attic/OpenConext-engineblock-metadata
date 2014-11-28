@@ -7,7 +7,7 @@ namespace OpenConext\Component\EngineBlockMetadata\MetadataRepository;
  */
 class RepositoryFactory
 {
-    const DEFAULT_NAMESPACE = '\\OpenConext\\Component\\EngineBlockMetadata\\Entity\\MetadataRepository';
+    const DEFAULT_NAMESPACE = '\\OpenConext\\Component\\EngineBlockMetadata\\MetadataRepository';
 
     /**
      * @param array $config
