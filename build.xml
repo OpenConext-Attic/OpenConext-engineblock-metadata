@@ -90,8 +90,6 @@
         <exec executable="vendor/bin/phpcpd" failonerror="false">
             <arg value="--log-pmd"/>
             <arg value="build/artifacts/logs/pmd-cpd.xml"/>
-            <arg value="--exclude"/>
-            <arg value="Tests"/>
             <arg path="src"/>
         </exec>
     </target>
