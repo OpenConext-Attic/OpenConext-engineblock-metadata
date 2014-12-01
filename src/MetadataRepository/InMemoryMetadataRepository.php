@@ -4,6 +4,7 @@ namespace OpenConext\Component\EngineBlockMetadata\MetadataRepository;
 
 use InvalidArgumentException;
 use OpenConext\Component\EngineBlockMetadata\AttributeReleasePolicy;
+use OpenConext\Component\EngineBlockMetadata\Container\ContainerInterface;
 use OpenConext\Component\EngineBlockMetadata\Entity\AbstractRole;
 use OpenConext\Component\EngineBlockMetadata\Entity\IdentityProvider;
 use OpenConext\Component\EngineBlockMetadata\Entity\ServiceProvider;
@@ -48,10 +49,10 @@ class InMemoryMetadataRepository extends AbstractMetadataRepository
 
     /**
      * @param array $repositoryConfig
-     * @param \EngineBlock_Application_DiContainer $container
+     * @param ContainerInterface $container
      * @return mixed
      */
-    public static function createFromConfig(array $repositoryConfig, \EngineBlock_Application_DiContainer $container)
+    public static function createFromConfig(array $repositoryConfig, ContainerInterface $container)
     {
         return new static(array(), array());
     }

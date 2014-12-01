@@ -3,6 +3,7 @@
 namespace OpenConext\Component\EngineBlockMetadata\MetadataRepository;
 
 use OpenConext\Component\EngineBlockMetadata\AttributeReleasePolicy;
+use OpenConext\Component\EngineBlockMetadata\Container\ContainerInterface;
 use OpenConext\Component\EngineBlockMetadata\Entity\AbstractRole;
 use OpenConext\Component\EngineBlockMetadata\Entity\IdentityProvider;
 use OpenConext\Component\EngineBlockMetadata\MetadataRepository\Filter\FilterInterface;
@@ -16,10 +17,10 @@ interface MetadataRepositoryInterface
 {
     /**
      * @param array $repositoryConfig
-     * @param \EngineBlock_Application_DiContainer $container
+     * @param ContainerInterface $container
      * @return MetadataRepositoryInterface
      */
-    public static function createFromConfig(array $repositoryConfig, \EngineBlock_Application_DiContainer $container);
+    public static function createFromConfig(array $repositoryConfig, ContainerInterface $container);
 
     /**
      *

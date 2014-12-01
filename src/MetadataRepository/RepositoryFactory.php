@@ -1,6 +1,7 @@
 <?php
 
 namespace OpenConext\Component\EngineBlockMetadata\MetadataRepository;
+use OpenConext\Component\EngineBlockMetadata\Container\ContainerInterface;
 
 /**
  * @package OpenConext\Component\EngineBlockMetadata\ServiceRegistry
@@ -11,11 +12,11 @@ class RepositoryFactory
 
     /**
      * @param array $config
-     * @param \EngineBlock_Application_DiContainer $container
+     * @param ContainerInterface $container
      * @return MetadataRepositoryInterface
      * @throws \RuntimeException
      */
-    public function createFromConfig(array $config, \EngineBlock_Application_DiContainer $container)
+    public function createFromConfig(array $config, ContainerInterface $container)
     {
         if (!isset($config['type'])) {
             throw new \RuntimeException('serviceRegistryAdapter config missing type!');

@@ -23,10 +23,10 @@ class DatabaseMetadataRepository extends AbstractMetadataRepository
 
     /**
      * @param array $repositoryConfig
-     * @param \EngineBlock_Application_DiContainer $container
+     * @param ContainerInterface $container
      * @return mixed
      */
-    public static function createFromConfig(array $repositoryConfig, \EngineBlock_Application_DiContainer $container)
+    public static function createFromConfig(array $repositoryConfig, ContainerInterface $container)
     {
         /** @var EntityManager $em */
         $em = $container->getEntityManager();

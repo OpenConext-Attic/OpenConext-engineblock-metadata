@@ -2,6 +2,7 @@
 
 namespace OpenConext\Component\EngineBlockMetadata\MetadataRepository;
 
+use OpenConext\Component\EngineBlockMetadata\Container\ContainerInterface;
 use OpenConext\Component\EngineBlockMetadata\Entity\AbstractRole;
 use OpenConext\Component\EngineBlockMetadata\Entity\IdentityProvider;
 use OpenConext\Component\EngineBlockMetadata\Entity\ServiceProvider;
@@ -34,11 +35,11 @@ class StokerMetadataRepository extends AbstractMetadataRepository
 
     /**
      * @param array $repositoryConfig
-     * @param \EngineBlock_Application_DiContainer $container
+     * @param ContainerInterface $container
      * @return mixed|static
      * @throws \RuntimeException
      */
-    public static function createFromConfig(array $repositoryConfig, \EngineBlock_Application_DiContainer $container)
+    public static function createFromConfig(array $repositoryConfig, ContainerInterface $container)
     {
         if (!isset($repositoryConfig['path'])) {
             throw new \RuntimeException('No path configured for stoker repository');

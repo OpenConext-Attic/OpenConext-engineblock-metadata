@@ -3,6 +3,7 @@
 namespace OpenConext\Component\EngineBlockMetadata\MetadataRepository;
 
 use EngineBlock_Application_DiContainer;
+use OpenConext\Component\EngineBlockMetadata\Container\ContainerInterface;
 use RuntimeException;
 use Janus_Client;
 use OpenConext\Component\EngineBlockMetadata\AttributeReleasePolicy;
@@ -48,10 +49,10 @@ class JanusRestV1MetadataRepository extends AbstractMetadataRepository
 
     /**
      * @param array $repositoryConfig
-     * @param EngineBlock_Application_DiContainer $container
+     * @param ContainerInterface $container
      * @return mixed
      */
-    public static function createFromConfig(array $repositoryConfig, EngineBlock_Application_DiContainer $container)
+    public static function createFromConfig(array $repositoryConfig, ContainerInterface $container)
     {
         return new static($container->getServiceRegistryClient(), new JanusRestV1Assembler());
     }
