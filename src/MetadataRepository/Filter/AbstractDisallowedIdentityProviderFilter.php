@@ -11,9 +11,15 @@ use OpenConext\Component\EngineBlockMetadata\Entity\IdentityProvider;
  */
 abstract class AbstractDisallowedIdentityProviderFilter extends AbstractFilter
 {
+    /**
+     * @var string
+     */
     private $serviceProviderEntityId;
 
-    private $allowedIdentityProviderEntityIds;
+    /**
+     * @var string[]
+     */
+    protected $allowedIdentityProviderEntityIds;
 
     /**
      *

@@ -63,8 +63,6 @@ class DoctrineMetadataRepository extends AbstractMetadataRepository
     /**
      * Find all SchacHomeOrganizations that are reserved by Identity Providers.
      *
-     *
-     *
      * @return string[]
      */
     public function findReservedSchacHomeOrganizations()

@@ -11,6 +11,9 @@ use OpenConext\Component\EngineBlockMetadata\Entity\ServiceProvider;
  */
 class RemoveOtherWorkflowStatesFilter extends AbstractFilter
 {
+    /**
+     * @var string
+     */
     private $workflowState;
 
     /**
