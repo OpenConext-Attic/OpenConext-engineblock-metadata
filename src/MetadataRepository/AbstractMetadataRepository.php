@@ -7,6 +7,7 @@ use OpenConext\Component\EngineBlockMetadata\Entity\AbstractRole;
 use OpenConext\Component\EngineBlockMetadata\Entity\IdentityProvider;
 use OpenConext\Component\EngineBlockMetadata\MetadataRepository\Filter\FilterInterface;
 use OpenConext\Component\EngineBlockMetadata\Entity\ServiceProvider;
+use OpenConext\Component\EngineBlockMetadata\MetadataRepository\Helper\FilterCollection;
 
 /**
  * Class AbstractMetadataRepository
@@ -15,6 +16,11 @@ use OpenConext\Component\EngineBlockMetadata\Entity\ServiceProvider;
  */
 abstract class AbstractMetadataRepository implements MetadataRepositoryInterface
 {
+    /**
+     * @var FilterCollection
+     */
+    protected $filterCollection;
+
     /**
      * @var FilterInterface[]
      */
@@ -25,13 +31,18 @@ abstract class AbstractMetadataRepository implements MetadataRepositoryInterface
      */
     private $disallowedByFilter;
 
+    protected function __construct()
+    {
+        $this->filterCollection = new Helper\FilterCollection();
+    }
+
     /**
      * @param FilterInterface $filter
      * @return $this
      */
     public function filter(FilterInterface $filter)
     {
-        $this->filters[] = $filter;
+        $this->filterCollection->add($filter);
         return $this;
     }
 
@@ -179,40 +190,5 @@ abstract class AbstractMetadataRepository implements MetadataRepositoryInterface
     public function findAllowedIdpEntityIdsForSp(ServiceProvider $serviceProvider)
     {
         return $this->findAllIdentityProviderEntityIds();
-    }
-
-    /**
-     * @param $entity
-     * @return AbstractRole
-     */
-    protected function applyFilters($entity)
-    {
-        foreach ($this->filters as $filter) {
-            $entity = $this->applyFilter($filter, $entity);
-
-            if (!$entity) {
-                $this->disallowedByFilter = $filter->__toString();
-                return null;
-            }
-        }
-        return $entity;
-    }
-
-    /**
-     * @param FilterInterface $filter
-     * @param $entity
-     * @return AbstractRole
-     */
-    protected function applyFilter(FilterInterface $filter, $entity)
-    {
-        return $filter->filter($entity);
-    }
-
-    /**
-     * @return string
-     */
-    protected function getDisallowedByFilter()
-    {
-        return $this->disallowedByFilter;
     }
 }

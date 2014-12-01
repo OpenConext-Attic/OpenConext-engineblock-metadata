@@ -54,6 +54,8 @@ class StokerMetadataRepository extends AbstractMetadataRepository
      */
     public function __construct($metadataDirectory, StokerAssembler $translator)
     {
+        parent::__construct();
+
         $this->metadataEntitySource = new MetadataEntitySource($metadataDirectory);
         $this->metadataIndex = MetadataIndex::load($metadataDirectory);
         if (!$this->metadataIndex) {
@@ -85,10 +87,11 @@ class StokerMetadataRepository extends AbstractMetadataRepository
 
         $entity = $this->translator->translate($xml, $metadataIndexEntity);
 
-        $entity = $this->applyFilters($entity);
+        $entity = $this->filterCollection->filterEntity($entity);
         if (!$entity) {
             throw new EntityNotFoundException(
-                "Found entity for '$entityId', but disallowed by filter: " . $this->getDisallowedByFilter()
+                "Found entity for '$entityId', but disallowed by filter: " .
+                $this->filterCollection->getDisallowedByFilter()
             );
         }
 
@@ -130,7 +133,7 @@ class StokerMetadataRepository extends AbstractMetadataRepository
 
         $entity = $this->translator->translate($xml, $metadataIndexEntity);
 
-        $entity = $this->applyFilters($entity);
+        $entity = $this->filterCollection->filterEntity($entity);
         if (!$entity) {
             return null;
         }
@@ -188,7 +191,7 @@ class StokerMetadataRepository extends AbstractMetadataRepository
 
             $entity = $this->translator->translate($entityXml, $metadataIndexEntity);
 
-            $entity = $this->applyFilters($entity);
+            $entity = $this->filterCollection->filterEntity($entity);
             if (!$entity) {
                 // @todo warn
                 continue;

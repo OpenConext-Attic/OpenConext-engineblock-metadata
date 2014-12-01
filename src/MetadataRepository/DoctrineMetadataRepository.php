@@ -109,7 +109,12 @@ class DoctrineMetadataRepository extends AbstractMetadataRepository
      */
     public function findIdentityProviderByEntityId($entityId)
     {
-        return $this->idpRepository->findBy(array('entityId' => $entityId));
+        /** @var IdentityProvider|null $identityProvider */
+        $identityProvider = $this->idpRepository->findOneBy(array('entityId' => $entityId));
+
+        return $this->filterCollection->filterEntity(
+            $identityProvider
+        );
     }
 
     /**
@@ -118,8 +123,15 @@ class DoctrineMetadataRepository extends AbstractMetadataRepository
      */
     public function findServiceProviderByEntityId($entityId)
     {
+        /** @var ServiceProvider|null $serviceProvider */
+        $serviceProvider = $this->spRepository->findOneBy(array('entityId' => $entityId));
+
+        if (!$serviceProvider) {
+            return null;
+        }
+
         return $this->filterCollection->filterEntity(
-            $this->spRepository->findBy(array('entityId' => $entityId))
+            $serviceProvider
         );
     }
 

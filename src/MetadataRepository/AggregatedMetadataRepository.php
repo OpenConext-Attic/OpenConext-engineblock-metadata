@@ -44,6 +44,8 @@ class AggregatedMetadataRepository extends AbstractMetadataRepository
      */
     public function __construct(array $orderedRepositories)
     {
+        parent::__construct();
+
         $this->orderedRepositories = $orderedRepositories;
     }
 

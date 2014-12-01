@@ -32,6 +32,8 @@ class InMemoryMetadataRepository extends AbstractMetadataRepository
      */
     public function __construct(array $identityProviders, array $serviceProviders)
     {
+        parent::__construct();
+
         foreach ($identityProviders as $identityProvider) {
             if (!$identityProvider instanceof IdentityProvider) {
                 throw new InvalidArgumentException("Gave a non-idp to InMemoryMetadataRepository idps");
