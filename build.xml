@@ -99,7 +99,7 @@
             <arg line="--configuration=${basedir}/tests/"/>
             <arg line="--coverage-html=build/artifacts/coverage"/>
             <arg line="--log-junit=build/artifacts/logs/junit.xml"/>
-            <arg line="--coverage-clover=build/artifacts/logs/clover.xml"/>
+            <arg line="--coverage-clover=build/artifacts/coverage/clover.xml"/>
             <arg line="--coverage-text"/>
         </exec>
     </target>
