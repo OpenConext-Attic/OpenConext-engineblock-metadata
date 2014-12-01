@@ -23,6 +23,9 @@ class RemoveDisallowedIdentityProvidersFilter extends AbstractDisallowedIdentity
         return null;
     }
 
+    /**
+     * @param QueryBuilder $queryBuilder
+     */
     public function toQueryBuilder(QueryBuilder $queryBuilder)
     {
         $queryBuilder
@@ -30,6 +33,9 @@ class RemoveDisallowedIdentityProvidersFilter extends AbstractDisallowedIdentity
             ->setParameter('allowedEntityIds', $this->allowedIdentityProviderEntityIds);
     }
 
+    /**
+     * @return Criteria
+     */
     public function toCriteria()
     {
         return Criteria::create()->where(Criteria::expr()->in('entityId', $this->allowedIdentityProviderEntityIds));

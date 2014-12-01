@@ -41,10 +41,18 @@ class RemoveEntityByEntityId extends AbstractFilter
         return parent::__toString() . ' -> ' . $this->entityId;
     }
 
+    /**
+     * @param QueryBuilder $queryBuilder
+     */
     public function toQueryBuilder(QueryBuilder $queryBuilder)
     {
         $queryBuilder
             ->andWhere('entityId <> :removeEntityId')
             ->setParameter('removeEntityId', $this->entityId);
+    }
+
+    public function toCriteria()
+    {
+        // TODO: Implement toCriteria() method.
     }
 }

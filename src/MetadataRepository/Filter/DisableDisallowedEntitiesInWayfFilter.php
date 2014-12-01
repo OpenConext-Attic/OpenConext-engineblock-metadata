@@ -21,13 +21,18 @@ class DisableDisallowedEntitiesInWayfFilter extends AbstractDisallowedIdentityPr
         return $entity;
     }
 
+    /**
+     * @param QueryBuilder $queryBuilder
+     * @return null
+     */
     public function toQueryBuilder(QueryBuilder $queryBuilder)
     {
     }
 
+    /**
+     *
+     */
     public function toCriteria()
     {
     }
-
-
 }

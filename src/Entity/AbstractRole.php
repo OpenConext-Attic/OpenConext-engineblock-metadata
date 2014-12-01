@@ -25,6 +25,9 @@ use SAML2_Const;
  *  "sp"  = "OpenConext\Component\EngineBlockMetadata\Entity\ServiceProvider",
  *  "idp" = "OpenConext\Component\EngineBlockMetadata\Entity\IdentityProvider"
  * })
+ *
+ * @SuppressWarnings(PHPMD.UnusedPrivateField)
+ * @SuppressWarnings(PHPMD.ExcessiveParameterList)
  */
 abstract class AbstractRole
 {
@@ -206,6 +209,32 @@ abstract class AbstractRole
      */
     public $responseProcessingService;
 
+    /**
+     * @param $entityId
+     * @param Organization $organizationEn
+     * @param Organization $organizationNl
+     * @param Service $singleLogoutService
+     * @param bool $additionalLogging
+     * @param array $certificates
+     * @param array $contactPersons
+     * @param string $descriptionEn
+     * @param string $descriptionNl
+     * @param bool $disableScoping
+     * @param string $displayNameEn
+     * @param string $displayNameNl
+     * @param string $keywordsEn
+     * @param string $keywordsNl
+     * @param Logo $logo
+     * @param string $nameEn
+     * @param string $nameNl
+     * @param null $nameIdFormat
+     * @param array $nameIdFormats
+     * @param null $publishInEduGainDate
+     * @param bool $publishInEdugain
+     * @param bool $requestsMustBeSigned
+     * @param Service $responseProcessingService
+     * @param string $workflowState
+     */
     public function __construct(
         $entityId,
         Organization $organizationEn = null,

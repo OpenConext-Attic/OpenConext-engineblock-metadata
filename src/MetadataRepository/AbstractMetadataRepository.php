@@ -22,15 +22,8 @@ abstract class AbstractMetadataRepository implements MetadataRepositoryInterface
     protected $filterCollection;
 
     /**
-     * @var FilterInterface[]
+     * Create a new Metadata Repository
      */
-    protected $filters = array();
-
-    /**
-     * @var string
-     */
-    private $disallowedByFilter;
-
     protected function __construct()
     {
         $this->filterCollection = new Helper\FilterCollection();

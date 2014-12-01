@@ -6,6 +6,10 @@ use Doctrine\ORM\QueryBuilder;
 use OpenConext\Component\EngineBlockMetadata\Entity\AbstractRole;
 use OpenConext\Component\EngineBlockMetadata\MetadataRepository\Filter\FilterInterface;
 
+/**
+ * Class FilterCollection
+ * @package OpenConext\Component\EngineBlockMetadata\MetadataRepository\Helper
+ */
 class FilterCollection
 {
     /**
@@ -18,11 +22,17 @@ class FilterCollection
      */
     private $disallowedByFilter;
 
+    /**
+     * @param FilterInterface $filter
+     */
     public function add(FilterInterface $filter)
     {
         $this->filters[] = $filter;
     }
 
+    /**
+     * @param QueryBuilder $queryBuilder
+     */
     public function toQueryBuilder(QueryBuilder $queryBuilder)
     {
         foreach ($this->filters as $filter) {

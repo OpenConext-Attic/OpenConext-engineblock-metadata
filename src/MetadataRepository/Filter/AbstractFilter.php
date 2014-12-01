@@ -1,6 +1,7 @@
 <?php
 
 namespace OpenConext\Component\EngineBlockMetadata\MetadataRepository\Filter;
+
 use Doctrine\ORM\QueryBuilder;
 
 /**

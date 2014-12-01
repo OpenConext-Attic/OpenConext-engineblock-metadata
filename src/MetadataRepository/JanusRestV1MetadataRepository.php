@@ -36,6 +36,9 @@ class JanusRestV1MetadataRepository extends AbstractMetadataRepository
      */
     private $prevClientException = null;
 
+    /**
+     * @var array
+     */
     private $entityCache = array();
 
     /**

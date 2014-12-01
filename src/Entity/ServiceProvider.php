@@ -16,6 +16,9 @@ use Doctrine\ORM;
  * @package OpenConext\Component\EngineBlockMetadata\Entity
  *
  * @ORM\Mapping\MappedSuperclass()
+ *
+ * @SuppressWarnings(PHPMD.TooManyMethods)
+ * @SuppressWarnings(PHPMD.ExcessiveParameterList)
  */
 class ServiceProvider extends AbstractRole
 {

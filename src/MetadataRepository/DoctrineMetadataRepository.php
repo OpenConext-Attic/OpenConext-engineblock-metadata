@@ -16,6 +16,13 @@ use OpenConext\Component\EngineBlockMetadata\MetadataRepository\Filter\RemoveEnt
 use OpenConext\Component\EngineBlockMetadata\MetadataRepository\Filter\RemoveOtherWorkflowStatesFilter;
 use RuntimeException;
 
+/**
+ * Class DoctrineMetadataRepository
+ * @package OpenConext\Component\EngineBlockMetadata\MetadataRepository
+ *
+ * @SuppressWarnings(PHPMD.ExcessiveParameterList)
+ * @SuppressWarnings(PHPMD.TooManyMethods)
+ */
 class DoctrineMetadataRepository extends AbstractMetadataRepository
 {
     /**
@@ -43,6 +50,10 @@ class DoctrineMetadataRepository extends AbstractMetadataRepository
         return new self($spRepository, $idpRepository);
     }
 
+    /**
+     * @param EntityRepository $spRepository
+     * @param EntityRepository $idpRepository
+     */
     protected function __construct(EntityRepository $spRepository, EntityRepository $idpRepository)
     {
         parent::__construct();
@@ -59,7 +70,7 @@ class DoctrineMetadataRepository extends AbstractMetadataRepository
     {
         $queryBuilder = $this->idpRepository->createQueryBuilder('idp')->select('entityId');
 
-        $this->applyFiltersToQueryBuilder($queryBuilder);
+        $this->filterCollection->toQueryBuilder($queryBuilder);
 
         return $queryBuilder->getQuery()->execute();
     }
@@ -88,23 +99,23 @@ class DoctrineMetadataRepository extends AbstractMetadataRepository
      *
      * NOTE: Highly inefficient default (in-memory) method that you probably want to override.
      *
-     * @param array $IdentityProviderIds
+     * @param array $identityProviderIds
      * @return array|IdentityProvider[]
      * @throws EntityNotFoundException
      */
-    public function fetchIdentityProvidersByEntityId(array $IdentityProviderIds)
+    public function fetchIdentityProvidersByEntityId(array $identityProviderIds)
     {
         $identityProviders = $this->findIdentityProviders();
 
         $filteredIdentityProviders = array();
-        foreach ($IdentityProviderIds as $IdentityProviderId) {
-            if (!isset($identityProviders[$IdentityProviderId])) {
+        foreach ($identityProviderIds as $identityProviderId) {
+            if (!isset($identityProviders[$identityProviderId])) {
                 throw new EntityNotFoundException(
-                    "Did not find an Identity Provider with entityId '$IdentityProviderId'"
+                    "Did not find an Identity Provider with entityId '$identityProviderId'"
                 );
             }
 
-            $filteredIdentityProviders[$IdentityProviderId] = $identityProviders[$IdentityProviderId];
+            $filteredIdentityProviders[$identityProviderId] = $identityProviders[$identityProviderId];
         }
         return $filteredIdentityProviders;
     }

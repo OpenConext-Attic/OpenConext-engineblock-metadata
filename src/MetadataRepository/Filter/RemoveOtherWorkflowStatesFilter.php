@@ -42,10 +42,18 @@ class RemoveOtherWorkflowStatesFilter extends AbstractFilter
         return parent::__toString() . ' -> ' . $this->workflowState;
     }
 
+    /**
+     * @param QueryBuilder $queryBuilder
+     */
     public function toQueryBuilder(QueryBuilder $queryBuilder)
     {
         $queryBuilder
             ->andWhere('workflowState <> :bannedWorkflowState')
             ->setParameter('bannedWorkflowState', $this->workflowState);
+    }
+
+    public function toCriteria()
+    {
+        // TODO: Implement toCriteria() method.
     }
 }

@@ -2,6 +2,10 @@
 
 namespace OpenConext\Component\EngineBlockMetadata\MetadataRepository\Helper;
 
+/**
+ * Class JanusRestV1Cache
+ * @package OpenConext\Component\EngineBlockMetadata\MetadataRepository\Helper
+ */
 class JanusRestV1Cache
 {
     /**
@@ -43,6 +47,10 @@ class JanusRestV1Cache
         return null;
     }
 
+    /**
+     * @param $entityId
+     * @return null
+     */
     public function findServiceProviderMetadataByEntityId($entityId)
     {
         if (!isset($this->serviceProvidersMetadata[$entityId])) {
@@ -52,6 +60,10 @@ class JanusRestV1Cache
         return $this->serviceProvidersMetadata[$entityId];
     }
 
+    /**
+     * @param $entityId
+     * @return null
+     */
     public function findIdentityProviderMetadataByEntityId($entityId)
     {
         if (!isset($this->identityProvidersMetadata[$entityId])) {
@@ -61,6 +73,9 @@ class JanusRestV1Cache
         return $this->identityProvidersMetadata[$entityId];
     }
 
+    /**
+     * @return array
+     */
     public function findIdentityProvidersMetadata()
     {
         return $this->identityProvidersMetadata;

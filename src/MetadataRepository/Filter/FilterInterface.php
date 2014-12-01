@@ -19,6 +19,10 @@ interface FilterInterface
 
     public function __toString();
 
+    /**
+     * @param QueryBuilder $queryBuilder
+     * @return mixed
+     */
     public function toQueryBuilder(QueryBuilder $queryBuilder);
 
     public function toCriteria();

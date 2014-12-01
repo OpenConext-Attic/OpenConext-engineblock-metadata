@@ -15,6 +15,8 @@ use SAML2_Const;
  * @SuppressWarnings(PHPMD.CamelCasePropertyName)
  *
  * @ORM\Mapping\MappedSuperclass()
+ *
+ * @SuppressWarnings(PHPMD.ExcessiveParameterList)
  */
 class IdentityProvider extends AbstractRole
 {

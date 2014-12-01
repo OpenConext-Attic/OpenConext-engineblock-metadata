@@ -1,6 +1,7 @@
 <?php
 
 namespace OpenConext\Component\EngineBlockMetadata\MetadataRepository;
+
 use OpenConext\Component\EngineBlockMetadata\Container\ContainerInterface;
 
 /**
@@ -8,6 +9,9 @@ use OpenConext\Component\EngineBlockMetadata\Container\ContainerInterface;
  */
 class RepositoryFactory
 {
+    /**
+     *
+     */
     const DEFAULT_NAMESPACE = '\\OpenConext\\Component\\EngineBlockMetadata\\MetadataRepository';
 
     /**
