@@ -4,6 +4,7 @@ namespace OpenConext\Component\EngineBlockMetadata\Entity;
 
 use Doctrine\ORM;
 use OpenConext\Component\EngineBlockMetadata\Logo;
+use OpenConext\Component\EngineBlockMetadata\MetadataRepository\Visitor\VisitorInterface;
 use OpenConext\Component\EngineBlockMetadata\Organization;
 use OpenConext\Component\EngineBlockMetadata\ShibMdScope;
 use OpenConext\Component\EngineBlockMetadata\Service;
@@ -183,5 +184,13 @@ class IdentityProvider extends AbstractRole
         $this->shibMdScopes = $shibMdScopes;
         $this->singleSignOnServices = $singleSignOnServices;
         $this->spsEntityIdsWithoutConsent = $spsEntityIdsWithoutConsent;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function accept(VisitorInterface $visitor)
+    {
+        $visitor->visitIdentityProvider($this);
     }
 }

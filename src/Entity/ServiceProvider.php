@@ -4,6 +4,7 @@ namespace OpenConext\Component\EngineBlockMetadata\Entity;
 
 use OpenConext\Component\EngineBlockMetadata\AttributeReleasePolicy;
 use OpenConext\Component\EngineBlockMetadata\Logo;
+use OpenConext\Component\EngineBlockMetadata\MetadataRepository\Visitor\VisitorInterface;
 use OpenConext\Component\EngineBlockMetadata\Organization;
 use OpenConext\Component\EngineBlockMetadata\RequestedAttribute;
 use OpenConext\Component\EngineBlockMetadata\IndexedService;
@@ -175,5 +176,13 @@ class ServiceProvider extends AbstractRole
         $this->isTrustedProxy = $isTrustedProxy;
         $this->requestedAttributes = $requestedAttributes;
         $this->skipDenormalization = $skipDenormalization;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function accept(VisitorInterface $visitor)
+    {
+        $visitor->visitServiceProvider($this);
     }
 }

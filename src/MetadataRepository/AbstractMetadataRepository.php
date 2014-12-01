@@ -8,6 +8,7 @@ use OpenConext\Component\EngineBlockMetadata\Entity\IdentityProvider;
 use OpenConext\Component\EngineBlockMetadata\MetadataRepository\Filter\FilterInterface;
 use OpenConext\Component\EngineBlockMetadata\Entity\ServiceProvider;
 use OpenConext\Component\EngineBlockMetadata\MetadataRepository\Helper\FilterCollection;
+use OpenConext\Component\EngineBlockMetadata\MetadataRepository\Visitor\VisitorInterface;
 
 /**
  * Class AbstractMetadataRepository
@@ -20,6 +21,11 @@ abstract class AbstractMetadataRepository implements MetadataRepositoryInterface
      * @var FilterCollection
      */
     protected $filterCollection;
+
+    /**
+     * @var array
+     */
+    protected $visitors = array();
 
     /**
      * Create a new Metadata Repository
@@ -36,6 +42,28 @@ abstract class AbstractMetadataRepository implements MetadataRepositoryInterface
     public function filter(FilterInterface $filter)
     {
         $this->filterCollection->add($filter);
+        return $this;
+    }
+
+    /**
+     * @param VisitorInterface $visitor
+     * @return $this
+     */
+    public function registerVisitor(VisitorInterface $visitor)
+    {
+        $this->visitors[] = $visitor;
+        return $this;
+    }
+
+    /**
+     * @param AbstractRole $role
+     * @return $this
+     */
+    protected function applyVisitors(AbstractRole $role)
+    {
+        foreach ($this->visitors as $visitor) {
+            $role->accept($visitor);
+        }
         return $this;
     }
 

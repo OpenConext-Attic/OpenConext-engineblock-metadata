@@ -288,5 +288,15 @@ abstract class AbstractRole
         $this->responseProcessingService = $responseProcessingService;
         $this->singleLogoutService = $singleLogoutService;
         $this->workflowState = $workflowState;
+        $this->manipulation = $manipulation;
+        $this->attributeReleasePolicy = $attributeReleasePolicy;
+    }
+
+    /**
+     * @param VisitorInterface $visitor
+     */
+    public function accept(VisitorInterface $visitor)
+    {
+        $visitor->visitRole($this);
     }
 }
