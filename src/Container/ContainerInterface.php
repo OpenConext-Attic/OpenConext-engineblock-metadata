@@ -2,6 +2,10 @@
 
 namespace OpenConext\Component\EngineBlockMetadata\Container;
 
+/**
+ * Interface ContainerInterface
+ * @package OpenConext\Component\EngineBlockMetadata\Container
+ */
 interface ContainerInterface
 {
     public function getServiceRegistryClient();

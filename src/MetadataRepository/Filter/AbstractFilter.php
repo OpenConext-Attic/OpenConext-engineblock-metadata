@@ -11,7 +11,7 @@ use Doctrine\ORM\QueryBuilder;
 abstract class AbstractFilter implements FilterInterface
 {
     /**
-     * @return string
+     * {@inheritdoc}
      */
     public function __toString()
     {
