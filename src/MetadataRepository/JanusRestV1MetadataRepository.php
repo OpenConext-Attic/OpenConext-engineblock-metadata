@@ -4,6 +4,7 @@ namespace OpenConext\Component\EngineBlockMetadata\MetadataRepository;
 
 use EngineBlock_Application_DiContainer;
 use OpenConext\Component\EngineBlockMetadata\Container\ContainerInterface;
+use OpenConext\Component\EngineBlockMetadata\JanusRestV1\RestClientInterface;
 use RuntimeException;
 use Janus_Client;
 use OpenConext\Component\EngineBlockMetadata\AttributeReleasePolicy;
@@ -21,7 +22,7 @@ use OpenConext\Component\EngineBlockMetadata\Entity\Assembler\JanusRestV1Assembl
 class JanusRestV1MetadataRepository extends AbstractMetadataRepository
 {
     /**
-     * @var Janus_Client
+     * @var RestClientInterface
      */
     private $client;
 
@@ -38,10 +39,10 @@ class JanusRestV1MetadataRepository extends AbstractMetadataRepository
     private $entityCache = array();
 
     /**
-     * @param \Janus_Client_CacheProxy $client
+     * @param RestClientInterface $client
      * @param JanusRestV1Assembler $translator
      */
-    public function __construct(\Janus_Client_CacheProxy $client, JanusRestV1Assembler $translator)
+    public function __construct(RestClientInterface $client, JanusRestV1Assembler $translator)
     {
         parent::__construct();
 
