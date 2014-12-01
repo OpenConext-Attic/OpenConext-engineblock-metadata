@@ -57,7 +57,11 @@ class DoctrineMetadataRepository extends AbstractMetadataRepository
      */
     public function findAllIdentityProviderEntityIds()
     {
-        return $this->idpRepository->createQueryBuilder('idp')->select('entityId')->getQuery()->execute();
+        $queryBuilder = $this->idpRepository->createQueryBuilder('idp')->select('entityId');
+
+        $this->applyFiltersToQueryBuilder($queryBuilder);
+
+        return $queryBuilder->getQuery()->execute();
     }
 
     /**
@@ -67,11 +71,15 @@ class DoctrineMetadataRepository extends AbstractMetadataRepository
      */
     public function findReservedSchacHomeOrganizations()
     {
-        return $this->idpRepository
+        $queryBuilder = $this->idpRepository
             ->createQueryBuilder('idp')
             ->select('schacHomeOrganization')
             ->distinct()
-            ->orderBy('schacHomeOrganization')
+            ->orderBy('schacHomeOrganization');
+
+        $this->filterCollection->toQueryBuilder($queryBuilder);
+
+        return $queryBuilder
             ->getQuery()
             ->execute();
     }

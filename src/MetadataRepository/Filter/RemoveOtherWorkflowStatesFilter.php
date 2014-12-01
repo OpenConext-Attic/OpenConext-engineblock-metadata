@@ -2,6 +2,7 @@
 
 namespace OpenConext\Component\EngineBlockMetadata\MetadataRepository\Filter;
 
+use Doctrine\ORM\QueryBuilder;
 use OpenConext\Component\EngineBlockMetadata\Entity\AbstractRole;
 use OpenConext\Component\EngineBlockMetadata\Entity\ServiceProvider;
 
@@ -39,5 +40,12 @@ class RemoveOtherWorkflowStatesFilter extends AbstractFilter
     public function __toString()
     {
         return parent::__toString() . ' -> ' . $this->workflowState;
+    }
+
+    public function toQueryBuilder(QueryBuilder $queryBuilder)
+    {
+        $queryBuilder
+            ->andWhere('workflowState <> :bannedWorkflowState')
+            ->setParameter('bannedWorkflowState', $this->workflowState);
     }
 }

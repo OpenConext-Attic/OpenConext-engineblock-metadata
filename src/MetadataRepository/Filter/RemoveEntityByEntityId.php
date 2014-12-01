@@ -2,6 +2,7 @@
 
 namespace OpenConext\Component\EngineBlockMetadata\MetadataRepository\Filter;
 
+use Doctrine\ORM\QueryBuilder;
 use OpenConext\Component\EngineBlockMetadata\Entity\AbstractRole;
 
 /**
@@ -35,16 +36,15 @@ class RemoveEntityByEntityId extends AbstractFilter
     /**
      * @return string
      */
-    public function getEntityId()
-    {
-        return $this->entityId;
-    }
-
-    /**
-     * @return string
-     */
     public function __toString()
     {
         return parent::__toString() . ' -> ' . $this->entityId;
+    }
+
+    public function toQueryBuilder(QueryBuilder $queryBuilder)
+    {
+        $queryBuilder
+            ->andWhere('entityId <> :removeEntityId')
+            ->setParameter('removeEntityId', $this->entityId);
     }
 }

@@ -2,6 +2,9 @@
 
 namespace OpenConext\Component\EngineBlockMetadata\MetadataRepository\Filter;
 
+use Doctrine\Common\Collections\Criteria;
+use Doctrine\ORM\Query\AST\InExpression;
+use Doctrine\ORM\QueryBuilder;
 use OpenConext\Component\EngineBlockMetadata\Entity\IdentityProvider;
 
 /**
@@ -18,5 +21,17 @@ class RemoveDisallowedIdentityProvidersFilter extends AbstractDisallowedIdentity
     protected function onDisallowedIdentityProvider(IdentityProvider $entity)
     {
         return null;
+    }
+
+    public function toQueryBuilder(QueryBuilder $queryBuilder)
+    {
+        $queryBuilder
+            ->andWhere("entityId IN(:allowedEntityIds)")
+            ->setParameter('allowedEntityIds', $this->allowedIdentityProviderEntityIds);
+    }
+
+    public function toCriteria()
+    {
+        return Criteria::create()->where(Criteria::expr()->in('entityId', $this->allowedIdentityProviderEntityIds));
     }
 }

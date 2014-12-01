@@ -2,6 +2,7 @@
 
 namespace OpenConext\Component\EngineBlockMetadata\MetadataRepository\Filter;
 
+use Doctrine\ORM\QueryBuilder;
 use OpenConext\Component\EngineBlockMetadata\Entity\IdentityProvider;
 
 /**
@@ -19,4 +20,14 @@ class DisableDisallowedEntitiesInWayfFilter extends AbstractDisallowedIdentityPr
         $entity->enabledInWayf = false;
         return $entity;
     }
+
+    public function toQueryBuilder(QueryBuilder $queryBuilder)
+    {
+    }
+
+    public function toCriteria()
+    {
+    }
+
+
 }

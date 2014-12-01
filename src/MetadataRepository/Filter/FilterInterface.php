@@ -2,6 +2,7 @@
 
 namespace OpenConext\Component\EngineBlockMetadata\MetadataRepository\Filter;
 
+use Doctrine\ORM\QueryBuilder;
 use OpenConext\Component\EngineBlockMetadata\Entity\AbstractRole;
 
 /**
@@ -17,4 +18,8 @@ interface FilterInterface
     public function filter(AbstractRole $entity);
 
     public function __toString();
+
+    public function toQueryBuilder(QueryBuilder $queryBuilder);
+
+    public function toCriteria();
 }
