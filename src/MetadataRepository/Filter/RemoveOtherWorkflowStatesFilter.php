@@ -2,6 +2,7 @@
 
 namespace OpenConext\Component\EngineBlockMetadata\MetadataRepository\Filter;
 
+use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\QueryBuilder;
 use OpenConext\Component\EngineBlockMetadata\Entity\AbstractRole;
 use OpenConext\Component\EngineBlockMetadata\Entity\ServiceProvider;
@@ -26,24 +27,15 @@ class RemoveOtherWorkflowStatesFilter extends AbstractFilter
     }
 
     /**
-     * @param AbstractRole $entity
-     * @return AbstractRole
+     * {@inheritdoc}
      */
-    public function filter(AbstractRole $entity)
+    public function filterRole(AbstractRole $entity)
     {
         return $entity->workflowState === $this->workflowState ? $entity : null;
     }
 
     /**
-     * @return string
-     */
-    public function __toString()
-    {
-        return parent::__toString() . ' -> ' . $this->workflowState;
-    }
-
-    /**
-     * @param QueryBuilder $queryBuilder
+     * {@inheritdoc}
      */
     public function toQueryBuilder(QueryBuilder $queryBuilder)
     {
@@ -52,8 +44,19 @@ class RemoveOtherWorkflowStatesFilter extends AbstractFilter
             ->setParameter('bannedWorkflowState', $this->workflowState);
     }
 
-    public function toCriteria()
+    /**
+     * {@inheritdoc}
+     */
+    public function toExpression()
     {
-        // TODO: Implement toCriteria() method.
+        return Criteria::expr()->neq('workflowState', $this->workflowState);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function __toString()
+    {
+        return parent::__toString() . ' -> ' . $this->workflowState;
     }
 }

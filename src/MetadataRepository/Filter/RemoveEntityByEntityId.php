@@ -2,6 +2,7 @@
 
 namespace OpenConext\Component\EngineBlockMetadata\MetadataRepository\Filter;
 
+use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\QueryBuilder;
 use OpenConext\Component\EngineBlockMetadata\Entity\AbstractRole;
 
@@ -25,12 +26,29 @@ class RemoveEntityByEntityId extends AbstractFilter
     }
 
     /**
-     * @param AbstractRole $entity
-     * @return AbstractRole
+     * {@inheritdoc}
      */
-    public function filter(AbstractRole $entity)
+    public function filterRole(AbstractRole $entity)
     {
         return $entity->entityId === $this->entityId ? null : $entity;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function toQueryBuilder(QueryBuilder $queryBuilder)
+    {
+        return $queryBuilder
+            ->andWhere('entityId <> :removeEntityId')
+            ->setParameter('removeEntityId', $this->entityId);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function toExpression()
+    {
+        return Criteria::expr()->neq('entityId', $this->entityId);
     }
 
     /**
@@ -39,20 +57,5 @@ class RemoveEntityByEntityId extends AbstractFilter
     public function __toString()
     {
         return parent::__toString() . ' -> ' . $this->entityId;
-    }
-
-    /**
-     * @param QueryBuilder $queryBuilder
-     */
-    public function toQueryBuilder(QueryBuilder $queryBuilder)
-    {
-        $queryBuilder
-            ->andWhere('entityId <> :removeEntityId')
-            ->setParameter('removeEntityId', $this->entityId);
-    }
-
-    public function toCriteria()
-    {
-        // TODO: Implement toCriteria() method.
     }
 }

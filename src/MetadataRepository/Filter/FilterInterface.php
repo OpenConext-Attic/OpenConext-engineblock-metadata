@@ -2,6 +2,7 @@
 
 namespace OpenConext\Component\EngineBlockMetadata\MetadataRepository\Filter;
 
+use Doctrine\Common\Collections\Expr\Expression;
 use Doctrine\ORM\QueryBuilder;
 use OpenConext\Component\EngineBlockMetadata\Entity\AbstractRole;
 
@@ -15,15 +16,21 @@ interface FilterInterface
      * @param AbstractRole $entity
      * @return AbstractRole
      */
-    public function filter(AbstractRole $entity);
-
-    public function __toString();
+    public function filterRole(AbstractRole $entity);
 
     /**
      * @param QueryBuilder $queryBuilder
-     * @return mixed
+     * @return QueryBuilder
      */
     public function toQueryBuilder(QueryBuilder $queryBuilder);
 
-    public function toCriteria();
+    /**
+     * @return Expression
+     */
+    public function toExpression();
+
+    /**
+     * @return string
+     */
+    public function __toString();
 }
