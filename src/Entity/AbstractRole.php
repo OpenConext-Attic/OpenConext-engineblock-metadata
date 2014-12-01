@@ -3,6 +3,7 @@
 namespace OpenConext\Component\EngineBlockMetadata\Entity;
 
 use DateTime;
+use Doctrine\ORM\Mapping as ORM;
 use OpenConext\Component\EngineBlockMetadata\Logo;
 use OpenConext\Component\EngineBlockMetadata\Organization;
 use OpenConext\Component\EngineBlockMetadata\ContactPerson;
@@ -21,8 +22,8 @@ use SAML2_Const;
  * @ORM\InheritanceType("SINGLE_TABLE")
  * @ORM\DiscriminatorColumn(name="type", type="string")
  * @ORM\DiscriminatorMap({
- *  "sp"  = "OpenConext\EngineBlock\Entity\ServiceProvider",
- *  "idp" = "OpenConext\EngineBlock\Entity\IdentityProvider"
+ *  "sp"  = "OpenConext\Component\EngineBlockMetadata\Entity\ServiceProvider",
+ *  "idp" = "OpenConext\Component\EngineBlockMetadata\Entity\IdentityProvider"
  * })
  */
 abstract class AbstractRole

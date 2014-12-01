@@ -1,15 +1,22 @@
 <?php
 
-namespace OpenConext\EngineBlock\MetadataRepository;
+namespace OpenConext\Component\EngineBlockMetadata\MetadataRepository;
 
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
-use OpenConext\EngineBlock\AttributeReleasePolicy;
-use OpenConext\EngineBlock\Entity\AbstractRole;
-use OpenConext\EngineBlock\Entity\IdentityProvider;
-use OpenConext\EngineBlock\Entity\ServiceProvider;
+use Doctrine\ORM\QueryBuilder;
+use OpenConext\Component\EngineBlockMetadata\Container\ContainerInterface;
+use OpenConext\Component\EngineBlockMetadata\AttributeReleasePolicy;
+use OpenConext\Component\EngineBlockMetadata\Entity\AbstractRole;
+use OpenConext\Component\EngineBlockMetadata\Entity\IdentityProvider;
+use OpenConext\Component\EngineBlockMetadata\Entity\ServiceProvider;
+use OpenConext\Component\EngineBlockMetadata\MetadataRepository\Filter\DisableDisallowedEntitiesInWayfFilter;
+use OpenConext\Component\EngineBlockMetadata\MetadataRepository\Filter\RemoveDisallowedIdentityProvidersFilter;
+use OpenConext\Component\EngineBlockMetadata\MetadataRepository\Filter\RemoveEntityByEntityId;
+use OpenConext\Component\EngineBlockMetadata\MetadataRepository\Filter\RemoveOtherWorkflowStatesFilter;
+use RuntimeException;
 
-class DatabaseMetadataRepository extends AbstractMetadataRepository
+class DoctrineMetadataRepository extends AbstractMetadataRepository
 {
     /**
      * @var EntityRepository
@@ -30,8 +37,8 @@ class DatabaseMetadataRepository extends AbstractMetadataRepository
     {
         /** @var EntityManager $em */
         $em = $container->getEntityManager();
-        $idpRepository = $em->getRepository('OpenConext\EngineBlock\Entity\IdentityProvider');
-        $spRepository  = $em->getRepository('OpenConext\EngineBlock\Entity\ServiceProvider');
+        $idpRepository = $em->getRepository('OpenConext\Component\EngineBlockMetadata\Entity\IdentityProvider');
+        $spRepository  = $em->getRepository('OpenConext\Component\EngineBlockMetadata\Entity\ServiceProvider');
 
         return new self($spRepository, $idpRepository);
     }

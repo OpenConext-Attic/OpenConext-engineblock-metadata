@@ -9,10 +9,13 @@ use OpenConext\Component\EngineBlockMetadata\RequestedAttribute;
 use OpenConext\Component\EngineBlockMetadata\IndexedService;
 use OpenConext\Component\EngineBlockMetadata\Service;
 use SAML2_Const;
+use Doctrine\ORM;
 
 /**
  * Class ServiceProvider
  * @package OpenConext\Component\EngineBlockMetadata\Entity
+ *
+ * @ORM\Mapping\MappedSuperclass()
  */
 class ServiceProvider extends AbstractRole
 {
