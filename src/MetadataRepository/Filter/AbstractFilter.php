@@ -2,8 +2,6 @@
 
 namespace OpenConext\Component\EngineBlockMetadata\MetadataRepository\Filter;
 
-use Doctrine\ORM\QueryBuilder;
-
 /**
  * Class AbstractFilter
  * @package OpenConext\Component\EngineBlockMetadata\MetadataRepository\Filter

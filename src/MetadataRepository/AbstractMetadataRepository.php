@@ -7,7 +7,6 @@ use OpenConext\Component\EngineBlockMetadata\Entity\AbstractRole;
 use OpenConext\Component\EngineBlockMetadata\Entity\IdentityProvider;
 use OpenConext\Component\EngineBlockMetadata\MetadataRepository\Filter\FilterInterface;
 use OpenConext\Component\EngineBlockMetadata\Entity\ServiceProvider;
-use OpenConext\Component\EngineBlockMetadata\MetadataRepository\Helper\FilterCollection;
 use OpenConext\Component\EngineBlockMetadata\MetadataRepository\Visitor\VisitorInterface;
 
 /**
@@ -18,7 +17,7 @@ use OpenConext\Component\EngineBlockMetadata\MetadataRepository\Visitor\VisitorI
 abstract class AbstractMetadataRepository implements MetadataRepositoryInterface
 {
     /**
-     * @var FilterCollection
+     * @var Filter\FilterCollection
      */
     protected $filterCollection;
 
@@ -32,14 +31,14 @@ abstract class AbstractMetadataRepository implements MetadataRepositoryInterface
      */
     protected function __construct()
     {
-        $this->filterCollection = new Helper\FilterCollection();
+        $this->filterCollection = new Filter\FilterCollection();
     }
 
     /**
      * @param FilterInterface $filter
      * @return $this
      */
-    public function filter(FilterInterface $filter)
+    public function registerFilter(FilterInterface $filter)
     {
         $this->filterCollection->add($filter);
         return $this;

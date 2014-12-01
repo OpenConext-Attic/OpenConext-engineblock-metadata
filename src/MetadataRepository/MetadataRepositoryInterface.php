@@ -23,6 +23,12 @@ interface MetadataRepositoryInterface
     public static function createFromConfig(array $repositoryConfig, ContainerInterface $container);
 
     /**
+     * @param FilterInterface $filter
+     * @return $this
+     */
+    public function registerFilter(FilterInterface $filter);
+
+    /**
      *
      * @param string $entityId
      * @return AbstractRole
@@ -88,12 +94,6 @@ interface MetadataRepositoryInterface
      * @return AbstractRole[]
      */
     public function findEntitiesPublishableInEdugain();
-
-    /**
-     * @param FilterInterface $filter
-     * @return $this
-     */
-    public function filter(FilterInterface $filter);
 
     /**
      * @param AbstractRole $entity

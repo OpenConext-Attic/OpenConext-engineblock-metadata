@@ -2,19 +2,14 @@
 
 namespace OpenConext\Component\EngineBlockMetadata\MetadataRepository;
 
+use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
-use Doctrine\ORM\QueryBuilder;
 use OpenConext\Component\EngineBlockMetadata\Container\ContainerInterface;
 use OpenConext\Component\EngineBlockMetadata\AttributeReleasePolicy;
 use OpenConext\Component\EngineBlockMetadata\Entity\AbstractRole;
 use OpenConext\Component\EngineBlockMetadata\Entity\IdentityProvider;
 use OpenConext\Component\EngineBlockMetadata\Entity\ServiceProvider;
-use OpenConext\Component\EngineBlockMetadata\MetadataRepository\Filter\DisableDisallowedEntitiesInWayfFilter;
-use OpenConext\Component\EngineBlockMetadata\MetadataRepository\Filter\RemoveDisallowedIdentityProvidersFilter;
-use OpenConext\Component\EngineBlockMetadata\MetadataRepository\Filter\RemoveEntityByEntityId;
-use OpenConext\Component\EngineBlockMetadata\MetadataRepository\Filter\RemoveOtherWorkflowStatesFilter;
-use RuntimeException;
 
 /**
  * Class DoctrineMetadataRepository
@@ -157,7 +152,7 @@ class DoctrineMetadataRepository extends AbstractMetadataRepository
      */
     public function findIdentityProviders()
     {
-        return $this->idpRepository->findAll();
+        return $this->idpRepository->findBy(Criteria::create()->where($this->filterCollection->toExpression()));
     }
 
     /**
