@@ -34,14 +34,6 @@ class RemoveOtherWorkflowStatesFilter extends AbstractFilter
     }
 
     /**
-     * @return mixed
-     */
-    public function getWorkflowState()
-    {
-        return $this->workflowState;
-    }
-
-    /**
      * @return string
      */
     public function __toString()
