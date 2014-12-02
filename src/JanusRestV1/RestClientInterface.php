@@ -10,23 +10,30 @@ interface RestClientInterface
 {
     /**
      * @param $entityId
-     * @return mixed
+     * @return string[]
      */
     public function getAllowedIdps($entityId);
 
     /**
      * @param $entityId
-     * @return mixed
+     * @return array
      */
     public function getEntity($entityId);
 
     /**
-     * @return mixed
+     * @return array
      */
     public function getIdpList();
 
     /**
-     * @return mixed
+     * @return array
      */
     public function getSpList();
+
+    /**
+     * @param string $propertyName
+     * @param string $propertyValue
+     * @return array
+     */
+    public function findIdentifiersByMetadata($propertyName, $propertyValue);
 }
