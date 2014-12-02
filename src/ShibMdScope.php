@@ -9,8 +9,12 @@ namespace OpenConext\Component\EngineBlockMetadata;
 class ShibMdScope
 {
     /**
-     * @var
+     * @var string
      */
     public $allowed;
+
+    /**
+     * @var string
+     */
     public $regexp;
 }
