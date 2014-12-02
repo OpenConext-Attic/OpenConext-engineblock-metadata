@@ -129,7 +129,7 @@ class JanusRestV1MetadataRepository extends AbstractMetadataRepository
     public function findEntityByEntityId($entityId)
     {
         if (isset($this->entityCache[$entityId])) {
-            return $this->filterCollection->filterEntity($this->entityCache[$entityId]);
+            return $this->filterCollection->filterRole($this->entityCache[$entityId]);
         }
 
         $metadata = $this->client->findMetadataByEntityId($entityId);
@@ -143,7 +143,7 @@ class JanusRestV1MetadataRepository extends AbstractMetadataRepository
         }
 
         $this->entityCache[$entityId] = $entity;
-        return $this->filterCollection->filterEntity($this->entityCache[$entityId]);
+        return $this->filterCollection->filterRole($this->entityCache[$entityId]);
     }
 
     /**
@@ -154,10 +154,10 @@ class JanusRestV1MetadataRepository extends AbstractMetadataRepository
     public function findIdentityProviderByEntityId($entityId)
     {
         if (isset($this->entityCache[$entityId])) {
-            return $this->filterCollection->filterEntity($this->entityCache[$entityId]);
+            return $this->filterCollection->filterRole($this->entityCache[$entityId]);
         }
 
-        $metadata = $this->loadEntitiesMetadataCache()->findIdentityProviderMetadataByEntityId($entityId);
+        $metadata = $this->client->findIdentityProviderMetadataByEntityId($entityId);
         if (empty($metadata)) {
             $this->entityCache[$entityId] = null;
             return $this->entityCache[$entityId];
@@ -175,7 +175,7 @@ class JanusRestV1MetadataRepository extends AbstractMetadataRepository
         }
 
         $this->entityCache[$entityId] = $entity;
-        return $this->filterCollection->filterEntity($this->entityCache[$entityId]);
+        return $this->filterCollection->filterRole($this->entityCache[$entityId]);
     }
 
     /**
@@ -204,7 +204,7 @@ class JanusRestV1MetadataRepository extends AbstractMetadataRepository
 
         $this->entityCache[$entityId] = $entity;
 
-        return $this->filterCollection->filterEntity($this->entityCache[$entityId]);
+        return $this->filterCollection->filterRole($this->entityCache[$entityId]);
     }
 
     /**
@@ -231,7 +231,7 @@ class JanusRestV1MetadataRepository extends AbstractMetadataRepository
                 continue;
             }
 
-            $entity = $this->filterCollection->filterEntity($this->entityCache[$entityId]);
+            $entity = $this->filterCollection->filterRole($this->entityCache[$entityId]);
 
             if (!$entity) {
                 continue;

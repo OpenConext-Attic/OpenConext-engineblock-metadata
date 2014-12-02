@@ -87,7 +87,7 @@ class StokerMetadataRepository extends AbstractMetadataRepository
 
         $entity = $this->translator->translate($xml, $metadataIndexEntity);
 
-        $entity = $this->filterCollection->filterEntity($entity);
+        $entity = $this->filterCollection->filterRole($entity);
         if (!$entity) {
             throw new EntityNotFoundException(
                 "Found entity for '$entityId', but disallowed by filter: " .
@@ -133,7 +133,7 @@ class StokerMetadataRepository extends AbstractMetadataRepository
 
         $entity = $this->translator->translate($xml, $metadataIndexEntity);
 
-        $entity = $this->filterCollection->filterEntity($entity);
+        $entity = $this->filterCollection->filterRole($entity);
         if (!$entity) {
             return null;
         }
@@ -191,7 +191,7 @@ class StokerMetadataRepository extends AbstractMetadataRepository
 
             $entity = $this->translator->translate($entityXml, $metadataIndexEntity);
 
-            $entity = $this->filterCollection->filterEntity($entity);
+            $entity = $this->filterCollection->filterRole($entity);
             if (!$entity) {
                 // @todo warn
                 continue;

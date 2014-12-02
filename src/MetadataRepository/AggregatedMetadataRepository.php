@@ -223,7 +223,7 @@ class AggregatedMetadataRepository extends AbstractMetadataRepository
     public function filter(FilterInterface $filter)
     {
         foreach ($this->orderedRepositories as $repository) {
-            $repository->filter(clone $filter);
+            $repository->registerFilter(clone $filter);
         }
         return $this;
     }

@@ -35,7 +35,7 @@ class X509PrivateKey
     /**
      * @return string
      */
-    public function filePath()
+    public function getFilePath()
     {
         return $this->filePath;
     }
