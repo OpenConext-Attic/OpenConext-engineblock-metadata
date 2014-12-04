@@ -9,6 +9,7 @@ use OpenConext\Component\EngineBlockMetadata\Entity\AbstractRole;
 use OpenConext\Component\EngineBlockMetadata\Entity\IdentityProvider;
 use OpenConext\Component\EngineBlockMetadata\Entity\ServiceProvider;
 use OpenConext\Component\EngineBlockMetadata\Entity\Assembler\JanusRestV1Assembler;
+use OpenConext\Component\EngineBlockMetadata\JanusRestV1\RestClientInterface;
 use RuntimeException;
 
 /**
@@ -47,8 +48,8 @@ class JanusRestV1MetadataRepository extends AbstractMetadataRepository
     {
         parent::__construct();
 
-        $this->client = $client;
-        $this->translator = $translator;
+        $this->client = new RestClientDecorator($client);
+        $this->assembler = $assembler;
     }
 
     /**
@@ -58,7 +59,10 @@ class JanusRestV1MetadataRepository extends AbstractMetadataRepository
      */
     public static function createFromConfig(array $repositoryConfig, ContainerInterface $container)
     {
-        return new static($container->getServiceRegistryClient(), new JanusRestV1Assembler());
+        return new static(
+            $container->getServiceRegistryClient(),
+            new JanusRestV1Assembler()
+        );
     }
 
     /**
