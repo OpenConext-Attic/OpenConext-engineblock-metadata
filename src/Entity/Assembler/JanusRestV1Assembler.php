@@ -29,19 +29,19 @@ class JanusRestV1Assembler
      * @return IdentityProvider|ServiceProvider
      * @throws \RuntimeException
      */
-    public function translate($entityId, array $metadata)
+    public function assemble($entityId, array $metadata)
     {
         if (isset($metadata['AssertionConsumerService:0:Location'])) {
             $entity = new ServiceProvider($entityId);
-            $entity = $this->translateCommonMetadata($metadata, $entity);
-            $entity = $this->translateServiceProviderMetadata($metadata, $entity);
+            $entity = $this->assembleCommonMetadata($metadata, $entity);
+            $entity = $this->assembleServiceProviderMetadata($metadata, $entity);
             return $entity;
         }
 
         if (isset($metadata['SingleSignOnService:0:Location'])) {
             $entity = new IdentityProvider($entityId);
-            $entity = $this->translateCommonMetadata($metadata, $entity);
-            $entity = $this->translateIdentityProviderMetadata($metadata, $entity);
+            $entity = $this->assembleCommonMetadata($metadata, $entity);
+            $entity = $this->assembleIdentityProviderMetadata($metadata, $entity);
             return $entity;
         }
 
@@ -56,7 +56,7 @@ class JanusRestV1Assembler
      * @param AbstractRole $entity
      * @return AbstractRole
      */
-    public function translateCommonMetadata(array $metadata, AbstractRole $entity)
+    public function assembleCommonMetadata(array $metadata, AbstractRole $entity)
     {
         $entity->nameEn                 =        self::ifsetor($metadata, 'Name:en'                 , $entity->nameEn);
         $entity->nameNl                 =        self::ifsetor($metadata, 'Name:nl'                 , $entity->nameNl);
@@ -96,7 +96,7 @@ class JanusRestV1Assembler
      * @param ServiceProvider $entity
      * @return ServiceProvider
      */
-    public function translateServiceProviderMetadata(array $metadata, ServiceProvider $entity)
+    public function assembleServiceProviderMetadata(array $metadata, ServiceProvider $entity)
     {
         $entity->isTransparentIssuer        = (bool) self::ifsetor($metadata, 'coin:transparant_issuer'             , $entity->isTransparentIssuer);
         $entity->isTrustedProxy             = (bool) self::ifsetor($metadata, 'coin:trusted_proxy'                  , $entity->isTrustedProxy);
@@ -106,7 +106,7 @@ class JanusRestV1Assembler
         $entity->eula                       =        self::ifsetor($metadata, 'coin:eula'                           , $entity->eula);
         $entity->skipDenormalization        = (bool) self::ifsetor($metadata, 'coin:do_not_add_attribute_aliases'   , $entity->skipDenormalization);
 
-        $entity->assertionConsumerServices = $this->translateIndexedServices($metadata, 'AssertionConsumerService');
+        $entity->assertionConsumerServices = $this->assembleIndexedServices($metadata, 'AssertionConsumerService');
 
         return $entity;
     }
@@ -118,9 +118,9 @@ class JanusRestV1Assembler
      * @param IdentityProvider $entity
      * @return IdentityProvider
      */
-    public function translateIdentityProviderMetadata(array $metadata, IdentityProvider $entity)
+    public function assembleIdentityProviderMetadata(array $metadata, IdentityProvider $entity)
     {
-        $entity->singleSignOnServices   = $this->translateIndexedServices($metadata, 'SingleSignOnService');
+        $entity->singleSignOnServices   = $this->assembleIndexedServices($metadata, 'SingleSignOnService');
         $entity->schacHomeOrganization  = self::ifsetor($metadata, 'coin:schachomeorganization');
         $entity->hidden                 = (bool) self::ifsetor($metadata, 'coin:hidden');
 
@@ -129,8 +129,8 @@ class JanusRestV1Assembler
             $entity->guestQualifier = $guestQualifier;
         }
 
-        $entity->shibMdScopes               = $this->translateShibMdScopes($metadata);
-        $entity->spsEntityIdsWithoutConsent = $this->translateSpEntityIdsWithoutConsent($metadata);
+        $entity->shibMdScopes               = $this->assembleShibMdScopes($metadata);
+        $entity->spsEntityIdsWithoutConsent = $this->assembleSpEntityIdsWithoutConsent($metadata);
 
         return $entity;
     }
@@ -139,7 +139,7 @@ class JanusRestV1Assembler
      * @param array $metadata
      * @return array
      */
-    private function translateCertificates(array $metadata)
+    private function assembleCertificates(array $metadata)
     {
         $certificateFactory = new X509CertificateFactory();
         $certificates = array();
@@ -177,7 +177,7 @@ class JanusRestV1Assembler
      * @return array
      * @throws \RuntimeException
      */
-    private function translateIndexedServices(array $metadata, $type)
+    private function assembleIndexedServices(array $metadata, $type)
     {
         $services = array();
         for ($i = 0; $i < 10; $i++) {
@@ -208,7 +208,7 @@ class JanusRestV1Assembler
      * @param array $metadata
      * @return null|Logo
      */
-    private function translateLogo(array $metadata)
+    private function assembleLogo(array $metadata)
     {
         $url = self::ifsetor($metadata, 'logo:0:url');
         if (!$url) {
@@ -227,7 +227,7 @@ class JanusRestV1Assembler
      * @param array $metadata
      * @return null|Organization
      */
-    private function translateOrganizationNl(array $metadata)
+    private function assembleOrganizationNl(array $metadata)
     {
         $organizationNameNl         = self::ifsetor($metadata, 'OrganizationName:nl'        , '');
         $organizationDisplayNameNl  = self::ifsetor($metadata, 'OrganizationDisplayName:nl' , '');
@@ -244,7 +244,7 @@ class JanusRestV1Assembler
      * @param array $metadata
      * @return null|Organization
      */
-    private function translateOrganizationEn(array $metadata)
+    private function assembleOrganizationEn(array $metadata)
     {
         $organizationNameEn         = self::ifsetor($metadata, 'OrganizationName:en'        , false);
         $organizationDisplayNameEn  = self::ifsetor($metadata, 'OrganizationDisplayName:en' , false);
@@ -264,7 +264,7 @@ class JanusRestV1Assembler
      * @param array $defaults
      * @return array
      */
-    private function translateNameIdFormats(array $metadata, array $defaults)
+    private function assembleNameIdFormats(array $metadata, array $defaults)
     {
         $nameIdFormats = array_filter(array(
             self::ifsetor($metadata, 'NameIDFormats:0'),
@@ -282,7 +282,7 @@ class JanusRestV1Assembler
      * @param array $metadata
      * @return null|Service
      */
-    private function translateSloServices(array $metadata)
+    private function assembleSloServices(array $metadata)
     {
         $sloBinding  = self::ifsetor($metadata, 'SingleLogoutService_Binding');
         $sloLocation = self::ifsetor($metadata, 'SingleLogoutService_Location');
@@ -298,7 +298,7 @@ class JanusRestV1Assembler
      * @param array $metadata
      * @return array
      */
-    private function translateShibMdScopes(array $metadata)
+    private function assembleShibMdScopes(array $metadata)
     {
         $scopes = array();
         for ($i = 0; $i < 10; $i++) {
@@ -324,7 +324,7 @@ class JanusRestV1Assembler
      * @param array $metadata
      * @return array
      */
-    private function translateContactPersons(array $metadata)
+    private function assembleContactPersons(array $metadata)
     {
         $contactPersons = array();
         for ($i = 0; $i < 3; $i++) {
@@ -345,7 +345,7 @@ class JanusRestV1Assembler
      * @param array $metadata
      * @return array
      */
-    private function translateSpEntityIdsWithoutConsent(array $metadata)
+    private function assembleSpEntityIdsWithoutConsent(array $metadata)
     {
         $i = 0;
         $spsEntityIdsWithoutConsent = array();

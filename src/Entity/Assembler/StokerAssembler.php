@@ -34,7 +34,7 @@ class StokerAssembler
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      * @SuppressWarnings(PHPMD.NPathComplexity)
      */
-    public function translate($entityXml, MetadataIndex\Entity $metadataIndexEntity)
+    public function assemble($entityXml, MetadataIndex\Entity $metadataIndexEntity)
     {
         $document = new DOMDocument();
         $document->loadXML($entityXml);
@@ -63,13 +63,13 @@ class StokerAssembler
         }
         if ($spDescriptor && $idpDescriptor) {
             // @todo warn: adding only the idp side!
-            return $this->translateIdentityProvider($metadataIndexEntity, $entityDescriptor, $idpDescriptor);
+            return $this->assembleIdentityProvider($metadataIndexEntity, $entityDescriptor, $idpDescriptor);
         }
         if ($spDescriptor) {
-            return $this->translateServiceProvider($entityDescriptor, $spDescriptor);
+            return $this->assembleServiceProvider($entityDescriptor, $spDescriptor);
         }
         if ($idpDescriptor) {
-            return $this->translateIdentityProvider($metadataIndexEntity, $entityDescriptor, $idpDescriptor);
+            return $this->assembleIdentityProvider($metadataIndexEntity, $entityDescriptor, $idpDescriptor);
         }
 
         throw new RuntimeException('Boolean logic no longer works, assume running as part of the Heart of Gold.');
@@ -81,7 +81,7 @@ class StokerAssembler
      * @param SAML2_XML_md_RoleDescriptor $role
      * @return AbstractRole
      */
-    private function translateCommon(
+    private function assembleCommon(
         MetadataIndex\Entity $metadataIndexEntity,
         AbstractRole $entity,
         SAML2_XML_md_RoleDescriptor $role
@@ -114,14 +114,14 @@ class StokerAssembler
      * @param SAML2_XML_md_IDPSSODescriptor $idpDescriptor
      * @return AbstractRole|IdentityProvider
      */
-    protected function translateIdentityProvider(
+    protected function assembleIdentityProvider(
         MetadataIndex\Entity $metadataIndexEntity,
         SAML2_XML_md_EntityDescriptor $entityDescriptor,
         SAML2_XML_md_IDPSSODescriptor $idpDescriptor
     ) {
         $entity = new IdentityProvider($entityDescriptor->entityID);
 
-        $entity = $this->translateCommon($metadataIndexEntity, $entity, $idpDescriptor);
+        $entity = $this->assembleCommon($metadataIndexEntity, $entity, $idpDescriptor);
 
         $singleSignOnServices = array();
         foreach ($idpDescriptor->SingleSignOnService as $ssos) {
@@ -140,7 +140,7 @@ class StokerAssembler
      * @param SAML2_XML_md_SPSSODescriptor $spDescriptor
      * @return ServiceProvider
      */
-    protected function translateServiceProvider(
+    protected function assembleServiceProvider(
         SAML2_XML_md_EntityDescriptor $entityDescriptor,
         SAML2_XML_md_SPSSODescriptor $spDescriptor
     ) {

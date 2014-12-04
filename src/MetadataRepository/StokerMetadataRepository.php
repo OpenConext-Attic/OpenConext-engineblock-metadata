@@ -49,10 +49,10 @@ class StokerMetadataRepository extends AbstractMetadataRepository
 
     /**
      * @param string $metadataDirectory
-     * @param \OpenConext\Component\EngineBlockMetadata\Entity\Assembler\StokerAssembler $translator
+     * @param \OpenConext\Component\EngineBlockMetadata\Entity\Assembler\StokerAssembler $assembler
      * @throws \RuntimeException
      */
-    public function __construct($metadataDirectory, StokerAssembler $translator)
+    public function __construct($metadataDirectory, StokerAssembler $assembler)
     {
         parent::__construct();
 
@@ -64,7 +64,7 @@ class StokerMetadataRepository extends AbstractMetadataRepository
             );
         }
         $this->metadataDirectory = $metadataDirectory;
-        $this->translator = $translator;
+        $this->translator = $assembler;
     }
 
     /**
@@ -85,7 +85,7 @@ class StokerMetadataRepository extends AbstractMetadataRepository
             throw new EntityNotFoundException("Unable to find entity for '$entityId'");
         }
 
-        $entity = $this->translator->translate($xml, $metadataIndexEntity);
+        $entity = $this->translator->assemble($xml, $metadataIndexEntity);
 
         $entity = $this->filterCollection->filterRole($entity);
         if (!$entity) {
@@ -131,7 +131,7 @@ class StokerMetadataRepository extends AbstractMetadataRepository
             return null;
         }
 
-        $entity = $this->translator->translate($xml, $metadataIndexEntity);
+        $entity = $this->translator->assemble($xml, $metadataIndexEntity);
 
         $entity = $this->filterCollection->filterRole($entity);
         if (!$entity) {
@@ -189,7 +189,7 @@ class StokerMetadataRepository extends AbstractMetadataRepository
                 continue;
             }
 
-            $entity = $this->translator->translate($entityXml, $metadataIndexEntity);
+            $entity = $this->translator->assemble($entityXml, $metadataIndexEntity);
 
             $entity = $this->filterCollection->filterRole($entity);
             if (!$entity) {

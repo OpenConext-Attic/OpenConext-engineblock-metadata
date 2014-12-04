@@ -27,7 +27,7 @@ class JanusRestV1MetadataRepository extends AbstractMetadataRepository
     /**
      * @var JanusRestV1Assembler
      */
-    private $translator;
+    private $assembler;
 
     /**
      * @var RuntimeException
@@ -40,10 +40,10 @@ class JanusRestV1MetadataRepository extends AbstractMetadataRepository
     private $entityCache = array();
 
     /**
-     * @param RestClientDecorator $client
-     * @param JanusRestV1Assembler $translator
+     * @param RestClientInterface $client
+     * @param JanusRestV1Assembler $assembler
      */
-    public function __construct(RestClientDecorator $client, JanusRestV1Assembler $translator)
+    public function __construct(RestClientInterface $client, JanusRestV1Assembler $assembler)
     {
         parent::__construct();
 
@@ -137,7 +137,7 @@ class JanusRestV1MetadataRepository extends AbstractMetadataRepository
             return null;
         }
 
-        $entity = $this->translator->translate($entityId, $metadata);
+        $entity = $this->assembler->assemble($entityId, $metadata);
         if (!$entity) {
             return null;
         }
@@ -163,7 +163,7 @@ class JanusRestV1MetadataRepository extends AbstractMetadataRepository
             return $this->entityCache[$entityId];
         }
 
-        $entity = $this->translator->translate($entityId, $metadata);
+        $entity = $this->assembler->assemble($entityId, $metadata);
         if (!$entity) {
             $this->entityCache[$entityId] = null;
             return $this->entityCache[$entityId];
@@ -190,7 +190,7 @@ class JanusRestV1MetadataRepository extends AbstractMetadataRepository
             return $this->entityCache[$entityId];
         }
 
-        $entity = $this->translator->translate($entityId, $metadata);
+        $entity = $this->assembler->assemble($entityId, $metadata);
 
         if (!$entity) {
             $this->entityCache[$entityId] = null;
@@ -218,7 +218,7 @@ class JanusRestV1MetadataRepository extends AbstractMetadataRepository
         $identityProviders = array();
         foreach ($entities as $entityId => $entity) {
             if (!isset($this->entityCache[$entityId])) {
-                $entity = $this->translator->translate($entityId, $entity);
+                $entity = $this->assembler->assemble($entityId, $entity);
 
                 if (!is_null($entity) && !$entity instanceof IdentityProvider) {
                     throw new \RuntimeException('Service Registry returned a non-idp from getIdpList?');
