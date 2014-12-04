@@ -40,6 +40,14 @@ class FilterCollection implements FilterInterface
     }
 
     /**
+     * @return Criteria
+     */
+    public function toCriteria()
+    {
+        return Criteria::create()->where($this->toExpression());
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function filterRole(AbstractRole $entity)
