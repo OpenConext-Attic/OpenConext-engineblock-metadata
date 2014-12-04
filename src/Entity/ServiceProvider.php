@@ -24,6 +24,13 @@ use Doctrine\ORM;
 class ServiceProvider extends AbstractRole
 {
     /**
+     * @var null|AttributeReleasePolicy
+     *
+     * @ORM\Column(name="attribute_release_policy", type="array")
+     */
+    protected $attributeReleasePolicy = null;
+
+    /**
      * @var IndexedService[]
      *
      * @ORM\Column(name="assertion_consumer_services", type="array")
@@ -94,12 +101,43 @@ class ServiceProvider extends AbstractRole
     public $requestedAttributes = null;
 
     /**
-     * @var string
-     *
-     * @ORM\Column(name="manipulation", type="text")
+     * @param $entityId
+     * @param Organization $organizationEn
+     * @param Organization $organizationNl
+     * @param Service $singleLogoutService
+     * @param bool $additionalLogging
+     * @param array $certificates
+     * @param array $contactPersons
+     * @param string $descriptionEn
+     * @param string $descriptionNl
+     * @param bool $disableScoping
+     * @param string $displayNameEn
+     * @param string $displayNameNl
+     * @param string $keywordsEn
+     * @param string $keywordsNl
+     * @param Logo $logo
+     * @param string $nameEn
+     * @param string $nameNl
+     * @param null $nameIdFormat
+     * @param array $supportedNameIdFormats
+     * @param null $publishInEduGainDate
+     * @param bool $publishInEdugain
+     * @param bool $requestsMustBeSigned
+     * @param Service $responseProcessingService
+     * @param string $workflowState
+     * @param array $allowedIdpEntityIds
+     * @param array $assertionConsumerServices
+     * @param bool $displayUnconnectedIdpsWayf
+     * @param null $eula
+     * @param null $implicitVoId
+     * @param bool $isConsentRequired
+     * @param bool $isTransparentIssuer
+     * @param bool $isTrustedProxy
+     * @param null $requestedAttributes
+     * @param bool $skipDenormalization
+     * @param string $manipulation
+     * @param AttributeReleasePolicy $attributeReleasePolicy
      */
-    protected $manipulation;
-
     public function __construct(
         $entityId,
         Organization $organizationEn = null,
@@ -119,7 +157,7 @@ class ServiceProvider extends AbstractRole
         $nameEn = '',
         $nameNl = '',
         $nameIdFormat = null,
-        $nameIdFormats = array(
+        $supportedNameIdFormats = array(
             SAML2_Const::NAMEID_TRANSIENT,
             SAML2_Const::NAMEID_PERSISTENT,
         ),
@@ -137,7 +175,9 @@ class ServiceProvider extends AbstractRole
         $isTransparentIssuer = false,
         $isTrustedProxy = false,
         $requestedAttributes = null,
-        $skipDenormalization = false
+        $skipDenormalization = false,
+        $manipulation = '',
+        AttributeReleasePolicy $attributeReleasePolicy = null
     ) {
         parent::__construct(
             $entityId,
@@ -158,7 +198,7 @@ class ServiceProvider extends AbstractRole
             $nameEn,
             $nameNl,
             $nameIdFormat,
-            $nameIdFormats,
+            $supportedNameIdFormats,
             $publishInEduGainDate,
             $publishInEdugain,
             $requestsMustBeSigned,
@@ -166,6 +206,7 @@ class ServiceProvider extends AbstractRole
             $workflowState
         );
 
+        $this->attributeReleasePolicy = $attributeReleasePolicy;
         $this->allowedIdpEntityIds = $allowedIdpEntityIds;
         $this->assertionConsumerServices = $assertionConsumerServices;
         $this->displayUnconnectedIdpsWayf = $displayUnconnectedIdpsWayf;
@@ -184,5 +225,13 @@ class ServiceProvider extends AbstractRole
     public function accept(VisitorInterface $visitor)
     {
         $visitor->visitServiceProvider($this);
+    }
+
+    /**
+     * @return null|AttributeReleasePolicy
+     */
+    public function getAttributeReleasePolicy()
+    {
+        return $this->attributeReleasePolicy;
     }
 }

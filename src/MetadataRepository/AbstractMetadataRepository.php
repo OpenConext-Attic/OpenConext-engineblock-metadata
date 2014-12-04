@@ -191,7 +191,7 @@ abstract class AbstractMetadataRepository implements MetadataRepositoryInterface
      */
     public function fetchEntityManipulation(AbstractRole $entity)
     {
-        return '';
+        return $entity->getManipulation();
     }
 
     /**
@@ -200,7 +200,7 @@ abstract class AbstractMetadataRepository implements MetadataRepositoryInterface
      */
     public function fetchServiceProviderArp(ServiceProvider $serviceProvider)
     {
-        return null;
+        return $serviceProvider->getAttributeReleasePolicy();
     }
 
     /**

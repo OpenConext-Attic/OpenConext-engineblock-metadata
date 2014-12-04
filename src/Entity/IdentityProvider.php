@@ -100,7 +100,7 @@ class IdentityProvider extends AbstractRole
      * @param string $nameEn
      * @param string $nameNl
      * @param null $nameIdFormat
-     * @param array $nameIdFormats
+     * @param array $supportedNameIdFormats
      * @param null $publishInEduGainDate
      * @param bool $publishInEdugain
      * @param bool $requestsMustBeSigned
@@ -133,7 +133,7 @@ class IdentityProvider extends AbstractRole
         $nameEn = '',
         $nameNl = '',
         $nameIdFormat = null,
-        $nameIdFormats = array(
+        $supportedNameIdFormats = array(
             SAML2_Const::NAMEID_TRANSIENT,
             SAML2_Const::NAMEID_PERSISTENT,
         ),
@@ -142,6 +142,8 @@ class IdentityProvider extends AbstractRole
         $requestsMustBeSigned = false,
         Service $responseProcessingService = null,
         $workflowState = self::WORKFLOW_STATE_DEFAULT,
+        $manipulation = '',
+        $attributeReleasePolicy = null,
         $enabledInWayf = true,
         $guestQualifier = self::GUEST_QUALIFIER_ALL,
         $hidden = false,
@@ -169,14 +171,16 @@ class IdentityProvider extends AbstractRole
             $nameEn,
             $nameNl,
             $nameIdFormat,
-            $nameIdFormats,
+            $supportedNameIdFormats,
             $publishInEduGainDate,
             $publishInEdugain,
             $requestsMustBeSigned,
             $responseProcessingService,
-            $workflowState
+            $workflowState,
+            $manipulation
         );
 
+        $this->attributeReleasePolicy = $attributeReleasePolicy;
         $this->enabledInWayf = $enabledInWayf;
         $this->guestQualifier = $guestQualifier;
         $this->hidden = $hidden;

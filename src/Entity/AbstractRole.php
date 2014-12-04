@@ -4,7 +4,9 @@ namespace OpenConext\Component\EngineBlockMetadata\Entity;
 
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
+use OpenConext\Component\EngineBlockMetadata\AttributeReleasePolicy;
 use OpenConext\Component\EngineBlockMetadata\Logo;
+use OpenConext\Component\EngineBlockMetadata\MetadataRepository\Visitor\VisitorInterface;
 use OpenConext\Component\EngineBlockMetadata\Organization;
 use OpenConext\Component\EngineBlockMetadata\ContactPerson;
 use OpenConext\Component\EngineBlockMetadata\Service;
@@ -210,6 +212,13 @@ abstract class AbstractRole
     public $responseProcessingService;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="manipulation", type="text")
+     */
+    protected $manipulation;
+
+    /**
      * @param $entityId
      * @param Organization $organizationEn
      * @param Organization $organizationNl
@@ -234,6 +243,7 @@ abstract class AbstractRole
      * @param bool $requestsMustBeSigned
      * @param Service $responseProcessingService
      * @param string $workflowState
+     * @param string $manipulation
      */
     public function __construct(
         $entityId,
@@ -262,7 +272,8 @@ abstract class AbstractRole
         $publishInEdugain = false,
         $requestsMustBeSigned = false,
         Service $responseProcessingService = null,
-        $workflowState = self::WORKFLOW_STATE_DEFAULT
+        $workflowState = self::WORKFLOW_STATE_DEFAULT,
+        $manipulation = ''
     ) {
         $this->additionalLogging = $additionalLogging;
         $this->certificates = $certificates;
@@ -289,7 +300,6 @@ abstract class AbstractRole
         $this->singleLogoutService = $singleLogoutService;
         $this->workflowState = $workflowState;
         $this->manipulation = $manipulation;
-        $this->attributeReleasePolicy = $attributeReleasePolicy;
     }
 
     /**
@@ -298,5 +308,13 @@ abstract class AbstractRole
     public function accept(VisitorInterface $visitor)
     {
         $visitor->visitRole($this);
+    }
+
+    /**
+     * @return string
+     */
+    public function getManipulation()
+    {
+        return $this->manipulation;
     }
 }
