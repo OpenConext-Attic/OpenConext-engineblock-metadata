@@ -122,11 +122,12 @@ class DoctrineMetadataRepository extends AbstractMetadataRepository
     public function findIdentityProviderByEntityId($entityId)
     {
         /** @var IdentityProvider|null $identityProvider */
-        $identityProvider = $this->idpRepository->findOneBy(array('entityId' => $entityId));
-
-        return $this->filterCollection->filterEntity(
-            $identityProvider
+        $identityProvider = $this->idpRepository->matching(
+            $this->filterCollection->toCriteria()
+                ->andWhere(Criteria::expr()->eq('entityId', $entityId))
         );
+
+        return $this->applyVisitors($identityProvider);
     }
 
     /**
@@ -136,13 +137,16 @@ class DoctrineMetadataRepository extends AbstractMetadataRepository
     public function findServiceProviderByEntityId($entityId)
     {
         /** @var ServiceProvider|null $serviceProvider */
-        $serviceProvider = $this->spRepository->findOneBy(array('entityId' => $entityId));
+        $serviceProvider = $this->spRepository->matching(
+            $this->filterCollection->toCriteria()
+                ->andWhere(Criteria::expr()->eq('entityId', $entityId))
+        );
 
         if (!$serviceProvider) {
             return null;
         }
 
-        return $this->filterCollection->filterEntity(
+        return $this->applyVisitors(
             $serviceProvider
         );
     }
@@ -152,7 +156,9 @@ class DoctrineMetadataRepository extends AbstractMetadataRepository
      */
     public function findIdentityProviders()
     {
-        return $this->idpRepository->findBy(Criteria::create()->where($this->filterCollection->toExpression()));
+        return $this->idpRepository->matching(
+            $this->filterCollection->toCriteria()
+        )->toArray();
     }
 
     /**
