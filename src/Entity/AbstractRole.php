@@ -169,7 +169,7 @@ abstract class AbstractRole
      *
      * @ORM\Column(name="name_id_formats", type="array")
      */
-    public $nameIdFormats;
+    public $supportedNameIdFormats;
 
     /**
      * @var Service
@@ -237,7 +237,7 @@ abstract class AbstractRole
      * @param string $nameEn
      * @param string $nameNl
      * @param null $nameIdFormat
-     * @param array $nameIdFormats
+     * @param array $supportedNameIdFormats
      * @param null $publishInEduGainDate
      * @param bool $publishInEdugain
      * @param bool $requestsMustBeSigned
@@ -264,7 +264,7 @@ abstract class AbstractRole
         $nameEn = '',
         $nameNl = '',
         $nameIdFormat = null,
-        $nameIdFormats = array(
+        $supportedNameIdFormats = array(
             SAML2_Const::NAMEID_TRANSIENT,
             SAML2_Const::NAMEID_PERSISTENT,
         ),
@@ -289,7 +289,7 @@ abstract class AbstractRole
         $this->logo = $logo;
         $this->nameEn = $nameEn;
         $this->nameIdFormat = $nameIdFormat;
-        $this->nameIdFormats = $nameIdFormats;
+        $this->supportedNameIdFormats = $supportedNameIdFormats;
         $this->nameNl = $nameNl;
         $this->organizationEn = $organizationEn;
         $this->organizationNl = $organizationNl;

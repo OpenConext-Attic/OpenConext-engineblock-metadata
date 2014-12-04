@@ -127,7 +127,7 @@ class CortoDisassembler
         if ($entity->nameIdFormat) {
             $cortoEntity['NameIDFormat'] = $entity->nameIdFormat;
         }
-        $cortoEntity['NameIDFormats'] = $entity->nameIdFormats;
+        $cortoEntity['NameIDFormats'] = $entity->supportedNameIdFormats;
         $cortoEntity['WorkflowState'] = $entity->workflowState;
 
         $cortoEntity = $this->translateContactPersons($entity, $cortoEntity);

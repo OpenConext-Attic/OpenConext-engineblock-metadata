@@ -80,13 +80,13 @@ class JanusRestV1Assembler
         $entity->nameIdFormat           =        self::ifsetor($metadata, 'NameIDFormat'            , $entity->nameIdFormat);
         $entity->workflowState          =        self::ifsetor($metadata, 'workflowState'           , $entity->workflowState);
 
-        $entity->logo                   = $this->translateLogo($metadata);
-        $entity->organizationEn         = $this->translateOrganizationEn($metadata);
-        $entity->organizationNl         = $this->translateOrganizationNl($metadata);
-        $entity->certificates           = $this->translateCertificates($metadata);
-        $entity->singleLogoutService    = $this->translateSloServices($metadata);
-        $entity->nameIdFormats          = $this->translateNameIdFormats($metadata, $entity->nameIdFormats);
-        $entity->contactPersons         = $this->translateContactPersons($metadata);
+        $entity->logo                   = $this->assembleLogo($metadata);
+        $entity->organizationEn         = $this->assembleOrganizationEn($metadata);
+        $entity->organizationNl         = $this->assembleOrganizationNl($metadata);
+        $entity->certificates           = $this->assembleCertificates($metadata);
+        $entity->singleLogoutService    = $this->assembleSloServices($metadata);
+        $entity->supportedNameIdFormats = $this->assembleNameIdFormats($metadata, $entity->supportedNameIdFormats);
+        $entity->contactPersons         = $this->assembleContactPersons($metadata);
 
         return $entity;
     }
