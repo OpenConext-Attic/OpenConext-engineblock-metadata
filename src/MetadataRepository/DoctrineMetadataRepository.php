@@ -179,30 +179,6 @@ class DoctrineMetadataRepository extends AbstractMetadataRepository
 
     /**
      *
-     * NOTE: Default (empty) method that you probably want to override.
-     *
-     * @param AbstractRole $entity
-     * @return string
-     */
-    public function fetchEntityManipulation(AbstractRole $entity)
-    {
-        return '';
-    }
-
-    /**
-     *
-     * NOTE: Default (empty) method that you probably want to override.
-     *
-     * @param ServiceProvider $serviceProvider
-     * @return AttributeReleasePolicy
-     */
-    public function fetchServiceProviderArp(ServiceProvider $serviceProvider)
-    {
-        return null;
-    }
-
-    /**
-     *
      * NOTE: Default (unfiltered) method that you probably want to override.
      *
      * @param ServiceProvider $serviceProvider
