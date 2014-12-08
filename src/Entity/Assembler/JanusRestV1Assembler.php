@@ -13,6 +13,7 @@ use OpenConext\Component\EngineBlockMetadata\Entity\ServiceProvider;
 use OpenConext\Component\EngineBlockMetadata\IndexedService;
 use OpenConext\Component\EngineBlockMetadata\X509\X509CertificateFactory;
 use OpenConext\Component\EngineBlockMetadata\X509\X509CertificateLazyProxy;
+use ReflectionClass;
 use RuntimeException;
 
 /**
@@ -24,25 +25,31 @@ use RuntimeException;
 class JanusRestV1Assembler
 {
     /**
-     * @param $entityId
+     * @param string $entityId
      * @param array $metadata
      * @return IdentityProvider|ServiceProvider
      * @throws \RuntimeException
      */
     public function assemble($entityId, array $metadata)
     {
+        $arguments = array('entityId' => $entityId);
+
         if (isset($metadata['AssertionConsumerService:0:Location'])) {
-            $entity = new ServiceProvider($entityId);
-            $entity = $this->assembleCommonMetadata($metadata, $entity);
-            $entity = $this->assembleServiceProviderMetadata($metadata, $entity);
-            return $entity;
+            $roleClass = new ReflectionClass('OpenConext\Component\EngineBlockMetadata\Entity\ServiceProvider');
+
+            $arguments += $this->assembleAbstractRoleArguments($metadata);
+            $arguments += $this->assembleServiceProviderArguments($metadata);
+
+            return $this->instantiate($roleClass, $arguments);
         }
 
         if (isset($metadata['SingleSignOnService:0:Location'])) {
-            $entity = new IdentityProvider($entityId);
-            $entity = $this->assembleCommonMetadata($metadata, $entity);
-            $entity = $this->assembleIdentityProviderMetadata($metadata, $entity);
-            return $entity;
+            $roleClass = new ReflectionClass('OpenConext\Component\EngineBlockMetadata\Entity\IdentityProvider');
+
+            $arguments += $this->assembleAbstractRoleArguments($metadata);
+            $arguments += $this->assembleIdentityProviderArguments($metadata);
+
+            return $this->instantiate($roleClass, $arguments);
         }
 
         // @todo log warning
@@ -53,42 +60,42 @@ class JanusRestV1Assembler
 
     /**
      * @param array $metadata
-     * @param AbstractRole $entity
      * @return AbstractRole
      */
-    public function assembleCommonMetadata(array $metadata, AbstractRole $entity)
+    public function assembleAbstractRoleArguments(array $metadata)
     {
-        $entity->nameEn                 =        self::ifsetor($metadata, 'Name:en'                 , $entity->nameEn);
-        $entity->nameNl                 =        self::ifsetor($metadata, 'Name:nl'                 , $entity->nameNl);
-        $entity->descriptionEn          =        self::ifsetor($metadata, 'Description:en'          , $entity->descriptionEn);
-        $entity->descriptionNl          =        self::ifsetor($metadata, 'Description:nl'          , $entity->descriptionNl);
-        $entity->displayNameEn          =        self::ifsetor($metadata, 'DisplayName:en'          , $entity->displayNameEn);
-        $entity->displayNameNl          =        self::ifsetor($metadata, 'DisplayName:nl'          , $entity->displayNameNl);
+        if (isset($metadata['Name:en']))        { $arguments['nameEn'] = $metadata['Name:en']; }
+        if (isset($metadata['Name:nl']))        { $arguments['nameNl'] = $metadata['Name:nl']; }
+        if (isset($metadata['Description:en'])) { $arguments['descriptionEn'] = $metadata['Description:en']; }
+        if (isset($metadata['Description:nl'])) { $arguments['descriptionNl'] = $metadata['Description:nl']; }
+        if (isset($metadata['DisplayName:en'])) { $arguments['displayNameEn'] = $metadata['DisplayName:en']; }
+        if (isset($metadata['DisplayName:nl'])) { $arguments['displayNameNl'] = $metadata['DisplayName:nl']; }
+        if (isset($metadata['keywords:en']))    { $arguments['keywordsEn'] = $metadata['keywords:en']; }
+        if (isset($metadata['keywords:nl']))    { $arguments['keywordsNl'] = $metadata['keywords:nl']; }
 
-        $entity->keywordsEn             =        self::ifsetor($metadata, 'keywords:en'             , $entity->keywordsEn);
-        $entity->keywordsNl             =        self::ifsetor($metadata, 'keywords:nl'             , $entity->keywordsNl);
-
-        $entity->publishInEdugain       = (bool) self::ifsetor($metadata, 'coin:publish_in_edugain' , $entity->publishInEdugain);
+        if (isset($metadata['coin:publish_in_edugain'])) { $arguments['publishInEdugain'] = (bool) $metadata['coin:publish_in_edugain']; }
         $publishDate = self::ifsetor($metadata, 'coin:publish_in_edugain_date');
         if ($publishDate) {
-            $entity->publishInEduGainDate   = date_create()->setTimestamp(strtotime($publishDate));
+            $arguments['publishInEduGainDate']   = date_create()->setTimestamp(strtotime($publishDate));
         }
-        $entity->disableScoping         = (bool) self::ifsetor($metadata, 'coin:disable_scoping'    , $entity->disableScoping);
-        $entity->additionalLogging      = (bool) self::ifsetor($metadata, 'coin:additional_logging' , $entity->additionalLogging);
+        if (isset($metadata['coin:disable_scoping']))    { $arguments['disableScoping'] = (bool) $metadata['coin:disable_scoping']; }
+        if (isset($metadata['coin:additional_logging'])) { $arguments['additionalLogging'] = (bool) $metadata['coin:additional_logging']; }
 
-        $entity->requestsMustBeSigned   = (bool) self::ifsetor($metadata, 'redirect.sign'           , $entity->requestsMustBeSigned);
-        $entity->nameIdFormat           =        self::ifsetor($metadata, 'NameIDFormat'            , $entity->nameIdFormat);
-        $entity->workflowState          =        self::ifsetor($metadata, 'workflowState'           , $entity->workflowState);
+        if (isset($metadata['redirect.sign'])) { $arguments['requestsMustBeSigned'] = (bool) $metadata['redirect.sign']; }
+        if (isset($metadata['NameIDFormat']))  { $arguments['nameIdFormat'] = $metadata['NameIDFormat']; }
+        if (isset($metadata['workflowState'])) { $arguments['workflowState'] = $metadata['workflowState']; }
 
-        $entity->logo                   = $this->assembleLogo($metadata);
-        $entity->organizationEn         = $this->assembleOrganizationEn($metadata);
-        $entity->organizationNl         = $this->assembleOrganizationNl($metadata);
-        $entity->certificates           = $this->assembleCertificates($metadata);
-        $entity->singleLogoutService    = $this->assembleSloServices($metadata);
-        $entity->supportedNameIdFormats = $this->assembleNameIdFormats($metadata, $entity->supportedNameIdFormats);
-        $entity->contactPersons         = $this->assembleContactPersons($metadata);
+        $arguments['logo']                   = $this->assembleLogo($metadata);
+        $arguments['organizationEn']         = $this->assembleOrganizationEn($metadata);
+        $arguments['organizationNl']         = $this->assembleOrganizationNl($metadata);
+        $arguments['certificates']           = $this->assembleCertificates($metadata);
+        $arguments['singleLogoutService']    = $this->assembleSloServices($metadata);
 
-        return $entity;
+        $supportedNameIdFormats = $this->assembleNameIdFormats($metadata);
+        if ($supportedNameIdFormats) $arguments['supportedNameIdFormats'] = $supportedNameIdFormats;
+        $arguments['contactPersons']         = $this->assembleContactPersons($metadata);
+
+        return $arguments;
     }
 
     /**
@@ -96,44 +103,46 @@ class JanusRestV1Assembler
      * @param ServiceProvider $entity
      * @return ServiceProvider
      */
-    public function assembleServiceProviderMetadata(array $metadata, ServiceProvider $entity)
+    public function assembleServiceProviderArguments(array $metadata)
     {
-        $entity->isTransparentIssuer        = (bool) self::ifsetor($metadata, 'coin:transparant_issuer'             , $entity->isTransparentIssuer);
-        $entity->isTrustedProxy             = (bool) self::ifsetor($metadata, 'coin:trusted_proxy'                  , $entity->isTrustedProxy);
-        $entity->implicitVoId               =        self::ifsetor($metadata, 'coin:implicit_vo_id'                 , $entity->implicitVoId);
-        $entity->displayUnconnectedIdpsWayf = (bool) self::ifsetor($metadata, 'coin:display_unconnected_idps_wayf'  , $entity->displayUnconnectedIdpsWayf);
-        $entity->isConsentRequired          = (bool) self::ifsetor($metadata, 'coin:no_consent_required'            , $entity->isConsentRequired);
-        $entity->eula                       =        self::ifsetor($metadata, 'coin:eula'                           , $entity->eula);
-        $entity->skipDenormalization        = (bool) self::ifsetor($metadata, 'coin:do_not_add_attribute_aliases'   , $entity->skipDenormalization);
+        if (isset($metadata['coin:transparant_issuer']))            { $arguments['isTransparentIssuer']         = (bool) $metadata['coin:transparant_issuer']; }
+        if (isset($metadata['coin:trusted_proxy']))                 { $arguments['isTrustedProxy']              = (bool) $metadata['coin:trusted_proxy']; }
+        if (isset($metadata['coin:implicit_vo_id']))                { $arguments['implicitVoId']                = $metadata['coin:implicit_vo_id']; }
+        if (isset($metadata['coin:display_unconnected_idps_wayf'])) { $arguments['displayUnconnectedIdpsWayf']  = (bool) $metadata['coin:display_unconnected_idps_wayf']; }
+        if (isset($metadata['coin:no_consent_required']))           { $arguments['isConsentRequired']           = (bool) $metadata['coin:no_consent_required']; }
+        if (isset($metadata['coin:eula']))                          { $arguments['termsOfServiceUrl']           = $metadata['coin:eula']; }
+        if (isset($metadata['coin:do_not_add_attribute_aliases']))  { $arguments['skipDenormalization']         = (bool) $metadata['coin:do_not_add_attribute_aliases']; }
 
-        $entity->assertionConsumerServices = $this->assembleIndexedServices($metadata, 'AssertionConsumerService');
+        $arguments['assertionConsumerServices'] = $this->assembleIndexedServices($metadata, 'AssertionConsumerService');
 
-        return $entity;
+        return $arguments;
     }
-
-    // @codingStandardsIgnoreEnd
 
     /**
      * @param array $metadata
-     * @param IdentityProvider $entity
      * @return IdentityProvider
      */
-    public function assembleIdentityProviderMetadata(array $metadata, IdentityProvider $entity)
+    public function assembleIdentityProviderArguments(array $metadata)
     {
-        $entity->singleSignOnServices   = $this->assembleIndexedServices($metadata, 'SingleSignOnService');
-        $entity->schacHomeOrganization  = self::ifsetor($metadata, 'coin:schachomeorganization');
-        $entity->hidden                 = (bool) self::ifsetor($metadata, 'coin:hidden');
+        $arguments['singleSignOnServices'] = $this->assembleIndexedServices($metadata, 'SingleSignOnService');
+        if (isset($metadata['coin:schachomeorganization'])) {
+            $arguments['schacHomeOrganization'] = $metadata['coin:schachomeorganization'];
+        }
+        $arguments['hidden']  = (bool) self::ifsetor($metadata, 'coin:hidden');
 
-        $guestQualifier = self::ifsetor($metadata, 'coin:guest_qualifier', $entity->guestQualifier);
-        if (in_array($guestQualifier, $entity->GUEST_QUALIFIERS)) {
-            $entity->guestQualifier = $guestQualifier;
+        if (isset($metadata['coin:guest_qualifiers'])) {
+            if (in_array($metadata['coin:guest_qualifiers'], IdentityProvider::$GUEST_QUALIFIERS)) {
+                $metadata['guestQualifier'] = $metadata['coin:guest_qualifiers'];
+            }
         }
 
-        $entity->shibMdScopes               = $this->assembleShibMdScopes($metadata);
-        $entity->spsEntityIdsWithoutConsent = $this->assembleSpEntityIdsWithoutConsent($metadata);
+        $arguments['shibMdScopes'] = $this->assembleShibMdScopes($metadata);
+        $arguments['spsEntityIdsWithoutConsent'] = $this->assembleSpEntityIdsWithoutConsent($metadata);
 
-        return $entity;
+        return $arguments;
     }
+
+    // @codingStandardsIgnoreEnd
 
     /**
      * @param array $metadata
@@ -192,11 +201,13 @@ class JanusRestV1Assembler
             }
 
             if (!$bindingValue && $locationValue) {
-                throw new \RuntimeException("$type Location set '$locationValue' without binding.");
+                // @todo warn
+                continue;
             }
 
             if ($bindingValue && !$locationValue) {
-                throw new \RuntimeException("$type Binding set '$bindingValue' without location.");
+                // @todo warn
+                continue;
             }
 
             $services[$i] = new IndexedService($locationValue, $bindingValue, $i);
@@ -262,9 +273,9 @@ class JanusRestV1Assembler
     /**
      * @param array $metadata
      * @param array $defaults
-     * @return array
+     * @return array|null
      */
-    private function assembleNameIdFormats(array $metadata, array $defaults)
+    private function assembleNameIdFormats(array $metadata)
     {
         $nameIdFormats = array_filter(array(
             self::ifsetor($metadata, 'NameIDFormats:0'),
@@ -272,7 +283,7 @@ class JanusRestV1Assembler
             self::ifsetor($metadata, 'NameIDFormats:2'),
         ));
         if (empty($nameIdFormats)) {
-            return $defaults;
+            return null;
         }
 
         return $nameIdFormats;
@@ -366,5 +377,29 @@ class JanusRestV1Assembler
     private static function ifsetor($entity, $property, $default = null)
     {
         return isset($entity[$property]) ? $entity[$property] : $default;
+    }
+
+    /**
+     * @param ReflectionClass $roleClass
+     * @param array $namedArguments
+     * @return AbstractRole
+     */
+    private function instantiate(ReflectionClass $roleClass, array $namedArguments)
+    {
+        $parameters = $roleClass->getConstructor()->getParameters();
+
+        $positionalDefaultFilledArguments = array();
+        foreach ($parameters as $parameter) {
+            // Do we have an argument set? If so use that.
+            if (isset($namedArguments[$parameter->name])) {
+                $positionalDefaultFilledArguments[] = $namedArguments[$parameter->name];
+                continue;
+            }
+
+            // Otherwise use the default.
+            $positionalDefaultFilledArguments[] = $parameter->getDefaultValue();
+        }
+
+        return $roleClass->newInstanceArgs($positionalDefaultFilledArguments);
     }
 }
