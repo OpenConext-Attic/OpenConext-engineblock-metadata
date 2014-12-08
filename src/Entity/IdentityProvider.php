@@ -30,7 +30,7 @@ class IdentityProvider extends AbstractRole
      *
      * @var string[]
      */
-    public $GUEST_QUALIFIERS = array(self::GUEST_QUALIFIER_ALL, self::GUEST_QUALIFIER_SOME, self::GUEST_QUALIFIER_NONE);
+    public static $GUEST_QUALIFIERS = array(self::GUEST_QUALIFIER_ALL, self::GUEST_QUALIFIER_SOME, self::GUEST_QUALIFIER_NONE);
 
     /**
      * @var bool
