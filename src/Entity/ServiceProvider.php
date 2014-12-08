@@ -75,9 +75,9 @@ class ServiceProvider extends AbstractRole
     /**
      * @var string
      *
-     * @ORM\Column(name="eula", type="string")
+     * @ORM\Column(name="terms_of_service_url", type="string")
      */
-    public $eula = null;
+    public $termsOfServiceUrl = null;
 
     /**
      * @var bool
@@ -128,7 +128,7 @@ class ServiceProvider extends AbstractRole
      * @param array $allowedIdpEntityIds
      * @param array $assertionConsumerServices
      * @param bool $displayUnconnectedIdpsWayf
-     * @param null $eula
+     * @param null $termsOfServiceUrl
      * @param null $implicitVoId
      * @param bool $isConsentRequired
      * @param bool $isTransparentIssuer
@@ -169,7 +169,7 @@ class ServiceProvider extends AbstractRole
         array $allowedIdpEntityIds = array(),
         array $assertionConsumerServices = array(),
         $displayUnconnectedIdpsWayf = false,
-        $eula = null,
+        $termsOfServiceUrl = null,
         $implicitVoId = null,
         $isConsentRequired = true,
         $isTransparentIssuer = false,
@@ -210,7 +210,7 @@ class ServiceProvider extends AbstractRole
         $this->allowedIdpEntityIds = $allowedIdpEntityIds;
         $this->assertionConsumerServices = $assertionConsumerServices;
         $this->displayUnconnectedIdpsWayf = $displayUnconnectedIdpsWayf;
-        $this->eula = $eula;
+        $this->termsOfServiceUrl = $termsOfServiceUrl;
         $this->implicitVoId = $implicitVoId;
         $this->isConsentRequired = $isConsentRequired;
         $this->isTransparentIssuer = $isTransparentIssuer;
