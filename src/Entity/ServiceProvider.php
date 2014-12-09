@@ -28,77 +28,77 @@ class ServiceProvider extends AbstractRole
      *
      * @ORM\Column(name="attribute_release_policy", type="array")
      */
-    protected $attributeReleasePolicy = null;
+    protected $attributeReleasePolicy;
 
     /**
      * @var IndexedService[]
      *
      * @ORM\Column(name="assertion_consumer_services", type="array")
      */
-    public $assertionConsumerServices = array();
+    public $assertionConsumerServices;
 
     /**
      * @var bool
      *
      * @ORM\Column(name="is_transparent_issuer", type="boolean")
      */
-    public $isTransparentIssuer = false;
+    public $isTransparentIssuer;
 
     /**
      * @var bool
      *
-     * @ORM\Column(name="is_trusted_proxy", type="boolean")
+     * @ORM\Column(name="is_trusted_proxy", tpe="boolean")
      */
-    public $isTrustedProxy = false;
+    public $isTrustedProxy;
 
     /**
      * @var string
      *
      * @ORM\Column(name="implicit_vo_id", type="string")
      */
-    public $implicitVoId = null;
+    public $implicitVoId;
 
     /**
      * @var bool
      *
      * @ORM\Column(name="display_unconnected_idps_wayf", type="boolean")
      */
-    public $displayUnconnectedIdpsWayf = false;
+    public $displayUnconnectedIdpsWayf;
 
     /**
      * @var bool
      *
      * @ORM\Column(name="is_consent_required", type="boolean")
      */
-    public $isConsentRequired = true;
+    public $isConsentRequired;
 
     /**
      * @var string
      *
      * @ORM\Column(name="terms_of_service_url", type="string")
      */
-    public $termsOfServiceUrl = null;
+    public $termsOfServiceUrl;
 
     /**
      * @var bool
      *
      * @ORM\Column(name="skip_denormalization", type="boolean")
      */
-    public $skipDenormalization = false;
+    public $skipDenormalization;
 
     /**
      * @var array
      *
      * @ORM\Column(name="allowed_idp_entity_ids", type="array")
      */
-    public $allowedIdpEntityIds = array();
+    public $allowedIdpEntityIds;
 
     /**
      * @var null|RequestedAttribute[]
      *
      * @ORM\Column(name="requested_attributes", type="array")
      */
-    public $requestedAttributes = null;
+    public $requestedAttributes;
 
     /**
      * @param $entityId
