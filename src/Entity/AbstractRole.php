@@ -304,10 +304,11 @@ abstract class AbstractRole
 
     /**
      * @param VisitorInterface $visitor
+     * @return null|AbstractRole
      */
     public function accept(VisitorInterface $visitor)
     {
-        $visitor->visitRole($this);
+        return $visitor->visitRole($this);
     }
 
     /**

@@ -37,14 +37,14 @@ class RemoveDisallowedIdentityProvidersFilter extends AbstractFilter
     /**
      * {@inheritdoc}
      */
-    public function filterRole(AbstractRole $entity)
+    public function filterRole(AbstractRole $role)
     {
-        if (!$entity instanceof IdentityProvider) {
-            return $entity;
+        if (!$role instanceof IdentityProvider) {
+            return $role;
         }
 
-        if (in_array($entity->entityId, $this->allowedIdentityProviderEntityIds)) {
-            return $entity;
+        if (in_array($role->entityId, $this->allowedIdentityProviderEntityIds)) {
+            return $role;
         }
 
         return null;

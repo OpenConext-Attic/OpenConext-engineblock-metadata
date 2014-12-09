@@ -26,7 +26,7 @@ class FilterCollectionTest extends PHPUnit_Framework_TestCase
             'OpenConext\Component\EngineBlockMetadata\Entity\AbstractRole'
         );
 
-        $collection = new FilterCollection();
+        $collection = new CompositeFilter();
         $collection->add($mockFilter);
         $this->assertNull($collection->filterRole($mockRole));
         $this->assertEquals('MockFilter', $collection->getDisallowedByFilter());
@@ -41,7 +41,7 @@ class FilterCollectionTest extends PHPUnit_Framework_TestCase
         $mockFilter->shouldReceive('toExpression')->andReturn(Criteria::expr()->isNull('entityId'));
         $mockFilter->shouldReceive('toQueryBuilder');
 
-        $collection = new FilterCollection();
+        $collection = new CompositeFilter();
         $collection->add($mockFilter);
 
         $this->assertTrue($collection->toExpression() instanceof Expression);

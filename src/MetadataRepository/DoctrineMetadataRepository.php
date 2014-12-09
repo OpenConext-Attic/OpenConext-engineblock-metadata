@@ -65,7 +65,7 @@ class DoctrineMetadataRepository extends AbstractMetadataRepository
     {
         $queryBuilder = $this->idpRepository->createQueryBuilder('idp')->select('entityId');
 
-        $this->filterCollection->toQueryBuilder($queryBuilder);
+        $this->compositeFilter->toQueryBuilder($queryBuilder);
 
         return $queryBuilder->getQuery()->execute();
     }
@@ -83,7 +83,7 @@ class DoctrineMetadataRepository extends AbstractMetadataRepository
             ->distinct()
             ->orderBy('schacHomeOrganization');
 
-        $this->filterCollection->toQueryBuilder($queryBuilder);
+        $this->compositeFilter->toQueryBuilder($queryBuilder);
 
         return $queryBuilder
             ->getQuery()
@@ -98,7 +98,7 @@ class DoctrineMetadataRepository extends AbstractMetadataRepository
      * @return array|IdentityProvider[]
      * @throws EntityNotFoundException
      */
-    public function fetchIdentityProvidersByEntityId(array $identityProviderIds)
+    public function findIdentityProvidersByEntityId(array $identityProviderIds)
     {
         $identityProviders = $this->findIdentityProviders();
 
@@ -123,11 +123,12 @@ class DoctrineMetadataRepository extends AbstractMetadataRepository
     {
         /** @var IdentityProvider|null $identityProvider */
         $identityProvider = $this->idpRepository->matching(
-            $this->filterCollection->toCriteria()
+            $this->compositeFilter->toCriteria()
                 ->andWhere(Criteria::expr()->eq('entityId', $entityId))
         );
 
-        return $this->applyVisitors($identityProvider);
+        $identityProvider->accept($this->compositeVisitor);
+        return $identityProvider;
     }
 
     /**
@@ -138,7 +139,7 @@ class DoctrineMetadataRepository extends AbstractMetadataRepository
     {
         /** @var ServiceProvider|null $serviceProvider */
         $serviceProvider = $this->spRepository->matching(
-            $this->filterCollection->toCriteria()
+            $this->compositeFilter->toCriteria()
                 ->andWhere(Criteria::expr()->eq('entityId', $entityId))
         );
 
@@ -146,9 +147,8 @@ class DoctrineMetadataRepository extends AbstractMetadataRepository
             return null;
         }
 
-        return $this->applyVisitors(
-            $serviceProvider
-        );
+        $serviceProvider->accept($this->compositeVisitor);
+        return $serviceProvider;
     }
 
     /**
@@ -157,7 +157,7 @@ class DoctrineMetadataRepository extends AbstractMetadataRepository
     public function findIdentityProviders()
     {
         return $this->idpRepository->matching(
-            $this->filterCollection->toCriteria()
+            $this->compositeFilter->toCriteria()
         )->toArray();
     }
 

@@ -255,10 +255,10 @@ class JanusRestV1AssemblerTest extends PHPUnit_Framework_TestCase
         "logo:0:width":120,
         "name:en":"Test",
         "name:nl":"Test",
-        "NameIDFormat":"urn:oasis:names:tc:SAML:2.0:nameid-format:unspecified",
+        "NameIDFormat":"urn:oasis:names:tc:SAML:1.1:nameid-format:unspecified",
         "NameIDFormats:0":"urn:oasis:names:tc:SAML:2.0:nameid-format:persistent",
         "NameIDFormats:1":"urn:oasis:names:tc:SAML:2.0:nameid-format:transient",
-        "NameIDFormats:2":"urn:oasis:names:tc:SAML:2.0:nameid-format:unspecified",
+        "NameIDFormats:2":"urn:oasis:names:tc:SAML:1.1:nameid-format:unspecified",
         "OrganizationDisplayName:en":"Test OrganizationDisplayName EN",
         "OrganizationDisplayName:nl":"Org DisplayName NL",
         "OrganizationName:en":"ORGname EN \u0ca0_\u0ca0",
@@ -282,18 +282,47 @@ class JanusRestV1AssemblerTest extends PHPUnit_Framework_TestCase
         );
 
         $this->assertTrue($serviceProvider instanceof ServiceProvider);
-        $this->assertTrue($serviceProvider->additionalLogging);
-        $this->assertTrue($serviceProvider->isTransparentIssuer);
-        $this->assertTrue($serviceProvider->isTrustedProxy);
-        $this->assertTrue($serviceProvider->displayUnconnectedIdpsWayf);
-        $this->assertTrue($serviceProvider->skipDenormalization);
-        $this->assertEquals('https://example.edu/eula', $serviceProvider->termsOfServiceUrl);
-        $this->assertEquals('2012-09-01', $serviceProvider->publishInEduGainDate->format('Y-m-d'));
         $this->assertCount(5, $serviceProvider->assertionConsumerServices);
         $this->assertEquals(5, $serviceProvider->assertionConsumerServices[5]->serviceIndex);
         $this->assertCount(3, $serviceProvider->certificates);
         $this->assertEquals($certData, $serviceProvider->certificates[0]->toCertData());
-        $this->assertCount(3, $serviceProvider->supportedNameIdFormats);
+        $this->assertEquals($serviceProvider->certificates[0]->toPem(), $serviceProvider->certificates[1]->toPem());
+        $this->assertTrue($serviceProvider->additionalLogging);
+        $this->assertTrue($serviceProvider->displayUnconnectedIdpsWayf);
+        $this->assertTrue($serviceProvider->skipDenormalization);
+        $this->assertEquals('https://example.edu/eula', $serviceProvider->termsOfServiceUrl);
+        $this->assertEquals('test', $serviceProvider->implicitVoId);
+        $this->assertFalse($serviceProvider->isConsentRequired);
+        $this->assertTrue($serviceProvider->publishInEdugain);
+        $this->assertEquals('2012-09-01', $serviceProvider->publishInEduGainDate->format('Y-m-d'));
+        $this->assertTrue($serviceProvider->isTransparentIssuer);
+        $this->assertTrue($serviceProvider->isTrustedProxy);
+        $this->assertCount(3, $serviceProvider->contactPersons);
+        $this->assertEquals('technical', $serviceProvider->contactPersons[1]->contactType);
+        $this->assertEquals('boy@ibuildings.nl', $serviceProvider->contactPersons[1]->emailAddress);
+        $this->assertEquals('Boy', $serviceProvider->contactPersons[1]->givenName);
+        $this->assertEquals('Baukema', $serviceProvider->contactPersons[1]->surName);
+        $this->assertEquals('Test', $serviceProvider->descriptionEn);
+        $this->assertEquals('Test', $serviceProvider->descriptionNl);
+        $this->assertEquals('Test DisplayName', $serviceProvider->displayNameEn);
+        $this->assertEquals('Test DisplayName', $serviceProvider->displayNameNl);
+        $this->assertEquals(60, $serviceProvider->logo->height);
+        $this->assertEquals(120, $serviceProvider->logo->width);
+        $this->assertEquals('https://.png', $serviceProvider->logo->url);
+        $this->assertEquals(SAML2_Const::NAMEID_UNSPECIFIED, $serviceProvider->nameIdFormat);
+        $this->assertEquals(
+            array(SAML2_Const::NAMEID_PERSISTENT, SAML2_Const::NAMEID_TRANSIENT, SAML2_Const::NAMEID_UNSPECIFIED),
+            $serviceProvider->supportedNameIdFormats
+        );
+        $this->assertEquals('Test OrganizationDisplayName EN', $serviceProvider->organizationEn->displayName);
+        $this->assertEquals('Org DisplayName NL'             , $serviceProvider->organizationNl->displayName);
+        $this->assertEquals('ORGname EN ಠ_ಠ', $serviceProvider->organizationEn->name);
+        $this->assertEquals('ORGname NL ಠ_ಠ', $serviceProvider->organizationNl->name);
+        $this->assertEquals('https://example.edu', $serviceProvider->organizationEn->url);
+        $this->assertEquals('https://example.edu', $serviceProvider->organizationNl->url);
         $this->assertTrue($serviceProvider->requestsMustBeSigned);
+        $this->assertEquals(SAML2_Const::BINDING_HTTP_REDIRECT, $serviceProvider->singleLogoutService->binding);
+        $this->assertEquals('https://example.edu', $serviceProvider->singleLogoutService->location);
+        $this->assertEquals(ServiceProvider::WORKFLOW_STATE_PROD, $serviceProvider->workflowState);
     }
 }

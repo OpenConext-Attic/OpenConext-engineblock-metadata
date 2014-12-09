@@ -8,10 +8,10 @@ use Doctrine\ORM\QueryBuilder;
 use OpenConext\Component\EngineBlockMetadata\Entity\AbstractRole;
 
 /**
- * Class FilterCollection
+ * Class CompositeFilter
  * @package OpenConext\Component\EngineBlockMetadata\MetadataRepository\Helper
  */
-class FilterCollection implements FilterInterface
+class CompositeFilter implements FilterInterface
 {
     /**
      * @var FilterInterface[]
@@ -24,19 +24,48 @@ class FilterCollection implements FilterInterface
     private $disallowedByFilter;
 
     /**
+     * @param AbstractRole[] $roles
+     * @return AbstractRole[]
+     */
+    public function filterRoles($roles)
+    {
+        $newRoles = array();
+        foreach ($roles as $key => $role) {
+            $role = $this->filterRole($role);
+
+            if (!$role) {
+                continue;
+            }
+
+            $newRoles[$key] = $role;
+        }
+        return $newRoles;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function filterRole(AbstractRole $role)
+    {
+        foreach ($this->filters as $filter) {
+            $role = $filter->filterRole($role);
+
+            if (!$role) {
+                $this->disallowedByFilter = $filter->__toString();
+                return null;
+            }
+        }
+        return $role;
+    }
+
+    /**
      * @param FilterInterface $filter
+     * @return $this
      */
     public function add(FilterInterface $filter)
     {
         $this->filters[] = $filter;
-    }
-
-    /**
-     * @return string
-     */
-    public function getDisallowedByFilter()
-    {
-        return $this->disallowedByFilter;
+        return $this;
     }
 
     /**
@@ -45,22 +74,6 @@ class FilterCollection implements FilterInterface
     public function toCriteria()
     {
         return Criteria::create()->where($this->toExpression());
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function filterRole(AbstractRole $entity)
-    {
-        foreach ($this->filters as $filter) {
-            $entity = $filter->filterRole($entity);
-
-            if (!$entity) {
-                $this->disallowedByFilter = $filter->__toString();
-                return null;
-            }
-        }
-        return $entity;
     }
 
     /**
@@ -99,5 +112,13 @@ class FilterCollection implements FilterInterface
         }
 
         return '[' . implode(', ', $filterStrings) . ']';
+    }
+
+    /**
+     * @return string
+     */
+    public function getDisallowedByFilter()
+    {
+        return $this->disallowedByFilter;
     }
 }

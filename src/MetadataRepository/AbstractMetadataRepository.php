@@ -17,30 +17,31 @@ use OpenConext\Component\EngineBlockMetadata\MetadataRepository\Visitor\VisitorI
 abstract class AbstractMetadataRepository implements MetadataRepositoryInterface
 {
     /**
-     * @var Filter\FilterCollection
+     * @var Filter\CompositeFilter
      */
-    protected $filterCollection;
+    protected $compositeFilter;
 
     /**
      * @var array
      */
-    protected $visitors = array();
+    protected $compositeVisitor;
 
     /**
      * Create a new Metadata Repository
      */
     protected function __construct()
     {
-        $this->filterCollection = new Filter\FilterCollection();
+        $this->compositeFilter = new Filter\CompositeFilter();
+        $this->compositeVisitor = new Visitor\CompositeVisitor();
     }
 
     /**
      * @param FilterInterface $filter
      * @return $this
      */
-    public function registerFilter(FilterInterface $filter)
+    public function appendFilter(FilterInterface $filter)
     {
-        $this->filterCollection->add($filter);
+        $this->compositeFilter->add($filter);
         return $this;
     }
 
@@ -48,25 +49,16 @@ abstract class AbstractMetadataRepository implements MetadataRepositoryInterface
      * @param VisitorInterface $visitor
      * @return $this
      */
-    public function registerVisitor(VisitorInterface $visitor)
+    public function appendVisitor(VisitorInterface $visitor)
     {
-        $this->visitors[] = $visitor;
+        $this->compositeVisitor->enqueue($visitor);
         return $this;
     }
 
     /**
-     * @param AbstractRole $role
-     * @return $this
-     */
-    protected function applyVisitors(AbstractRole $role)
-    {
-        foreach ($this->visitors as $visitor) {
-            $role->accept($visitor);
-        }
-        return $this;
-    }
-
-    /**
+     *
+     * WARNING: Very inefficient in-memory default.
+     *
      * @return string[]
      */
     public function findAllIdentityProviderEntityIds()
@@ -77,31 +69,41 @@ abstract class AbstractMetadataRepository implements MetadataRepositoryInterface
         foreach ($identityProviders as $identityProvider) {
             $entityIds[] = $identityProvider->entityId;
         }
+
         return $entityIds;
     }
 
     /**
+     *
+     * WARNING: Very inefficient in-memory default.
+     *
      * @return string[]
      */
     public function findReservedSchacHomeOrganizations()
     {
-        return array_unique(
-            array_map(
-                function (IdentityProvider $entity) {
-                    return $entity->schacHomeOrganization;
-                },
-                $this->findIdentityProviders()
-            ),
-            SORT_STRING
-        );
+        $schacHomeOrganizations = array();
+
+        $identityProviders = $this->findIdentityProviders();
+        foreach ($identityProviders as $identityProvider) {
+            if (!$identityProvider->schacHomeOrganization) {
+                continue;
+            }
+
+            $schacHomeOrganizations[] = $identityProvider->schacHomeOrganization;
+        }
+        return $schacHomeOrganizations;
     }
 
     /**
+     *
+     *
+     * WARNING: Very inefficient in-memory default.
+     *
      * @param array $identityProviderEntityIds
      * @return array|IdentityProvider[]
      * @throws EntityNotFoundException
      */
-    public function fetchIdentityProvidersByEntityId(array $identityProviderEntityIds)
+    public function findIdentityProvidersByEntityId(array $identityProviderEntityIds)
     {
         $identityProviders = $this->findIdentityProviders();
 

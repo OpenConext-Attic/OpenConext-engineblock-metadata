@@ -36,14 +36,14 @@ class InMemoryMetadataRepository extends AbstractMetadataRepository
 
         foreach ($identityProviders as $identityProvider) {
             if (!$identityProvider instanceof IdentityProvider) {
-                throw new InvalidArgumentException("Gave a non-idp to InMemoryMetadataRepository idps");
+                throw new InvalidArgumentException('Gave a non-idp to InMemoryMetadataRepository idps');
             }
             $this->identityProviders[$identityProvider->entityId] = $identityProvider;
         }
 
         foreach ($serviceProviders as $serviceProvider) {
             if (!$serviceProvider instanceof ServiceProvider) {
-                throw new InvalidArgumentException("Gave a non-sp to InMemoryMetadataRepository sps");
+                throw new InvalidArgumentException('Gave a non-sp to InMemoryMetadataRepository sps');
             }
             $this->serviceProviders[$serviceProvider->entityId] = $serviceProvider;
         }
@@ -52,7 +52,7 @@ class InMemoryMetadataRepository extends AbstractMetadataRepository
     /**
      * @param array $repositoryConfig
      * @param ContainerInterface $container
-     * @return mixed
+     * @return static
      */
     public static function createFromConfig(array $repositoryConfig, ContainerInterface $container)
     {
@@ -89,7 +89,15 @@ class InMemoryMetadataRepository extends AbstractMetadataRepository
             return null;
         }
 
-        return $this->identityProviders[$entityId];
+        $identityProvider = $this->compositeFilter->filterRole(
+            $this->identityProviders[$entityId]
+        );
+        if (!$identityProvider) {
+            return null;
+        }
+
+        $identityProvider->accept($this->compositeVisitor);
+        return $identityProvider;
     }
 
     /**
@@ -102,7 +110,14 @@ class InMemoryMetadataRepository extends AbstractMetadataRepository
             return null;
         }
 
-        return $this->serviceProviders[$entityId];
+        $serviceProvider = $this->serviceProviders[$entityId];
+        $serviceProvider = $this->compositeFilter->filterRole($serviceProvider);
+        if (!$serviceProvider) {
+            return null;
+        }
+
+        $serviceProvider->accept($this->compositeVisitor);
+        return $serviceProvider;
     }
 
     /**
@@ -110,7 +125,14 @@ class InMemoryMetadataRepository extends AbstractMetadataRepository
      */
     public function findIdentityProviders()
     {
-        return $this->identityProviders;
+        $identityProviders = $this->compositeFilter->filterRoles(
+            $this->identityProviders
+        );
+
+        foreach ($identityProviders as $identityProvider) {
+            $identityProvider->accept($this->compositeVisitor);
+        }
+        return $identityProviders;
     }
 
     /**
@@ -129,6 +151,14 @@ class InMemoryMetadataRepository extends AbstractMetadataRepository
 
             $publishableEntities[] = $entity;
         }
-        return $publishableEntities;
+
+        $roles = $this->compositeFilter->filterRoles(
+            $publishableEntities
+        );
+
+        foreach ($roles as $role) {
+            $role->accept($this->compositeVisitor);
+        }
+        return $roles;
     }
 }

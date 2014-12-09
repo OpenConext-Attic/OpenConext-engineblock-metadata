@@ -13,10 +13,10 @@ use OpenConext\Component\EngineBlockMetadata\Entity\AbstractRole;
 interface FilterInterface
 {
     /**
-     * @param AbstractRole $entity
-     * @return AbstractRole
+     * @param AbstractRole $role
+     * @return AbstractRole|null
      */
-    public function filterRole(AbstractRole $entity);
+    public function filterRole(AbstractRole $role);
 
     /**
      * @param QueryBuilder $queryBuilder

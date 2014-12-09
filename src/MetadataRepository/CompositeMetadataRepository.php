@@ -8,14 +8,15 @@ use OpenConext\Component\EngineBlockMetadata\Entity\AbstractRole;
 use OpenConext\Component\EngineBlockMetadata\Entity\IdentityProvider;
 use OpenConext\Component\EngineBlockMetadata\MetadataRepository\Filter\FilterInterface;
 use OpenConext\Component\EngineBlockMetadata\Entity\ServiceProvider;
+use OpenConext\Component\EngineBlockMetadata\MetadataRepository\Visitor\VisitorInterface;
 
 /**
- * Class AggregatedMetadataRepository
+ * Class CompositeMetadataRepository
  * @package OpenConext\Component\EngineBlockMetadata\MetadataRepository
  * @SuppressWarnings(PMD.TooManyMethods)
  * @SuppressWarnings(PMD.CouplingBetweenObjects)
  */
-class AggregatedMetadataRepository extends AbstractMetadataRepository
+class CompositeMetadataRepository extends AbstractMetadataRepository
 {
     /**
      * @var MetadataRepositoryInterface[]
@@ -53,17 +54,35 @@ class AggregatedMetadataRepository extends AbstractMetadataRepository
      * @param MetadataRepositoryInterface $repository
      * @return $this
      */
-    public function appendRepository(MetadataRepositoryInterface $repository)
+    public function enqueueRepository(MetadataRepositoryInterface $repository)
     {
         $this->orderedRepositories[] = $repository;
         return $this;
     }
 
     /**
-     *
-     * @param string $entityId
-     * @return AbstractRole
-     * @throws EntityNotFoundException
+     * {@inheritdoc}
+     */
+    public function appendVisitor(VisitorInterface $visitor)
+    {
+        foreach ($this->orderedRepositories as $repository) {
+            $repository->appendVisitor($visitor);
+        }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function appendFilter(FilterInterface $filter)
+    {
+        foreach ($this->orderedRepositories as $repository) {
+            $repository->appendFilter(clone $filter);
+        }
+        return $this;
+    }
+
+    /**
+     * {@inheritdoc}
      */
     public function fetchEntityByEntityId($entityId)
     {
@@ -79,9 +98,7 @@ class AggregatedMetadataRepository extends AbstractMetadataRepository
     }
 
     /**
-     * @param string $entityId
-     * @return ServiceProvider
-     * @throws EntityNotFoundException
+     * {@inheritdoc}
      */
     public function fetchServiceProviderByEntityId($entityId)
     {
@@ -97,9 +114,7 @@ class AggregatedMetadataRepository extends AbstractMetadataRepository
     }
 
     /**
-     * @param string $entityId
-     * @return IdentityProvider
-     * @throws EntityNotFoundException
+     * {@inheritdoc}
      */
     public function fetchIdentityProviderByEntityId($entityId)
     {
@@ -115,8 +130,7 @@ class AggregatedMetadataRepository extends AbstractMetadataRepository
     }
 
     /**
-     * @param string $entityId
-     * @return AbstractRole|null
+     * {@inheritdoc}
      */
     public function findEntityByEntityId($entityId)
     {
@@ -131,8 +145,7 @@ class AggregatedMetadataRepository extends AbstractMetadataRepository
     }
 
     /**
-     * @param string $entityId
-     * @return ServiceProvider|null
+     * {@inheritdoc}
      */
     public function findIdentityProviderByEntityId($entityId)
     {
@@ -147,8 +160,7 @@ class AggregatedMetadataRepository extends AbstractMetadataRepository
     }
 
     /**
-     * @param $entityId
-     * @return ServiceProvider|null
+     * {@inheritdoc}
      */
     public function findServiceProviderByEntityId($entityId)
     {
@@ -163,19 +175,28 @@ class AggregatedMetadataRepository extends AbstractMetadataRepository
     }
 
     /**
-     * @return IdentityProvider[]
+     * {@inheritdoc}
      */
     public function findIdentityProviders()
     {
         $identityProviders = array();
         foreach ($this->orderedRepositories as $repository) {
-            $identityProviders = array_merge($identityProviders, $repository->findIdentityProviders());
+            $repositoryIdentityProviders = $repository->findIdentityProviders();
+            foreach ($repositoryIdentityProviders as $identityProvider) {
+                // Earlier repositories have precedence, so if later repositories give the same entityId,
+                // then we ignore that.
+                if (isset($identityProviders[$identityProvider->entityId])) {
+                    continue;
+                }
+
+                $identityProviders[$identityProvider->entityId] = $identityProvider;
+            }
         }
         return $identityProviders;
     }
 
     /**
-     * @return string[]
+     * {@inheritdoc}
      */
     public function findAllIdentityProviderEntityIds()
     {
@@ -186,11 +207,11 @@ class AggregatedMetadataRepository extends AbstractMetadataRepository
                 $repository->findAllIdentityProviderEntityIds()
             );
         }
-        return $identityProviderEntityIds;
+        return array_values(array_unique($identityProviderEntityIds));
     }
 
     /**
-     * @return string[]
+     * {@inheritdoc}
      */
     public function findReservedSchacHomeOrganizations()
     {
@@ -201,37 +222,37 @@ class AggregatedMetadataRepository extends AbstractMetadataRepository
                 $repository->findReservedSchacHomeOrganizations()
             );
         }
-        return $schacHomeOrganizations;
+        return array_values(array_unique($schacHomeOrganizations));
     }
 
     /**
-     * @return AbstractRole[]
+     * {@inheritdoc}
      */
     public function findEntitiesPublishableInEdugain()
     {
+        $entityIndex = array();
         $entities = array();
         foreach ($this->orderedRepositories as $repository) {
-            $entities = array_merge($entities, $repository->findEntitiesPublishableInEdugain());
+            $repositoryEntities = $repository->findEntitiesPublishableInEdugain();
+            foreach ($repositoryEntities as $repositoryEntity) {
+                // When is an entity the same as another one? For now when it's the same role type (SP / IDP)
+                // and has the same entityId. Though the SAML2 spec allows for much more than that,
+                // we currently don't support anything more.
+                // Note that we avoid an O(n3) lookup here by maintaining an index.
+                $index = get_class($repositoryEntity) . ':' . $repositoryEntity->entityId;
+                if (in_array($index, $entityIndex)) {
+                    continue;
+                }
+
+                $entityIndex[] = $index;
+                $entities[] = $repositoryEntity;
+            }
         }
         return $entities;
     }
 
     /**
-     * @param FilterInterface $filter
-     * @return $this
-     */
-    public function filter(FilterInterface $filter)
-    {
-        foreach ($this->orderedRepositories as $repository) {
-            $repository->registerFilter(clone $filter);
-        }
-        return $this;
-    }
-
-    /**
-     * @param AbstractRole $entity
-     * @return string
-     * @throws \RuntimeException
+     * {@inheritdoc}
      */
     public function fetchEntityManipulation(AbstractRole $entity)
     {
@@ -249,9 +270,7 @@ class AggregatedMetadataRepository extends AbstractMetadataRepository
     }
 
     /**
-     * @param ServiceProvider $serviceProvider
-     * @return AttributeReleasePolicy
-     * @throws \RuntimeException
+     * {@inheritdoc}
      */
     public function fetchServiceProviderArp(ServiceProvider $serviceProvider)
     {
@@ -269,17 +288,15 @@ class AggregatedMetadataRepository extends AbstractMetadataRepository
     }
 
     /**
-     * @param ServiceProvider $serviceProvider
-     * @return array|bool
-     * @throws \RuntimeException
+     * {@inheritdoc}
      */
     public function findAllowedIdpEntityIdsForSp(ServiceProvider $serviceProvider)
     {
         $allowed = array();
         foreach ($this->orderedRepositories as $repository) {
-            $allowed = array_merge($allowed, $repository->findAllowedIdpEntityIdsForSp($serviceProvider));
+            $allowed += $repository->findAllowedIdpEntityIdsForSp($serviceProvider);
         }
 
-        return $allowed;
+        return array_values(array_unique($allowed));
     }
 }

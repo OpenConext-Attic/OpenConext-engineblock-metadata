@@ -11,6 +11,7 @@ use OpenConext\Component\EngineBlockMetadata\Entity\AbstractRole;
 use OpenConext\Component\EngineBlockMetadata\Entity\IdentityProvider;
 use OpenConext\Component\EngineBlockMetadata\Entity\ServiceProvider;
 use OpenConext\Component\EngineBlockMetadata\IndexedService;
+use OpenConext\Component\EngineBlockMetadata\Utils;
 use OpenConext\Component\EngineBlockMetadata\X509\X509CertificateFactory;
 use OpenConext\Component\EngineBlockMetadata\X509\X509CertificateLazyProxy;
 use ReflectionClass;
@@ -35,21 +36,17 @@ class JanusRestV1Assembler
         $arguments = array('entityId' => $entityId);
 
         if (isset($metadata['AssertionConsumerService:0:Location'])) {
-            $roleClass = new ReflectionClass('OpenConext\Component\EngineBlockMetadata\Entity\ServiceProvider');
-
             $arguments += $this->assembleAbstractRoleArguments($metadata);
             $arguments += $this->assembleServiceProviderArguments($metadata);
 
-            return $this->instantiate($roleClass, $arguments);
+            return Utils::instantiate('OpenConext\Component\EngineBlockMetadata\Entity\ServiceProvider', $arguments);
         }
 
         if (isset($metadata['SingleSignOnService:0:Location'])) {
-            $roleClass = new ReflectionClass('OpenConext\Component\EngineBlockMetadata\Entity\IdentityProvider');
-
             $arguments += $this->assembleAbstractRoleArguments($metadata);
             $arguments += $this->assembleIdentityProviderArguments($metadata);
 
-            return $this->instantiate($roleClass, $arguments);
+            return Utils::instantiate('OpenConext\Component\EngineBlockMetadata\Entity\IdentityProvider', $arguments);
         }
 
         // @todo log warning
@@ -64,17 +61,18 @@ class JanusRestV1Assembler
      */
     public function assembleAbstractRoleArguments(array $metadata)
     {
-        if (isset($metadata['Name:en']))        { $arguments['nameEn'] = $metadata['Name:en']; }
-        if (isset($metadata['Name:nl']))        { $arguments['nameNl'] = $metadata['Name:nl']; }
-        if (isset($metadata['Description:en'])) { $arguments['descriptionEn'] = $metadata['Description:en']; }
-        if (isset($metadata['Description:nl'])) { $arguments['descriptionNl'] = $metadata['Description:nl']; }
-        if (isset($metadata['DisplayName:en'])) { $arguments['displayNameEn'] = $metadata['DisplayName:en']; }
-        if (isset($metadata['DisplayName:nl'])) { $arguments['displayNameNl'] = $metadata['DisplayName:nl']; }
+        $arguments = array();
+        if (isset($metadata['name:en']))        { $arguments['nameEn'] = $metadata['name:en']; }
+        if (isset($metadata['name:nl']))        { $arguments['nameNl'] = $metadata['name:nl']; }
+        if (isset($metadata['description:en'])) { $arguments['descriptionEn'] = $metadata['description:en']; }
+        if (isset($metadata['description:nl'])) { $arguments['descriptionNl'] = $metadata['description:nl']; }
+        if (isset($metadata['displayName:en'])) { $arguments['displayNameEn'] = $metadata['displayName:en']; }
+        if (isset($metadata['displayName:nl'])) { $arguments['displayNameNl'] = $metadata['displayName:nl']; }
         if (isset($metadata['keywords:en']))    { $arguments['keywordsEn'] = $metadata['keywords:en']; }
         if (isset($metadata['keywords:nl']))    { $arguments['keywordsNl'] = $metadata['keywords:nl']; }
 
         if (isset($metadata['coin:publish_in_edugain'])) { $arguments['publishInEdugain'] = (bool) $metadata['coin:publish_in_edugain']; }
-        $publishDate = self::ifsetor($metadata, 'coin:publish_in_edugain_date');
+        $publishDate = Utils::ifsetor($metadata, 'coin:publish_in_edugain_date');
         if ($publishDate) {
             $arguments['publishInEduGainDate']   = date_create()->setTimestamp(strtotime($publishDate));
         }
@@ -105,11 +103,12 @@ class JanusRestV1Assembler
      */
     public function assembleServiceProviderArguments(array $metadata)
     {
+        $arguments = array();
         if (isset($metadata['coin:transparant_issuer']))            { $arguments['isTransparentIssuer']         = (bool) $metadata['coin:transparant_issuer']; }
         if (isset($metadata['coin:trusted_proxy']))                 { $arguments['isTrustedProxy']              = (bool) $metadata['coin:trusted_proxy']; }
         if (isset($metadata['coin:implicit_vo_id']))                { $arguments['implicitVoId']                = $metadata['coin:implicit_vo_id']; }
         if (isset($metadata['coin:display_unconnected_idps_wayf'])) { $arguments['displayUnconnectedIdpsWayf']  = (bool) $metadata['coin:display_unconnected_idps_wayf']; }
-        if (isset($metadata['coin:no_consent_required']))           { $arguments['isConsentRequired']           = (bool) $metadata['coin:no_consent_required']; }
+        if (isset($metadata['coin:no_consent_required']))           { $arguments['isConsentRequired']           = !(bool) $metadata['coin:no_consent_required']; }
         if (isset($metadata['coin:eula']))                          { $arguments['termsOfServiceUrl']           = $metadata['coin:eula']; }
         if (isset($metadata['coin:do_not_add_attribute_aliases']))  { $arguments['skipDenormalization']         = (bool) $metadata['coin:do_not_add_attribute_aliases']; }
 
@@ -124,11 +123,12 @@ class JanusRestV1Assembler
      */
     public function assembleIdentityProviderArguments(array $metadata)
     {
+        $arguments = array();
         $arguments['singleSignOnServices'] = $this->assembleIndexedServices($metadata, 'SingleSignOnService');
         if (isset($metadata['coin:schachomeorganization'])) {
             $arguments['schacHomeOrganization'] = $metadata['coin:schachomeorganization'];
         }
-        $arguments['hidden']  = (bool) self::ifsetor($metadata, 'coin:hidden');
+        $arguments['hidden']  = (bool) Utils::ifsetor($metadata, 'coin:hidden');
 
         if (isset($metadata['coin:guest_qualifiers'])) {
             if (in_array($metadata['coin:guest_qualifiers'], IdentityProvider::$GUEST_QUALIFIERS)) {
@@ -154,7 +154,7 @@ class JanusRestV1Assembler
         $certificates = array();
 
         // Try the primary certificate.
-        $certData = self::ifsetor($metadata, 'certData');
+        $certData = Utils::ifsetor($metadata, 'certData');
         if (!$certData) {
             return $certificates;
         }
@@ -162,7 +162,7 @@ class JanusRestV1Assembler
         $certificates[] = new X509CertificateLazyProxy($certificateFactory, $certData);
 
         // If we have a primary we may have a secondary.
-        $certData2 = self::ifsetor($metadata, 'certData2');
+        $certData2 = Utils::ifsetor($metadata, 'certData2');
         if (!$certData2) {
             return $certificates;
         }
@@ -170,7 +170,7 @@ class JanusRestV1Assembler
         $certificates[] = new X509CertificateLazyProxy($certificateFactory, $certData2);
 
         // If we have a secondary we may have a tertiary.
-        $certData3 = self::ifsetor($metadata, 'certData3');
+        $certData3 = Utils::ifsetor($metadata, 'certData3');
         if (!$certData3) {
             return $certificates;
         }
@@ -191,10 +191,10 @@ class JanusRestV1Assembler
         $services = array();
         for ($i = 0; $i < 10; $i++) {
             $bindingKey = $type . ":$i:Binding";
-            $bindingValue = self::ifsetor($metadata, $bindingKey);
+            $bindingValue = Utils::ifsetor($metadata, $bindingKey);
 
             $locationKey = $type . ":$i:Location";
-            $locationValue = self::ifsetor($metadata, $locationKey);
+            $locationValue = Utils::ifsetor($metadata, $locationKey);
 
             if (!$bindingValue && !$locationValue) {
                 continue;
@@ -221,14 +221,14 @@ class JanusRestV1Assembler
      */
     private function assembleLogo(array $metadata)
     {
-        $url = self::ifsetor($metadata, 'logo:0:url');
+        $url = Utils::ifsetor($metadata, 'logo:0:url');
         if (!$url) {
             return null;
         }
 
         $logo = new Logo($url);
-        $logo->width  = self::ifsetor($metadata, 'logo:0:width');
-        $logo->height = self::ifsetor($metadata, 'logo:0:height');
+        $logo->width  = Utils::ifsetor($metadata, 'logo:0:width');
+        $logo->height = Utils::ifsetor($metadata, 'logo:0:height');
         return $logo;
     }
 
@@ -240,15 +240,15 @@ class JanusRestV1Assembler
      */
     private function assembleOrganizationNl(array $metadata)
     {
-        $organizationNameNl         = self::ifsetor($metadata, 'OrganizationName:nl'        , '');
-        $organizationDisplayNameNl  = self::ifsetor($metadata, 'OrganizationDisplayName:nl' , '');
-        $organizationUrlNl          = self::ifsetor($metadata, 'OrganizationURL:nl'         , '');
+        $organizationNameNl         = Utils::ifsetor($metadata, 'OrganizationName:nl'        , '');
+        $organizationDisplayNameNl  = Utils::ifsetor($metadata, 'OrganizationDisplayName:nl' , '');
+        $organizationUrlNl          = Utils::ifsetor($metadata, 'OrganizationURL:nl'         , '');
 
         if (!$organizationNameNl || !$organizationDisplayNameNl || !$organizationUrlNl) {
             return null;
         }
 
-        return new Organization($organizationDisplayNameNl, $organizationNameNl, $organizationUrlNl);
+        return new Organization($organizationNameNl, $organizationDisplayNameNl, $organizationUrlNl);
     }
 
     /**
@@ -257,9 +257,9 @@ class JanusRestV1Assembler
      */
     private function assembleOrganizationEn(array $metadata)
     {
-        $organizationNameEn         = self::ifsetor($metadata, 'OrganizationName:en'        , false);
-        $organizationDisplayNameEn  = self::ifsetor($metadata, 'OrganizationDisplayName:en' , false);
-        $organizationUrlEn          = self::ifsetor($metadata, 'OrganizationURL:en'         , false);
+        $organizationNameEn         = Utils::ifsetor($metadata, 'OrganizationName:en'        , false);
+        $organizationDisplayNameEn  = Utils::ifsetor($metadata, 'OrganizationDisplayName:en' , false);
+        $organizationUrlEn          = Utils::ifsetor($metadata, 'OrganizationURL:en'         , false);
 
         if (!$organizationNameEn || !$organizationDisplayNameEn || !$organizationUrlEn) {
             return null;
@@ -278,9 +278,9 @@ class JanusRestV1Assembler
     private function assembleNameIdFormats(array $metadata)
     {
         $nameIdFormats = array_filter(array(
-            self::ifsetor($metadata, 'NameIDFormats:0'),
-            self::ifsetor($metadata, 'NameIDFormats:1'),
-            self::ifsetor($metadata, 'NameIDFormats:2'),
+            Utils::ifsetor($metadata, 'NameIDFormats:0'),
+            Utils::ifsetor($metadata, 'NameIDFormats:1'),
+            Utils::ifsetor($metadata, 'NameIDFormats:2'),
         ));
         if (empty($nameIdFormats)) {
             return null;
@@ -295,8 +295,8 @@ class JanusRestV1Assembler
      */
     private function assembleSloServices(array $metadata)
     {
-        $sloBinding  = self::ifsetor($metadata, 'SingleLogoutService_Binding');
-        $sloLocation = self::ifsetor($metadata, 'SingleLogoutService_Location');
+        $sloBinding  = Utils::ifsetor($metadata, 'SingleLogoutService_Binding');
+        $sloLocation = Utils::ifsetor($metadata, 'SingleLogoutService_Location');
 
         if (!$sloBinding || !$sloLocation) {
             return null;
@@ -314,10 +314,10 @@ class JanusRestV1Assembler
         $scopes = array();
         for ($i = 0; $i < 10; $i++) {
             $allowedKey = "shibmd:scope:$i:allowed";
-            $allowedValue = self::ifsetor($metadata, $allowedKey);
+            $allowedValue = Utils::ifsetor($metadata, $allowedKey);
 
             $regexpKey = "shibmd:scope:$i:regexp";
-            $regexpValue = self::ifsetor($metadata, $regexpKey);
+            $regexpValue = Utils::ifsetor($metadata, $regexpKey);
 
             if (!$allowedValue) {
                 continue;
@@ -340,12 +340,12 @@ class JanusRestV1Assembler
         $contactPersons = array();
         for ($i = 0; $i < 3; $i++) {
             $contactTypeKey = "contacts:$i:contactType";
-            $contactType = self::ifsetor($metadata, $contactTypeKey);
+            $contactType = Utils::ifsetor($metadata, $contactTypeKey);
             if ($contactType) {
                 $contactPerson = new ContactPerson($contactType);
-                $contactPerson->emailAddress = self::ifsetor($metadata, "contacts:$i:emailAddress", '');
-                $contactPerson->givenName    = self::ifsetor($metadata, "contacts:$i:givenName", '');
-                $contactPerson->surName      = self::ifsetor($metadata, "contacts:$i:surName", '');
+                $contactPerson->emailAddress = Utils::ifsetor($metadata, "contacts:$i:emailAddress", '');
+                $contactPerson->givenName    = Utils::ifsetor($metadata, "contacts:$i:givenName", '');
+                $contactPerson->surName      = Utils::ifsetor($metadata, "contacts:$i:surName", '');
                 $contactPersons[] = $contactPerson;
             }
         }
@@ -361,45 +361,10 @@ class JanusRestV1Assembler
         $i = 0;
         $spsEntityIdsWithoutConsent = array();
         /** @noinspection PhpAssignmentInConditionInspection */
-        while ($disableConsentEntityId = self::ifsetor($metadata, 'disableConsent:' . $i)) {
+        while ($disableConsentEntityId = Utils::ifsetor($metadata, 'disableConsent:' . $i)) {
             $spsEntityIdsWithoutConsent[] = $disableConsentEntityId;
         }
 
         return $spsEntityIdsWithoutConsent;
-    }
-
-    /**
-     * @param $entity
-     * @param $property
-     * @param null $default
-     * @return null
-     */
-    private static function ifsetor($entity, $property, $default = null)
-    {
-        return isset($entity[$property]) ? $entity[$property] : $default;
-    }
-
-    /**
-     * @param ReflectionClass $roleClass
-     * @param array $namedArguments
-     * @return AbstractRole
-     */
-    private function instantiate(ReflectionClass $roleClass, array $namedArguments)
-    {
-        $parameters = $roleClass->getConstructor()->getParameters();
-
-        $positionalDefaultFilledArguments = array();
-        foreach ($parameters as $parameter) {
-            // Do we have an argument set? If so use that.
-            if (isset($namedArguments[$parameter->name])) {
-                $positionalDefaultFilledArguments[] = $namedArguments[$parameter->name];
-                continue;
-            }
-
-            // Otherwise use the default.
-            $positionalDefaultFilledArguments[] = $parameter->getDefaultValue();
-        }
-
-        return $roleClass->newInstanceArgs($positionalDefaultFilledArguments);
     }
 }

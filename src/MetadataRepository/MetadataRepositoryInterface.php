@@ -8,6 +8,7 @@ use OpenConext\Component\EngineBlockMetadata\Entity\AbstractRole;
 use OpenConext\Component\EngineBlockMetadata\Entity\IdentityProvider;
 use OpenConext\Component\EngineBlockMetadata\MetadataRepository\Filter\FilterInterface;
 use OpenConext\Component\EngineBlockMetadata\Entity\ServiceProvider;
+use OpenConext\Component\EngineBlockMetadata\MetadataRepository\Visitor\VisitorInterface;
 
 /**
  * Interface MetadataRepositoryInterface
@@ -26,7 +27,13 @@ interface MetadataRepositoryInterface
      * @param FilterInterface $filter
      * @return $this
      */
-    public function registerFilter(FilterInterface $filter);
+    public function appendFilter(FilterInterface $filter);
+
+    /**
+     * @param VisitorInterface $visitor
+     * @return $this
+     */
+    public function appendVisitor(VisitorInterface $visitor);
 
     /**
      *
@@ -78,7 +85,7 @@ interface MetadataRepositoryInterface
      * @param array $identityProviderEntityIds
      * @return IdentityProvider[]
      */
-    public function fetchIdentityProvidersByEntityId(array $identityProviderEntityIds);
+    public function findIdentityProvidersByEntityId(array $identityProviderEntityIds);
 
     /**
      * @return string[]

@@ -28,9 +28,9 @@ class RemoveEntityByEntityId extends AbstractFilter
     /**
      * {@inheritdoc}
      */
-    public function filterRole(AbstractRole $entity)
+    public function filterRole(AbstractRole $role)
     {
-        return $entity->entityId === $this->entityId ? null : $entity;
+        return $role->entityId === $this->entityId ? null : $role;
     }
 
     /**

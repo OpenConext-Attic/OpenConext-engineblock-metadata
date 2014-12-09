@@ -29,9 +29,9 @@ class RemoveOtherWorkflowStatesFilter extends AbstractFilter
     /**
      * {@inheritdoc}
      */
-    public function filterRole(AbstractRole $entity)
+    public function filterRole(AbstractRole $role)
     {
-        return $entity->workflowState === $this->workflowState ? $entity : null;
+        return $role->workflowState === $this->workflowState ? $role : null;
     }
 
     /**

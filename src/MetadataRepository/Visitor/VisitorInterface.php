@@ -14,19 +14,19 @@ interface VisitorInterface
 {
     /**
      * @param IdentityProvider $identityProvider
-     * @return null
+     * @return IdentityProvider|null
      */
     public function visitIdentityProvider(IdentityProvider $identityProvider);
 
     /**
      * @param ServiceProvider $serviceProvider
-     * @return mixed
+     * @return ServiceProvider|null
      */
     public function visitServiceProvider(ServiceProvider $serviceProvider);
 
     /**
      * @param AbstractRole $role
-     * @return mixed
+     * @return AbstractRole|null
      */
     public function visitRole(AbstractRole $role);
 }

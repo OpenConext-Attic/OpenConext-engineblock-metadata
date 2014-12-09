@@ -132,22 +132,27 @@ class JanusRestV1MetadataRepository extends AbstractMetadataRepository
      */
     public function findEntityByEntityId($entityId)
     {
+        // If we have it in our entity cache...
         if (isset($this->entityCache[$entityId])) {
-            return $this->filterCollection->filterRole($this->entityCache[$entityId]);
+            return $this->postProcessCachedEntity($entityId);
         }
 
+        // If not, use the client to find metadata.
         $metadata = $this->client->findMetadataByEntityId($entityId);
         if (!$metadata) {
             return null;
         }
 
+        // Assemble an entity out of it.
         $entity = $this->assembler->assemble($entityId, $metadata);
         if (!$entity) {
             return null;
         }
 
+        // Cache it.
         $this->entityCache[$entityId] = $entity;
-        return $this->filterCollection->filterRole($this->entityCache[$entityId]);
+
+        return $this->postProcessCachedEntity($entityId);
     }
 
     /**
@@ -158,28 +163,28 @@ class JanusRestV1MetadataRepository extends AbstractMetadataRepository
     public function findIdentityProviderByEntityId($entityId)
     {
         if (isset($this->entityCache[$entityId])) {
-            return $this->filterCollection->filterRole($this->entityCache[$entityId]);
+            return $this->postProcessCachedEntity($entityId);
         }
 
         $metadata = $this->client->findIdentityProviderMetadataByEntityId($entityId);
         if (empty($metadata)) {
             $this->entityCache[$entityId] = null;
-            return $this->entityCache[$entityId];
+            return null;
         }
 
         $entity = $this->assembler->assemble($entityId, $metadata);
         if (!$entity) {
             $this->entityCache[$entityId] = null;
-            return $this->entityCache[$entityId];
+            return null;
         }
 
         if (!$entity instanceof IdentityProvider) {
             $this->entityCache[$entityId] = null;
-            return $this->entityCache[$entityId];
+            return null;
         }
 
         $this->entityCache[$entityId] = $entity;
-        return $this->filterCollection->filterRole($this->entityCache[$entityId]);
+        return $this->postProcessCachedEntity($entityId);
     }
 
     /**
@@ -191,24 +196,24 @@ class JanusRestV1MetadataRepository extends AbstractMetadataRepository
         $metadata = $this->client->findServiceProviderMetadataByEntityId($entityId);
         if (empty($metadata)) {
             $this->entityCache[$entityId] = null;
-            return $this->entityCache[$entityId];
+            return null;
         }
 
         $entity = $this->assembler->assemble($entityId, $metadata);
 
         if (!$entity) {
             $this->entityCache[$entityId] = null;
-            return $this->entityCache[$entityId];
+            return null;
         }
 
         if (!$entity instanceof ServiceProvider) {
             $this->entityCache[$entityId] = null;
-            return $this->entityCache[$entityId];
+            return null;
         }
 
         $this->entityCache[$entityId] = $entity;
 
-        return $this->filterCollection->filterRole($this->entityCache[$entityId]);
+        return $this->compositeFilter->filterRole($this->entityCache[$entityId]);
     }
 
     /**
@@ -235,7 +240,7 @@ class JanusRestV1MetadataRepository extends AbstractMetadataRepository
                 continue;
             }
 
-            $entity = $this->filterCollection->filterRole($this->entityCache[$entityId]);
+            $entity = $this->postProcessCachedEntity($entity);
 
             if (!$entity) {
                 continue;
@@ -294,5 +299,23 @@ class JanusRestV1MetadataRepository extends AbstractMetadataRepository
     public function findAllowedIdpEntityIdsForSp(ServiceProvider $serviceProvider)
     {
         return $this->client->getAllowedIdps($serviceProvider->entityId);
+    }
+
+    /**
+     * @param $entityId
+     * @return null|AbstractRole
+     */
+    private function postProcessCachedEntity($entityId)
+    {
+        // Filter
+        $entity = $this->compositeFilter->filterRole($this->entityCache[$entityId]);
+        if (!$entity) {
+            return null;
+        }
+
+        // Visit
+        $entity->accept($this->compositeVisitor);
+
+        return $entity;
     }
 }
