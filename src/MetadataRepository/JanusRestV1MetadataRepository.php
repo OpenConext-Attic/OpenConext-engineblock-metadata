@@ -213,7 +213,7 @@ class JanusRestV1MetadataRepository extends AbstractMetadataRepository
 
         $this->entityCache[$entityId] = $entity;
 
-        return $this->compositeFilter->filterRole($this->entityCache[$entityId]);
+        return $this->postProcessCachedEntity($entityId);
     }
 
     /**
@@ -240,7 +240,7 @@ class JanusRestV1MetadataRepository extends AbstractMetadataRepository
                 continue;
             }
 
-            $entity = $this->postProcessCachedEntity($entity);
+            $entity = $this->postProcessCachedEntity($entityId);
 
             if (!$entity) {
                 continue;
