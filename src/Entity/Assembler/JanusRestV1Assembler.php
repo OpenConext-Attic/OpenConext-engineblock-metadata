@@ -20,8 +20,7 @@ use RuntimeException;
 /**
  * Class JanusRestV1Assembler
  * @package OpenConext\Component\EngineBlockMetadata\Entity\Translator
- * @SuppressWarnings(PMD.TooManyMethods)
- * @SuppressWarnings(PMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PMD)
  */
 class JanusRestV1Assembler
 {
