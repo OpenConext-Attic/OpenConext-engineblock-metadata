@@ -79,7 +79,7 @@ class RestClientDecorator implements RestClientInterface
      */
     public function getAllowedIdps($entityId)
     {
-        return $this->getAllowedIdps($entityId);
+        return $this->client->getAllowedIdps($entityId);
     }
 
     /**
@@ -88,7 +88,7 @@ class RestClientDecorator implements RestClientInterface
      */
     public function getEntity($entityId)
     {
-        return $this->getEntity($entityId);
+        return $this->client->getEntity($entityId);
     }
 
     /**
@@ -96,7 +96,7 @@ class RestClientDecorator implements RestClientInterface
      */
     public function getIdpList()
     {
-        return $this->getIdpList();
+        return $this->client->getIdpList();
     }
 
     /**
@@ -104,7 +104,7 @@ class RestClientDecorator implements RestClientInterface
      */
     public function getSpList()
     {
-        return $this->getSpList();
+        return $this->client->getSpList();
     }
 
     /**
@@ -114,6 +114,6 @@ class RestClientDecorator implements RestClientInterface
      */
     public function findIdentifiersByMetadata($propertyName, $propertyValue)
     {
-        return $this->findIdentifiersByMetadata($propertyName, $propertyValue);
+        return $this->client->findIdentifiersByMetadata($propertyName, $propertyValue);
     }
 }
