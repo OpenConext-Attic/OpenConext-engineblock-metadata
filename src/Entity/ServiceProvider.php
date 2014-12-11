@@ -47,7 +47,7 @@ class ServiceProvider extends AbstractRole
     /**
      * @var bool
      *
-     * @ORM\Column(name="is_trusted_proxy", tpe="boolean")
+     * @ORM\Column(name="is_trusted_proxy", type="boolean")
      */
     public $isTrustedProxy;
 
