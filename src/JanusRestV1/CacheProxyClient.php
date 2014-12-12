@@ -16,12 +16,12 @@ class CacheProxyClient implements RestClientInterface
     /**
      * @var array
      */
-    private $serviceProvidersMetadata;
+    private $serviceProvidersMetadata = array();
 
     /**
      * @var array
      */
-    private $identityProvidersMetadata;
+    private $identityProvidersMetadata = array();
 
     /**
      * @var
@@ -42,23 +42,28 @@ class CacheProxyClient implements RestClientInterface
     }
 
     /**
-     * @param $entityId
-     * @return mixed
+     * Retrieve the allowed IDPs for an SP. The SP is only
+     * allowed to make connections to the retrieved IDP's.
+     *
+     * @param string $spEntityId the URN of the SP entity.
+     * @return array containing the URN's of the IDP's that this SP is allowed to make a connection to.
      */
-    public function getAllowedIdps($entityId)
+    public function getAllowedIdps($spEntityId)
     {
-        if (isset($this->allowedIdpsPerSp[$entityId])) {
-            return $this->allowedIdpsPerSp[$entityId];
+        if (isset($this->allowedIdpsPerSp[$spEntityId])) {
+            return $this->allowedIdpsPerSp[$spEntityId];
         }
 
-        $this->allowedIdpsPerSp[$entityId] = $this->client->getAllowedIdps($entityId);
+        $this->allowedIdpsPerSp[$spEntityId] = $this->client->getAllowedIdps($spEntityId);
 
-        return $this->allowedIdpsPerSp[$entityId];
+        return $this->allowedIdpsPerSp[$spEntityId];
     }
 
     /**
+     * Get full information for a given entity.
+     *
      * @param $entityId
-     * @return mixed
+     * @return array
      */
     public function getEntity($entityId)
     {
@@ -72,40 +77,69 @@ class CacheProxyClient implements RestClientInterface
     }
 
     /**
-     * @return mixed
+     * Retrieve a list of metadata values of all available
+     * IDP entities.
+     * @param array $keys An array of keys to retrieve. Retrieves
+     *                    all available keys if omited or empty
+     * @param String $forSpEntityId An optional identifier of an SP
+     *               If present, idplist will return a list of only the
+     *               idps that this sp is allowed to authenticate against.
+     * @return array An associative array of values, indexed by IDP
+     *               identifier. Each value is another associative
+     *               array with key/value pairs containing the metadata.
      */
-    public function getIdpList()
+    public function getIdpList($keys = array(), $forSpEntityId = null)
     {
-        if (isset($this->identityProvidersMetadata)) {
-            return $this->identityProvidersMetadata;
+        $keysString = implode(',', sort($keys));
+        if (isset($this->identityProvidersMetadata[$keysString][$forSpEntityId])) {
+            return $this->identityProvidersMetadata[$keysString][$forSpEntityId];
         }
 
-        $this->identityProvidersMetadata = $this->client->getIdpList();
+        if (!isset($this->identityProvidersMetadata[$keysString])) {
+            $this->identityProvidersMetadata[$keysString] = array();
+        }
+
+        $this->identityProvidersMetadata[$keysString][$forSpEntityId] = $this->client->getIdpList();
 
         return $this->identityProvidersMetadata;
     }
 
     /**
-     * @return mixed
+     * Find entities based on metadata.
+     *
+     * Finds the identifiers (URNS) of all SPs/IDPs that match a certain
+     * metadata value. The rest webservice that's behind this call supports
+     * regular expressions in the metadata values in its database. So you
+     * can pass "www.google.com" as value to this function and match
+     * entities that have '.*\.google\.com in their url:en metadata field.
+     *
+     * @param string $key The key you want to match against
+     * @param string $value The value you want to match against
+     * @return array An array of URNS of entities that match the request.
      */
-    public function getSpList()
+    public function findIdentifiersByMetadata($key, $value)
     {
-        if (isset($this->serviceProvidersMetadata)) {
-            return $this->serviceProvidersMetadata;
-        }
-
-        $this->serviceProvidersMetadata = $this->client->getSpList();
-
-        return $this->serviceProvidersMetadata;
+        return $this->client->findIdentifiersByMetadata($key, $value);
     }
 
     /**
-     * @param string $propertyName
-     * @param string $propertyValue
-     * @return array
+     * Retrieve a list of metadata values of all available
+     * SP entities.
+     * @param array $keys An array of keys to retrieve. Retrieves
+     *                    all available keys if omited or empty
+     * @return array An associative array of values, indexed by SP
+     *               identifier. Each value is another associative
+     *               array with key/value pairs containing the metadata.
      */
-    public function findIdentifiersByMetadata($propertyName, $propertyValue)
+    public function getSpList($keys = array())
     {
-        return $this->client->findIdentifiersByMetadata($propertyName, $propertyValue);
+        $keysString = implode(',', sort($keys));
+        if (isset($this->serviceProvidersMetadata[$keysString])) {
+            return $this->serviceProvidersMetadata[$keysString];
+        }
+
+        $this->serviceProvidersMetadata[$keysString] = $this->client->getSpList();
+
+        return $this->serviceProvidersMetadata;
     }
 }
