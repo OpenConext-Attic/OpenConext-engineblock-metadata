@@ -25,7 +25,7 @@ class CompositeVisitor implements VisitorInterface
      * @param VisitorInterface $visitor
      * @return $this
      */
-    public function enqueue(VisitorInterface $visitor)
+    public function append(VisitorInterface $visitor)
     {
         $this->visitors[] = $visitor;
         return $this;

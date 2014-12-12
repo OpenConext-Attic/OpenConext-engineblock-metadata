@@ -51,7 +51,7 @@ abstract class AbstractMetadataRepository implements MetadataRepositoryInterface
      */
     public function appendVisitor(VisitorInterface $visitor)
     {
-        $this->compositeVisitor->enqueue($visitor);
+        $this->compositeVisitor->append($visitor);
         return $this;
     }
 

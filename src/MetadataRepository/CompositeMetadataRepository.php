@@ -54,7 +54,7 @@ class CompositeMetadataRepository extends AbstractMetadataRepository
      * @param MetadataRepositoryInterface $repository
      * @return $this
      */
-    public function enqueueRepository(MetadataRepositoryInterface $repository)
+    public function appendRepository(MetadataRepositoryInterface $repository)
     {
         $this->orderedRepositories[] = $repository;
         return $this;
