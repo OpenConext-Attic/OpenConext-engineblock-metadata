@@ -6,7 +6,6 @@ use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
 use OpenConext\Component\EngineBlockMetadata\Container\ContainerInterface;
-use OpenConext\Component\EngineBlockMetadata\AttributeReleasePolicy;
 use OpenConext\Component\EngineBlockMetadata\Entity\AbstractRole;
 use OpenConext\Component\EngineBlockMetadata\Entity\IdentityProvider;
 use OpenConext\Component\EngineBlockMetadata\Entity\ServiceProvider;
@@ -49,11 +48,11 @@ class DoctrineMetadataRepository extends AbstractMetadataRepository
      * @param EntityRepository $spRepository
      * @param EntityRepository $idpRepository
      */
-    protected function __construct(EntityRepository $spRepository, EntityRepository $idpRepository)
+    public function __construct(EntityRepository $spRepository, EntityRepository $idpRepository)
     {
         parent::__construct();
 
-        $this->spRepository = $spRepository;
+        $this->spRepository  = $spRepository;
         $this->idpRepository = $idpRepository;
     }
 
@@ -91,28 +90,20 @@ class DoctrineMetadataRepository extends AbstractMetadataRepository
     }
 
     /**
-     *
-     * NOTE: Highly inefficient default (in-memory) method that you probably want to override.
-     *
      * @param array $identityProviderIds
      * @return array|IdentityProvider[]
      * @throws EntityNotFoundException
      */
     public function findIdentityProvidersByEntityId(array $identityProviderIds)
     {
-        $identityProviders = $this->findIdentityProviders();
+        /** @var IdentityProvider|null $identityProvider */
+        $identityProvider = $this->idpRepository->matching(
+            $this->compositeFilter->toCriteria()
+                ->andWhere(Criteria::expr()->in('entityId', $identityProviderIds))
+        );
 
-        $filteredIdentityProviders = array();
-        foreach ($identityProviderIds as $identityProviderId) {
-            if (!isset($identityProviders[$identityProviderId])) {
-                throw new EntityNotFoundException(
-                    "Did not find an Identity Provider with entityId '$identityProviderId'"
-                );
-            }
-
-            $filteredIdentityProviders[$identityProviderId] = $identityProviders[$identityProviderId];
-        }
-        return $filteredIdentityProviders;
+        $identityProvider->accept($this->compositeVisitor);
+        return $identityProvider;
     }
 
     /**
@@ -159,28 +150,6 @@ class DoctrineMetadataRepository extends AbstractMetadataRepository
         return $this->idpRepository->matching(
             $this->compositeFilter->toCriteria()
         )->toArray();
-    }
-
-    /**
-     *
-     * NOTE: Inefficient default (in-memory) method that you probably want to override.
-     *
-     * @param string $entityId
-     * @return AbstractRole|null
-     */
-    public function findEntityByEntityId($entityId)
-    {
-        $serviceProvider = $this->findServiceProviderByEntityId($entityId);
-        if ($serviceProvider) {
-            return $serviceProvider;
-        }
-
-        $identityProvider = $this->findIdentityProviderByEntityId($entityId);
-        if ($identityProvider) {
-            return $identityProvider;
-        }
-
-        return null;
     }
 
     /**
