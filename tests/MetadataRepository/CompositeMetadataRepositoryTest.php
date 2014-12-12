@@ -148,39 +148,39 @@ class CompositeMetadataRepositoryTest extends PHPUnit_Framework_TestCase
                         new ServiceProvider('https://sp1.example.edu')
                     )
                 ),
-                new InMemoryMetadataRepository(
-                    array(
-                        Utils::instantiate(
-                            'OpenConext\Component\EngineBlockMetadata\Entity\IdentityProvider',
-                            array(
-                                'entityId' => 'https://idp1.example.edu',
-                                'publishInEdugain' => true,
-                                'schacHomeOrganization' => 'idp1.example.edu',
-                                'displayNameEn' => '2',
-                            )
-                        ),
-                        Utils::instantiate(
-                            'OpenConext\Component\EngineBlockMetadata\Entity\IdentityProvider',
-                            array(
-                                'entityId' => 'https://idp2.example.edu',
-                                'publishInEdugain' => true,
-                                'schacHomeOrganization' => 'idp2.example.edu',
-                            )
-                        )
-                    ),
-                    array(
-                        Utils::instantiate(
-                            'OpenConext\Component\EngineBlockMetadata\Entity\ServiceProvider',
-                            array('entityId' => 'https://sp1.example.edu', 'publishInEdugain' => true)
-                        ),
-                        Utils::instantiate(
-                            'OpenConext\Component\EngineBlockMetadata\Entity\ServiceProvider',
-                            array('entityId' => 'https://sp2.example.edu', 'publishInEdugain' => true)
-                        )
-                    )
-                ),
             )
         );
+        $repository->appendRepository(new InMemoryMetadataRepository(
+            array(
+                Utils::instantiate(
+                    'OpenConext\Component\EngineBlockMetadata\Entity\IdentityProvider',
+                    array(
+                        'entityId' => 'https://idp1.example.edu',
+                        'publishInEdugain' => true,
+                        'schacHomeOrganization' => 'idp1.example.edu',
+                        'displayNameEn' => '2',
+                    )
+                ),
+                Utils::instantiate(
+                    'OpenConext\Component\EngineBlockMetadata\Entity\IdentityProvider',
+                    array(
+                        'entityId' => 'https://idp2.example.edu',
+                        'publishInEdugain' => true,
+                        'schacHomeOrganization' => 'idp2.example.edu',
+                    )
+                )
+            ),
+            array(
+                Utils::instantiate(
+                    'OpenConext\Component\EngineBlockMetadata\Entity\ServiceProvider',
+                    array('entityId' => 'https://sp1.example.edu', 'publishInEdugain' => true)
+                ),
+                Utils::instantiate(
+                    'OpenConext\Component\EngineBlockMetadata\Entity\ServiceProvider',
+                    array('entityId' => 'https://sp2.example.edu', 'publishInEdugain' => true)
+                )
+            )
+        ));
         return $repository;
     }
 }
