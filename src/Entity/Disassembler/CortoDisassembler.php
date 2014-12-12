@@ -42,7 +42,7 @@ class CortoDisassembler
                 $cortoEntity['AssertionConsumerServices'] = array();
             }
 
-            $cortoEntity[$service->serviceIndex] = array(
+            $cortoEntity['AssertionConsumerServices'][$service->serviceIndex] = array(
                 'Binding'  => $service->binding,
                 'Location' => $service->location,
             );
@@ -65,7 +65,7 @@ class CortoDisassembler
     {
         $cortoEntity = array();
 
-        $this->translateCommon($entity, $cortoEntity);
+        $cortoEntity = $this->translateCommon($entity, $cortoEntity);
 
         foreach ($entity->singleSignOnServices as $service) {
             if (!isset($cortoEntity['SingleSignOnService'])) {
@@ -105,6 +105,7 @@ class CortoDisassembler
      */
     private function translateCommon(AbstractRole $entity, array $cortoEntity)
     {
+        $cortoEntity['EntityID'] = $entity->entityId;
         if ($entity->publishInEdugain) {
             $cortoEntity['PublishInEdugain'] = true;
         }
@@ -247,11 +248,11 @@ class CortoDisassembler
     private function translateDisplayName(AbstractRole $entity, array $cortoEntity)
     {
         if ($entity->displayNameNl) {
-            $this->mapMultilang($entity->keywordsNl, $cortoEntity, 'DisplayName', 'nl');
+            $this->mapMultilang($entity->displayNameNl, $cortoEntity, 'DisplayName', 'nl');
         }
 
         if ($entity->displayNameEn) {
-            $this->mapMultilang($entity->keywordsNl, $cortoEntity, 'DisplayName', 'nl');
+            $this->mapMultilang($entity->displayNameEn, $cortoEntity, 'DisplayName', 'en');
         }
         return $cortoEntity;
     }
@@ -263,13 +264,17 @@ class CortoDisassembler
      */
     private function translateSingleLogoutServices(AbstractRole $entity, array $cortoEntity)
     {
+        if (!$entity->singleLogoutService) {
+            return $cortoEntity;
+        }
+
         $service = $entity->singleLogoutService;
 
         if (!isset($cortoEntity['SingleLogoutService'])) {
             $cortoEntity['SingleLogoutService'] = array();
         }
 
-        $cortoEntity[] = array(
+        $cortoEntity['SingleLogoutService'][] = array(
             'Binding' => $service->binding,
             'Location' => $service->location,
         );
@@ -322,7 +327,7 @@ class CortoDisassembler
     private function mapMultilang($value, array &$to)
     {
         $path = array_slice(func_get_args(), 2);
-        while (count($path) > 1) {
+        while (count($path) >= 1) {
             $key = array_shift($path);
             if (!isset($to[$key])) {
                 $to[$key] = array();
