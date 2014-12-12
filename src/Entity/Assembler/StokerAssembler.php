@@ -66,7 +66,7 @@ class StokerAssembler
             return $this->assembleIdentityProvider($metadataIndexEntity, $entityDescriptor, $idpDescriptor);
         }
         if ($spDescriptor) {
-            return $this->assembleServiceProvider($entityDescriptor, $spDescriptor);
+            return $this->assembleServiceProvider($metadataIndexEntity, $entityDescriptor, $spDescriptor);
         }
         if ($idpDescriptor) {
             return $this->assembleIdentityProvider($metadataIndexEntity, $entityDescriptor, $idpDescriptor);
@@ -141,25 +141,28 @@ class StokerAssembler
      * @return ServiceProvider
      */
     protected function assembleServiceProvider(
+        MetadataIndex\Entity $metadataIndexEntity,
         SAML2_XML_md_EntityDescriptor $entityDescriptor,
         SAML2_XML_md_SPSSODescriptor $spDescriptor
     ) {
         $entity = new ServiceProvider($entityDescriptor->entityID);
 
-        $singleSignOnServices = array();
+        $entity = $this->assembleCommon($metadataIndexEntity, $entity, $spDescriptor);
+
+        $assertionConsumerServices = array();
         foreach ($spDescriptor->AssertionConsumerService as $acs) {
             if (!in_array($acs->Binding, array(SAML2_Const::BINDING_HTTP_POST, SAML2_Const::BINDING_HTTP_REDIRECT))) {
                 continue;
             }
 
-            $singleSignOnServices[$acs->index] = new IndexedService(
+            $assertionConsumerServices[$acs->index] = new IndexedService(
                 $acs->Location,
                 $acs->Binding,
                 $acs->index,
                 $acs->isDefault
             );
         }
-        $entity->assertionConsumerServices = $singleSignOnServices;
+        $entity->assertionConsumerServices = $assertionConsumerServices;
         return $entity;
     }
 }
