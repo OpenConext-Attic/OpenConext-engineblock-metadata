@@ -44,26 +44,39 @@ class StokerMetadataRepository extends AbstractMetadataRepository
         if (!isset($repositoryConfig['path'])) {
             throw new \RuntimeException('No path configured for stoker repository');
         }
-        return new static($repositoryConfig['path'], new StokerAssembler());
+        $directory = $repositoryConfig['path'];
+
+        $entitySource = new MetadataEntitySource($directory);
+
+        $index = MetadataIndex::load($directory);
+        if (!$index) {
+            throw new \RuntimeException(
+                "Unable to load $directory" . DIRECTORY_SEPARATOR . MetadataIndex::FILENAME
+            );
+        }
+
+        $assembler = new StokerAssembler();
+
+        return new static($entitySource, $index, $directory, $assembler);
     }
 
     /**
-     * @param string $metadataDirectory
-     * @param \OpenConext\Component\EngineBlockMetadata\Entity\Assembler\StokerAssembler $assembler
-     * @throws \RuntimeException
+     * @param MetadataEntitySource $source
+     * @param MetadataIndex $index
+     * @param $directory
+     * @param StokerAssembler $assembler
      */
-    public function __construct($metadataDirectory, StokerAssembler $assembler)
-    {
+    public function __construct(
+        MetadataEntitySource $source,
+        MetadataIndex $index,
+        $directory,
+        StokerAssembler $assembler
+    ) {
         parent::__construct();
 
-        $this->metadataEntitySource = new MetadataEntitySource($metadataDirectory);
-        $this->metadataIndex = MetadataIndex::load($metadataDirectory);
-        if (!$this->metadataIndex) {
-            throw new \RuntimeException(
-                "Unable to load $metadataDirectory" . DIRECTORY_SEPARATOR . MetadataIndex::FILENAME
-            );
-        }
-        $this->metadataDirectory = $metadataDirectory;
+        $this->metadataEntitySource = $source;
+        $this->metadataIndex = $index;
+        $this->metadataDirectory = $directory;
         $this->translator = $assembler;
     }
 
