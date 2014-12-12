@@ -7,10 +7,10 @@ use Doctrine\ORM\QueryBuilder;
 use OpenConext\Component\EngineBlockMetadata\Entity\AbstractRole;
 
 /**
- * Class RemoveEntityByEntityId
+ * Class RemoveEntityByEntityIdFilter
  * @package OpenConext\Component\EngineBlockMetadata\MetadataRepository\Filter
  */
-class RemoveEntityByEntityId extends AbstractFilter
+class RemoveEntityByEntityIdFilter extends AbstractFilter
 {
     /**
      * @var string
