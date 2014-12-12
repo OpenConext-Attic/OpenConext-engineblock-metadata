@@ -2,6 +2,7 @@
 
 namespace OpenConext\Component\EngineBlockMetadata\MetadataRepository;
 
+use InvalidArgumentException;
 use OpenConext\Component\EngineBlockMetadata\Container\ContainerInterface;
 use ReflectionClass;
 use RuntimeException;
@@ -12,11 +13,6 @@ use RuntimeException;
 class RepositoryFactory
 {
     /**
-     * Namespace to locate the repository in.
-     */
-    const DEFAULT_NAMESPACE = '\\OpenConext\\Component\\EngineBlockMetadata\\MetadataRepository';
-
-    /**
      * @param array $config
      * @param ContainerInterface $container
      * @return MetadataRepositoryInterface
@@ -25,17 +21,17 @@ class RepositoryFactory
     public function createFromConfig(array $config, ContainerInterface $container)
     {
         if (!isset($config['type'])) {
-            throw new RuntimeException('serviceRegistryAdapter config missing type!');
+            throw new InvalidArgumentException('serviceRegistryAdapter config missing type!');
         }
 
-        $namespace = isset($config['namespace']) ? $config['namespace'] : self::DEFAULT_NAMESPACE;
+        $namespace = isset($config['namespace']) ? $config['namespace'] : __NAMESPACE__;
         $className = $namespace . '\\' . $config['type'] . 'MetadataRepository';
         if (!class_exists($className, true)) {
-            throw new RuntimeException("Unable to find '$className'");
+            throw new InvalidArgumentException("Unable to find '$className'");
         }
 
         $class = new ReflectionClass($className);
-        if (!$class->implementsInterface(self::DEFAULT_NAMESPACE . '\\MetadataRepositoryInterface')) {
+        if (!$class->implementsInterface(__NAMESPACE__ . '\\MetadataRepositoryInterface')) {
             throw new RuntimeException("$className does not implement MetadataRepositoryInterface");
         }
 
