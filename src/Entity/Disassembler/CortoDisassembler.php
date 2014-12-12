@@ -8,7 +8,11 @@ use OpenConext\Component\EngineBlockMetadata\Entity\IdentityProvider;
 use OpenConext\Component\EngineBlockMetadata\Entity\ServiceProvider;
 
 /**
- * Class CortoDisassembler
+ * The Corto disassembler disassembles an entity to legacy Corto arrays.
+ *
+ * Used primarily for legacy support in the Entity Manipulations.
+ * Note that these should be migrated and then this disassembler can be removed.
+ *
  * @package OpenConext\Component\EngineBlockMetadata\Legacy
  * @SuppressWarnings(PMD.TooManyMethods)
  */

@@ -27,7 +27,7 @@ use SAML2_XML_mdui_UIInfo;
 class StokerAssembler
 {
     /**
-     * @param $entityXml
+     * @param string $entityXml
      * @param MetadataIndex\Entity $metadataIndexEntity
      * @return IdentityProvider|ServiceProvider
      * @throws RuntimeException

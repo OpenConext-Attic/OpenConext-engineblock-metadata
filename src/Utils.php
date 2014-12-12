@@ -30,8 +30,6 @@ class Utils
      *
      * An answer to a problem that should not exist (legacy large Entities).
      *
-     * @deprecated Deprecated from the start because you really shouldn't use this if you can avoid it.
-     *
      * @param string $className
      * @param array $namedArguments
      * @return object

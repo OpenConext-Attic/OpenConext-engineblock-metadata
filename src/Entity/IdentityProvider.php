@@ -82,7 +82,7 @@ class IdentityProvider extends AbstractRole
     public $shibMdScopes = array();
 
     /**
-     * @param $entityId
+     * @param string $entityId
      * @param Organization $organizationEn
      * @param Organization $organizationNl
      * @param Service $singleLogoutService
