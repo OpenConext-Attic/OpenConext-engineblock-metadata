@@ -90,7 +90,8 @@ class CacheProxyClient implements RestClientInterface
      */
     public function getIdpList($keys = array(), $forSpEntityId = null)
     {
-        $keysString = implode(',', sort($keys));
+        sort($keys);
+        $keysString = implode(',', $keys);
         if (isset($this->identityProvidersMetadata[$keysString][$forSpEntityId])) {
             return $this->identityProvidersMetadata[$keysString][$forSpEntityId];
         }
@@ -133,7 +134,8 @@ class CacheProxyClient implements RestClientInterface
      */
     public function getSpList($keys = array())
     {
-        $keysString = implode(',', sort($keys));
+        sort($keys);
+        $keysString = implode(',', $keys);
         if (isset($this->serviceProvidersMetadata[$keysString])) {
             return $this->serviceProvidersMetadata[$keysString];
         }

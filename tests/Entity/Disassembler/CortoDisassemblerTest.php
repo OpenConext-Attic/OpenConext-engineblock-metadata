@@ -35,7 +35,7 @@ class CortoDisassemblerTest extends PHPUnit_Framework_TestCase
         $this->assertEquals('yes'                                   , $cortoServiceProvider['TransparentIssuer']);
         $this->assertEquals('yes'                                   , $cortoServiceProvider['DisplayUnconnectedIdpsWayf']);
         $this->assertEquals($serviceProvider->implicitVoId          , $cortoServiceProvider['VoContext']);
-        $this->assertEquals($serviceProvider->isConsentRequired     , $cortoServiceProvider['NoConsentRequired']);
+        $this->assertEquals(!$serviceProvider->isConsentRequired    , $cortoServiceProvider['NoConsentRequired']);
         $this->assertEquals($serviceProvider->skipDenormalization   , $cortoServiceProvider['SkipDenormalization']);
     }
 
