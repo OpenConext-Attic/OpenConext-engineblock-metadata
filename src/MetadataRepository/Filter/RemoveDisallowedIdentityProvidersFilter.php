@@ -56,7 +56,7 @@ class RemoveDisallowedIdentityProvidersFilter extends AbstractFilter
     public function toQueryBuilder(QueryBuilder $queryBuilder)
     {
         return $queryBuilder
-            ->andWhere("entityId IN(:allowedEntityIds)")
+            ->andWhere("role.entityId IN(:allowedEntityIds)")
             ->setParameter('allowedEntityIds', $this->allowedIdentityProviderEntityIds);
     }
 

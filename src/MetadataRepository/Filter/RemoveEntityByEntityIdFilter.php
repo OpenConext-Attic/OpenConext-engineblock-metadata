@@ -39,7 +39,7 @@ class RemoveEntityByEntityIdFilter extends AbstractFilter
     public function toQueryBuilder(QueryBuilder $queryBuilder)
     {
         return $queryBuilder
-            ->andWhere('entityId <> :removeEntityId')
+            ->andWhere('role.entityId <> :removeEntityId')
             ->setParameter('removeEntityId', $this->entityId);
     }
 

@@ -40,7 +40,7 @@ class RemoveOtherWorkflowStatesFilter extends AbstractFilter
     public function toQueryBuilder(QueryBuilder $queryBuilder)
     {
         $queryBuilder
-            ->andWhere('workflowState <> :bannedWorkflowState')
+            ->andWhere('role.workflowState <> :bannedWorkflowState')
             ->setParameter('bannedWorkflowState', $this->workflowState);
     }
 
