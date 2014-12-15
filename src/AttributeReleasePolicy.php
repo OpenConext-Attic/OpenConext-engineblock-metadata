@@ -20,6 +20,26 @@ class AttributeReleasePolicy
      */
     public function __construct(array $attributesWithValues)
     {
+        foreach ($attributesWithValues as $key => $values) {
+            if (!is_string($key)) {
+                throw new \InvalidArgumentException('Invalid key: ' . var_export($key, true));
+            }
+
+            if (!is_array($values)) {
+                throw new \InvalidArgumentException(
+                    "Invalid values for attribute '$key', not an array: " . var_export($values, true)
+                );
+            }
+
+            foreach ($values as $value) {
+                if (!is_string($value)) {
+                    throw new \InvalidArgumentException(
+                        "Invalid value for attribute '$key', not an array: " . var_export($value, true)
+                    );
+                }
+            }
+        }
+
         $this->attributesWithValues = $attributesWithValues;
     }
 

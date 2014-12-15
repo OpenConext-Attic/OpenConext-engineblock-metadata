@@ -9,9 +9,9 @@ namespace OpenConext\Component\EngineBlockMetadata;
 class ContactPerson
 {
     public $contactType;
-    public $emailAddress;
-    public $givenName;
-    public $surName;
+    public $emailAddress = '';
+    public $givenName = '';
+    public $surName = '';
 
     /**
      * @param $contactType

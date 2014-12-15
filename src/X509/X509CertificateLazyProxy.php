@@ -5,7 +5,7 @@ namespace OpenConext\Component\EngineBlockMetadata\X509;
 /**
  * Lazy Proxy for X509 Certificate.
  * Used when parsing / validation of the certificate is meant to be deferred until use
- * (bad idea in theory, sometimes useful in practice).
+ * (useful if your upstream certificate supplier does not do checking and hands you all certificates at once).
  */
 class X509CertificateLazyProxy
 {

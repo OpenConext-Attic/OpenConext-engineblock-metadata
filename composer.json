@@ -7,11 +7,14 @@
     },
     "require": {
         "php": ">=5.3.3",
+        "doctrine/orm": "~2.3",
         "openconext/stoker-metadata": "dev-master",
         "simplesamlphp/saml2": "~0.5"
     },
     "require-dev": {
         "ibuildings/qa-tools": "~1.1",
-        "sebastian/phpcpd": "dev-master"
+        "sebastian/phpcpd": "dev-master",
+        "satooshi/php-coveralls": "~0.6",
+        "mockery/mockery": "~0.9"
     }
 }
