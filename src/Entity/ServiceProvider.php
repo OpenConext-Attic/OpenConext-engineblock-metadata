@@ -10,14 +10,12 @@ use OpenConext\Component\EngineBlockMetadata\RequestedAttribute;
 use OpenConext\Component\EngineBlockMetadata\IndexedService;
 use OpenConext\Component\EngineBlockMetadata\Service;
 use SAML2_Const;
-use Doctrine\ORM;
+use Doctrine\ORM\Mapping as ORM;
 
 /**
  * Class ServiceProvider
  * @package OpenConext\Component\EngineBlockMetadata\Entity
- *
- * @ORM\Mapping\MappedSuperclass()
- *
+ * @ORM\Entity
  * @SuppressWarnings(PHPMD.TooManyMethods)
  * @SuppressWarnings(PHPMD.ExcessiveParameterList)
  */
@@ -87,7 +85,7 @@ class ServiceProvider extends AbstractRole
     public $skipDenormalization;
 
     /**
-     * @var array
+     * @var string[]
      *
      * @ORM\Column(name="allowed_idp_entity_ids", type="array")
      */
@@ -101,7 +99,7 @@ class ServiceProvider extends AbstractRole
     public $requestedAttributes;
 
     /**
-     * @param $entityId
+     * @param string $entityId
      * @param Organization $organizationEn
      * @param Organization $organizationNl
      * @param Service $singleLogoutService

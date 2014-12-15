@@ -2,7 +2,7 @@
 
 namespace OpenConext\Component\EngineBlockMetadata\Entity;
 
-use Doctrine\ORM;
+use Doctrine\ORM\Mapping as ORM;
 use OpenConext\Component\EngineBlockMetadata\Logo;
 use OpenConext\Component\EngineBlockMetadata\MetadataRepository\Visitor\VisitorInterface;
 use OpenConext\Component\EngineBlockMetadata\Organization;
@@ -13,10 +13,8 @@ use SAML2_Const;
 /**
  * Class IdentityProvider
  * @package OpenConext\Component\EngineBlockMetadata\Entity
+ * @ORM\Entity
  * @SuppressWarnings(PHPMD.CamelCasePropertyName)
- *
- * @ORM\Mapping\MappedSuperclass()
- *
  * @SuppressWarnings(PHPMD.ExcessiveParameterList)
  */
 class IdentityProvider extends AbstractRole
