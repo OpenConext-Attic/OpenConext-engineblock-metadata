@@ -155,15 +155,12 @@ class DoctrineMetadataRepository extends AbstractMetadataRepository
     }
 
     /**
-     *
-     * NOTE: Default (unfiltered) method that you probably want to override.
-     *
      * @param ServiceProvider $serviceProvider
      * @return \string[]
      */
     public function findAllowedIdpEntityIdsForSp(ServiceProvider $serviceProvider)
     {
-        return $this->findAllIdentityProviderEntityIds();
+        return $serviceProvider->allowedIdpEntityIds;
     }
 
     /**
