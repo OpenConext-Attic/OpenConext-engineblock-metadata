@@ -73,7 +73,11 @@ class CompositeFilter implements FilterInterface
      */
     public function toCriteria()
     {
-        return Criteria::create()->where($this->toExpression());
+        $criteria = Criteria::create();
+        if (empty($this->filters)) {
+            return $criteria;
+        }
+        return $criteria->where($this->toExpression());
     }
 
     /**
