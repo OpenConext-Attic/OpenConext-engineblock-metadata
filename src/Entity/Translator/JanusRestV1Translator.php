@@ -58,12 +58,12 @@ class JanusRestV1Translator
      */
     public function translateCommonMetadata(array $metadata, AbstractConfigurationEntity $entity)
     {
-        $entity->nameEn                 =        self::ifsetor($metadata, 'Name:en'                 , $entity->nameEn);
-        $entity->nameNl                 =        self::ifsetor($metadata, 'Name:nl'                 , $entity->nameNl);
-        $entity->descriptionEn          =        self::ifsetor($metadata, 'Description:en'          , $entity->descriptionEn);
-        $entity->descriptionNl          =        self::ifsetor($metadata, 'Description:nl'          , $entity->descriptionNl);
-        $entity->displayNameEn          =        self::ifsetor($metadata, 'DisplayName:en'          , $entity->displayNameEn);
-        $entity->displayNameNl          =        self::ifsetor($metadata, 'DisplayName:nl'          , $entity->displayNameNl);
+        $entity->nameEn                 =        self::ifsetor($metadata, 'name:en'                 , $entity->nameEn);
+        $entity->nameNl                 =        self::ifsetor($metadata, 'name:nl'                 , $entity->nameNl);
+        $entity->descriptionEn          =        self::ifsetor($metadata, 'description:en'          , $entity->descriptionEn);
+        $entity->descriptionNl          =        self::ifsetor($metadata, 'description:nl'          , $entity->descriptionNl);
+        $entity->displayNameEn          =        self::ifsetor($metadata, 'displayName:en'          , $entity->displayNameEn);
+        $entity->displayNameNl          =        self::ifsetor($metadata, 'displayName:nl'          , $entity->displayNameNl);
 
         $entity->keywordsEn             =        self::ifsetor($metadata, 'keywords:en'             , $entity->keywordsEn);
         $entity->keywordsNl             =        self::ifsetor($metadata, 'keywords:nl'             , $entity->keywordsNl);
