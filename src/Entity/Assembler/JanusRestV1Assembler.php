@@ -58,7 +58,7 @@ class JanusRestV1Assembler
      * @param array $metadata
      * @return AbstractRole
      */
-    public function assembleAbstractRoleArguments(array $metadata)
+    private function assembleAbstractRoleArguments(array $metadata)
     {
         $arguments = array();
         if (isset($metadata['name:en']))        { $arguments['nameEn'] = $metadata['name:en']; }
@@ -360,7 +360,7 @@ class JanusRestV1Assembler
         $i = 0;
         $spsEntityIdsWithoutConsent = array();
         /** @noinspection PhpAssignmentInConditionInspection */
-        while ($disableConsentEntityId = Utils::ifsetor($metadata, 'disableConsent:' . $i)) {
+        while ($disableConsentEntityId = Utils::ifsetor($metadata, 'disableConsent:' . $i++)) {
             $spsEntityIdsWithoutConsent[] = $disableConsentEntityId;
         }
 
