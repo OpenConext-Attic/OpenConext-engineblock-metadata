@@ -97,21 +97,21 @@ abstract class AbstractRole
     /**
      * @var Logo
      *
-     * @ORM\Column(name="logo", type="text")
+     * @ORM\Column(name="logo", type="object")
      */
     public $logo;
 
     /**
-     * @var string
+     * @var Organization
      *
-     * @ORM\Column(name="organization_nl_name",type="string")
+     * @ORM\Column(name="organization_nl_name",type="object", nullable=true)
      */
     public $organizationNl;
 
     /**
-     * @var string
+     * @var Organization
      *
-     * @ORM\Column(name="organization_en_name",type="string")
+     * @ORM\Column(name="organization_en_name",type="object", nullable=true)
      */
     public $organizationEn;
 
@@ -160,7 +160,7 @@ abstract class AbstractRole
     /**
      * @var string
      *
-     * @ORM\Column(name="name_id_format", type="string")
+     * @ORM\Column(name="name_id_format", type="string", nullable=true)
      */
     public $nameIdFormat;
 
@@ -173,13 +173,15 @@ abstract class AbstractRole
 
     /**
      * @var Service
+     *
+     * @ORM\Column(name="single_logout_service", type="object", nullable=true)
      */
     public $singleLogoutService;
 
     /**
      * @var DateTime
      *
-     * @ORM\Column(name="publish_in_edu_gain_date", type="date")
+     * @ORM\Column(name="publish_in_edu_gain_date", type="date", nullable=true)
      */
     public $publishInEduGainDate;
 
@@ -207,7 +209,7 @@ abstract class AbstractRole
     /**
      * @var string
      *
-     * @ORM\Column(name="response_processing_service_binding", type="string")
+     * @ORM\Column(name="response_processing_service_binding", type="string", nullable=true)
      */
     public $responseProcessingService;
 
