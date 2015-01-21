@@ -3,6 +3,7 @@
 namespace OpenConext\Component\EngineBlockMetadata\MetadataRepository;
 
 use Doctrine\Common\Collections\Criteria;
+use Doctrine\ORM\AbstractQuery;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
 use OpenConext\Component\EngineBlockMetadata\Container\ContainerInterface;
@@ -20,6 +21,11 @@ use RuntimeException;
  */
 class DoctrineMetadataRepository extends AbstractMetadataRepository
 {
+    /**
+     * @var EntityManager
+     */
+    private $entityManager;
+
     /**
      * @var EntityRepository
      */
@@ -42,17 +48,21 @@ class DoctrineMetadataRepository extends AbstractMetadataRepository
         $idpRepository = $em->getRepository('OpenConext\Component\EngineBlockMetadata\Entity\IdentityProvider');
         $spRepository  = $em->getRepository('OpenConext\Component\EngineBlockMetadata\Entity\ServiceProvider');
 
-        return new self($spRepository, $idpRepository);
+        return new self($em, $spRepository, $idpRepository);
     }
 
     /**
      * @param EntityRepository $spRepository
      * @param EntityRepository $idpRepository
      */
-    public function __construct(EntityRepository $spRepository, EntityRepository $idpRepository)
-    {
+    public function __construct(
+        EntityManager $entityManager,
+        EntityRepository $spRepository,
+        EntityRepository $idpRepository
+    ) {
         parent::__construct();
 
+        $this->entityManager = $entityManager;
         $this->spRepository  = $spRepository;
         $this->idpRepository = $idpRepository;
     }
@@ -69,7 +79,7 @@ class DoctrineMetadataRepository extends AbstractMetadataRepository
 
         $this->compositeFilter->toQueryBuilder($queryBuilder);
 
-        return $queryBuilder->getQuery()->execute();
+        return array_map('current', $queryBuilder->getQuery()->execute(null, AbstractQuery::HYDRATE_ARRAY));
     }
 
     /**
@@ -205,5 +215,85 @@ class DoctrineMetadataRepository extends AbstractMetadataRepository
         $result = array_merge($result, $this->idpRepository->findBy(array('publishableInEdugain' => true)));
         $result = array_merge($result, $this->spRepository->findBy(array('publishableInEdugain' => true)));
         return $result;
+    }
+
+    /**
+     * @param AbstractRole[] $roles
+     * @return SynchronizationResult
+     */
+    public function synchronize(array $roles)
+    {
+        $result = new SynchronizationResult();
+
+        $repository = $this;
+        $this->entityManager->transactional(function(EntityManager $em) use ($roles, $repository, $result) {
+            $identityProviderEntityIds = $repository->findAllIdentityProviderEntityIds();
+            $serviceProviderEntityIds  = $repository->findAllServiceProviderEntityIds();
+
+            foreach ($roles as $role) {
+                if ($role instanceof IdentityProvider) {
+                    if (!in_array($role->entityId, $identityProviderEntityIds)) {
+                        $em->persist($role);
+                        $result->createdIdentityProviders[] = $role->entityId;
+                    }
+                    else {
+                        $em->persist($role);
+                        $result->updatedIdentityProviders[] = $role->entityId;
+                    }
+                    continue;
+                }
+
+                if ($role instanceof ServiceProvider) {
+                    if (!in_array($role->entityId, $serviceProviderEntityIds)) {
+                        $em->persist($role);
+                        $result->createdServiceProviders[] = $role->entityId;
+                    }
+                    else {
+                        $em->persist($role);
+                        $result->updatedServiceProviders[] = $role->entityId;
+                    }
+                    continue;
+                }
+
+                throw new RuntimeException('Unsupported role provided to synchonization: ' . var_export($role, true));
+            }
+
+            // Always remove ALL Identity Providers, way easier than trying to update.
+            foreach ($identityProviderEntityIds as $identityProviderEntityId) {
+                $identityProvider = $em->getPartialReference(
+                    'OpenConext\Component\EngineBlockMetadata\Entity\IdentityProvider',
+                    array('entityId' => $identityProviderEntityId)
+                );
+
+                $em->remove($identityProvider);
+
+                $result->removedIdentityProviders[] = $identityProviderEntityId;
+            }
+
+            // Always remove ALL Service Providers, way easier than trying to update.
+            foreach ($serviceProviderEntityIds as $serviceProviderEntityId) {
+                $serviceProvider = $em->getPartialReference(
+                    'OpenConext\Component\EngineBlockMetadata\Entity\ServiceProvider',
+                    array('entityId' => $serviceProviderEntityId)
+                );
+
+                $em->remove($serviceProvider);
+
+                $result->removedServiceProviders[] = $serviceProviderEntityId;
+            }
+        });
+
+        return $result;
+    }
+
+    public function findAllServiceProviderEntityIds()
+    {
+        $queryBuilder = $this->spRepository
+            ->createQueryBuilder('role')
+            ->select('role.entityId');
+
+        $this->compositeFilter->toQueryBuilder($queryBuilder);
+
+        return array_map('current',$queryBuilder->getQuery()->execute(null, AbstractQuery::HYDRATE_ARRAY));
     }
 }
