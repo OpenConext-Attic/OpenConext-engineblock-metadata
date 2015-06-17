@@ -18,6 +18,7 @@ use RuntimeException;
  *
  * @SuppressWarnings(PHPMD.ExcessiveParameterList)
  * @SuppressWarnings(PHPMD.TooManyMethods)
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class DoctrineMetadataRepository extends AbstractMetadataRepository
 {

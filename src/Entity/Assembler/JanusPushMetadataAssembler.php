@@ -20,6 +20,7 @@ use stdClass;
 /**
  * Class JanusPushMetadataAssembler
  * @package OpenConext\Component\EngineBlockMetadata\Entity\Assembler
+ * @SuppressWarnings(PMD)
  */
 class JanusPushMetadataAssembler
 {
