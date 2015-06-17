@@ -170,7 +170,7 @@ class DoctrineMetadataRepository extends AbstractMetadataRepository
         }
 
         if ($serviceProviderCollection->count() > 1) {
-            throw new RuntimeException('Multiple Identity Providers found for entityId: ' . $entityId);
+            throw new RuntimeException('Multiple Service Providers found for entityId: ' . $entityId);
         }
 
         $serviceProvider = $serviceProviderCollection->first();
