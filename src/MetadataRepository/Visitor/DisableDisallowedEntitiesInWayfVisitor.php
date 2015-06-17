@@ -16,14 +16,14 @@ class DisableDisallowedEntitiesInWayfVisitor implements VisitorInterface
     /**
      * @var array
      */
-    private $disabledEntityIds;
+    private $allowedEntityIds;
 
     /**
-     * @param $disabledEntityIds
+     * @param $allowedEntityIds
      */
-    public function __construct(array $disabledEntityIds)
+    public function __construct(array $allowedEntityIds)
     {
-        $this->disabledEntityIds = $disabledEntityIds;
+        $this->allowedEntityIds = $allowedEntityIds;
     }
 
     /**
@@ -31,7 +31,7 @@ class DisableDisallowedEntitiesInWayfVisitor implements VisitorInterface
      */
     public function visitIdentityProvider(IdentityProvider $identityProvider)
     {
-        if (!in_array($identityProvider->entityId, $this->disabledEntityIds)) {
+        if (in_array($identityProvider->entityId, $this->allowedEntityIds)) {
             return;
         }
 
