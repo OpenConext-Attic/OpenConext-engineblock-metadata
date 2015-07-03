@@ -227,7 +227,7 @@ class DoctrineMetadataRepository extends AbstractMetadataRepository
         $result = new SynchronizationResult();
 
         $repository = $this;
-        $this->entityManager->transactional(function(EntityManager $em) use ($roles, $repository, $result) {
+        $this->entityManager->transactional(function (EntityManager $em) use ($roles, $repository, $result) {
             $identityProviderEntityIds = $repository->findAllIdentityProviderEntityIds();
             $serviceProviderEntityIds  = $repository->findAllServiceProviderEntityIds();
 
@@ -236,8 +236,7 @@ class DoctrineMetadataRepository extends AbstractMetadataRepository
                     if (!in_array($role->entityId, $identityProviderEntityIds)) {
                         $em->persist($role);
                         $result->createdIdentityProviders[] = $role->entityId;
-                    }
-                    else {
+                    } else {
                         $em->persist($role);
                         $result->updatedIdentityProviders[] = $role->entityId;
                     }
@@ -248,8 +247,7 @@ class DoctrineMetadataRepository extends AbstractMetadataRepository
                     if (!in_array($role->entityId, $serviceProviderEntityIds)) {
                         $em->persist($role);
                         $result->createdServiceProviders[] = $role->entityId;
-                    }
-                    else {
+                    } else {
                         $em->persist($role);
                         $result->updatedServiceProviders[] = $role->entityId;
                     }
@@ -295,6 +293,6 @@ class DoctrineMetadataRepository extends AbstractMetadataRepository
 
         $this->compositeFilter->toQueryBuilder($queryBuilder, $this->spRepository->getClassName());
 
-        return array_map('current',$queryBuilder->getQuery()->execute(null, AbstractQuery::HYDRATE_ARRAY));
+        return array_map('current', $queryBuilder->getQuery()->execute(null, AbstractQuery::HYDRATE_ARRAY));
     }
 }

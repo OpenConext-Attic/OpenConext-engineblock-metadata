@@ -57,7 +57,7 @@ class RemoveDisallowedIdentityProvidersFilter extends AbstractFilter
     public function toQueryBuilder(QueryBuilder $queryBuilder, $repositoryClassName)
     {
         if ($repositoryClassName !== 'OpenConext\Component\EngineBlockMetadata\Entity\IdentityProvider') {
-            return NULL;
+            return null;
         }
 
         return $queryBuilder
@@ -71,7 +71,7 @@ class RemoveDisallowedIdentityProvidersFilter extends AbstractFilter
     public function toExpression($repositoryClassName)
     {
         if ($repositoryClassName !== 'OpenConext\Component\EngineBlockMetadata\Entity\IdentityProvider') {
-            return NULL;
+            return null;
         }
 
         return Criteria::expr()->in('entityId', $this->allowedIdentityProviderEntityIds);

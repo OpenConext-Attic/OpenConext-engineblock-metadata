@@ -37,7 +37,7 @@ class JanusPushMetadataAssembler
             if ($role instanceof ServiceProvider) {
                 if (isset($connection->allowed_connections)) {
                     $spAllowedEntityIds[$role->entityId] = array_map(
-                        function($allowedConnection) {
+                        function ($allowedConnection) {
                             return $allowedConnection->name;
                         },
                         $connection->allowed_connections
@@ -54,7 +54,7 @@ class JanusPushMetadataAssembler
 
                 if (isset($connection->allowed_connections)) {
                     $idpAllowedEntityIds[$role->entityId] = array_map(
-                        function($allowedConnection) {
+                        function ($allowedConnection) {
                             return $allowedConnection->name;
                         },
                         $connection->allowed_connections
@@ -345,7 +345,7 @@ class JanusPushMetadataAssembler
 
         return array(
             'spsEntityIdsWithoutConsent' => array_map(
-                function($disableConsentConnection) {
+                function ($disableConsentConnection) {
                     return $disableConsentConnection->name;
                 },
                 $connection->disable_consent_connections
