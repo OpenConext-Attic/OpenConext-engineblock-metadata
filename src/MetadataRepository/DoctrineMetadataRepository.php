@@ -78,7 +78,7 @@ class DoctrineMetadataRepository extends AbstractMetadataRepository
             ->createQueryBuilder('role')
             ->select('role.entityId');
 
-        $this->compositeFilter->toQueryBuilder($queryBuilder);
+        $this->compositeFilter->toQueryBuilder($queryBuilder, $this->idpRepository->getClassName());
 
         return array_map('current', $queryBuilder->getQuery()->execute(null, AbstractQuery::HYDRATE_ARRAY));
     }
@@ -96,7 +96,7 @@ class DoctrineMetadataRepository extends AbstractMetadataRepository
             ->distinct()
             ->orderBy('role.schacHomeOrganization');
 
-        $this->compositeFilter->toQueryBuilder($queryBuilder);
+        $this->compositeFilter->toQueryBuilder($queryBuilder, $this->idpRepository->getClassName());
 
         return $queryBuilder
             ->getQuery()
@@ -293,7 +293,7 @@ class DoctrineMetadataRepository extends AbstractMetadataRepository
             ->createQueryBuilder('role')
             ->select('role.entityId');
 
-        $this->compositeFilter->toQueryBuilder($queryBuilder);
+        $this->compositeFilter->toQueryBuilder($queryBuilder, $this->spRepository->getClassName());
 
         return array_map('current',$queryBuilder->getQuery()->execute(null, AbstractQuery::HYDRATE_ARRAY));
     }

@@ -20,12 +20,14 @@ interface FilterInterface
     public function filterRole(AbstractRole $role);
 
     /**
+     * @param string $repositoryClassName
      * @param QueryBuilder $queryBuilder
      * @return QueryBuilder
      */
-    public function toQueryBuilder(QueryBuilder $queryBuilder);
+    public function toQueryBuilder(QueryBuilder $queryBuilder, $repositoryClassName);
 
     /**
+     * @param string $repositoryClassName
      * @return Expression|NULL
      */
     public function toExpression($repositoryClassName);

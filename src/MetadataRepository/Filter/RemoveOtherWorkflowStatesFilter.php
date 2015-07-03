@@ -37,7 +37,7 @@ class RemoveOtherWorkflowStatesFilter extends AbstractFilter
     /**
      * {@inheritdoc}
      */
-    public function toQueryBuilder(QueryBuilder $queryBuilder)
+    public function toQueryBuilder(QueryBuilder $queryBuilder, $repositoryClassName)
     {
         $queryBuilder
             ->andWhere('role.workflowState = :requiredWorkflowState')

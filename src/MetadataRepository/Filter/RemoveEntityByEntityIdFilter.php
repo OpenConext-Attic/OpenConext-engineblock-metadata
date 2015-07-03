@@ -36,7 +36,7 @@ class RemoveEntityByEntityIdFilter extends AbstractFilter
     /**
      * {@inheritdoc}
      */
-    public function toQueryBuilder(QueryBuilder $queryBuilder)
+    public function toQueryBuilder(QueryBuilder $queryBuilder, $repositoryClassName)
     {
         return $queryBuilder
             ->andWhere('role.entityId <> :removeEntityId')

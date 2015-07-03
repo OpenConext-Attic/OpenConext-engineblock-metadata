@@ -91,10 +91,10 @@ class CompositeFilter implements FilterInterface
     /**
      * {@inheritdoc}
      */
-    public function toQueryBuilder(QueryBuilder $queryBuilder)
+    public function toQueryBuilder(QueryBuilder $queryBuilder, $repositoryClassName)
     {
         foreach ($this->filters as $filter) {
-            $filter->toQueryBuilder($queryBuilder);
+            $filter->toQueryBuilder($queryBuilder, $repositoryClassName);
         }
         return $queryBuilder;
     }

@@ -54,10 +54,14 @@ class RemoveDisallowedIdentityProvidersFilter extends AbstractFilter
     /**
      * {@inheritdoc}
      */
-    public function toQueryBuilder(QueryBuilder $queryBuilder)
+    public function toQueryBuilder(QueryBuilder $queryBuilder, $repositoryClassName)
     {
+        if ($repositoryClassName !== 'OpenConext\Component\EngineBlockMetadata\Entity\IdentityProvider') {
+            return NULL;
+        }
+
         return $queryBuilder
-            ->andWhere("role.type <> 'idp' OR role.entityId IN(:allowedEntityIds)")
+            ->andWhere("role.entityId IN(:allowedEntityIds)")
             ->setParameter('allowedEntityIds', $this->allowedIdentityProviderEntityIds);
     }
 

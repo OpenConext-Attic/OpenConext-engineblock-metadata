@@ -55,6 +55,12 @@ class FilterCollectionTest extends PHPUnit_Framework_TestCase
             ) instanceof Criteria
         );
         $queryBuilderMock = Mockery::mock('Doctrine\ORM\QueryBuilder');
-        $this->assertEquals($queryBuilderMock, $collection->toQueryBuilder($queryBuilderMock));
+        $this->assertEquals(
+            $queryBuilderMock,
+            $collection->toQueryBuilder(
+                $queryBuilderMock,
+                'OpenConext\Component\EngineBlockMetadata\Entity\ServiceProvider'
+            )
+        );
     }
 }
