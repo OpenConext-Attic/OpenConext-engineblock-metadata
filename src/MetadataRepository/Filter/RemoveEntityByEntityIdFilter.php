@@ -46,7 +46,7 @@ class RemoveEntityByEntityIdFilter extends AbstractFilter
     /**
      * {@inheritdoc}
      */
-    public function toExpression()
+    public function toExpression($repositoryClassName)
     {
         return Criteria::expr()->neq('entityId', $this->entityId);
     }

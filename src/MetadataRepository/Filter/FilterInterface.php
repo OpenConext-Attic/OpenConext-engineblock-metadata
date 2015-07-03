@@ -3,6 +3,7 @@
 namespace OpenConext\Component\EngineBlockMetadata\MetadataRepository\Filter;
 
 use Doctrine\Common\Collections\Expr\Expression;
+use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\QueryBuilder;
 use OpenConext\Component\EngineBlockMetadata\Entity\AbstractRole;
 
@@ -25,9 +26,9 @@ interface FilterInterface
     public function toQueryBuilder(QueryBuilder $queryBuilder);
 
     /**
-     * @return Expression
+     * @return Expression|NULL
      */
-    public function toExpression();
+    public function toExpression($repositoryClassName);
 
     /**
      * @return string

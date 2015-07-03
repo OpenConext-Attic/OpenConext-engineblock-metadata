@@ -111,7 +111,7 @@ class DoctrineMetadataRepository extends AbstractMetadataRepository
     public function findIdentityProvidersByEntityId(array $identityProviderIds)
     {
         $identityProviders = $this->idpRepository->matching(
-            $this->compositeFilter->toCriteria()
+            $this->compositeFilter->toCriteria($this->idpRepository->getClassName())
                 ->andWhere(Criteria::expr()->in('entityId', $identityProviderIds))
         )->toArray();
 
@@ -133,7 +133,7 @@ class DoctrineMetadataRepository extends AbstractMetadataRepository
     public function findIdentityProviderByEntityId($entityId)
     {
         $identityProviderCollection = $this->idpRepository->matching(
-            $this->compositeFilter->toCriteria()
+            $this->compositeFilter->toCriteria($this->idpRepository->getClassName())
                 ->andWhere(Criteria::expr()->eq('entityId', $entityId))
         );
 
@@ -162,7 +162,7 @@ class DoctrineMetadataRepository extends AbstractMetadataRepository
     public function findServiceProviderByEntityId($entityId)
     {
         $serviceProviderCollection = $this->spRepository->matching(
-            $this->compositeFilter->toCriteria()
+            $this->compositeFilter->toCriteria($this->spRepository->getClassName())
                 ->andWhere(Criteria::expr()->eq('entityId', $entityId))
         );
 
@@ -194,7 +194,7 @@ class DoctrineMetadataRepository extends AbstractMetadataRepository
     public function findIdentityProviders()
     {
         return $this->idpRepository->matching(
-            $this->compositeFilter->toCriteria()
+            $this->compositeFilter->toCriteria($this->idpRepository->getClassName())
         )->toArray();
     }
 

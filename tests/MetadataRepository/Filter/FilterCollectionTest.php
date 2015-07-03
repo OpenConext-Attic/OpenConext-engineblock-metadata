@@ -44,8 +44,16 @@ class FilterCollectionTest extends PHPUnit_Framework_TestCase
         $collection = new CompositeFilter();
         $collection->add($mockFilter);
 
-        $this->assertTrue($collection->toExpression() instanceof Expression);
-        $this->assertTrue($collection->toCriteria() instanceof Criteria);
+        $this->assertTrue(
+            $collection->toExpression(
+                'OpenConext\Component\EngineBlockMetadata\Entity\ServiceProvider'
+            ) instanceof Expression
+        );
+        $this->assertTrue(
+            $collection->toCriteria(
+                'OpenConext\Component\EngineBlockMetadata\Entity\ServiceProvider'
+            ) instanceof Criteria
+        );
         $queryBuilderMock = Mockery::mock('Doctrine\ORM\QueryBuilder');
         $this->assertEquals($queryBuilderMock, $collection->toQueryBuilder($queryBuilderMock));
     }

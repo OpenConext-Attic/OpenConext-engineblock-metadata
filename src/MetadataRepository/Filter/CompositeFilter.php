@@ -4,6 +4,7 @@ namespace OpenConext\Component\EngineBlockMetadata\MetadataRepository\Filter;
 
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\Common\Collections\Expr\CompositeExpression;
+use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\QueryBuilder;
 use OpenConext\Component\EngineBlockMetadata\Entity\AbstractRole;
 
@@ -69,15 +70,22 @@ class CompositeFilter implements FilterInterface
     }
 
     /**
+     * @param string $repositoryClassName
      * @return Criteria
      */
-    public function toCriteria()
+    public function toCriteria($repositoryClassName)
     {
         $criteria = Criteria::create();
         if (empty($this->filters)) {
             return $criteria;
         }
-        return $criteria->where($this->toExpression());
+
+        $expression = $this->toExpression($repositoryClassName);
+        if (!$expression) {
+            return $expression;
+        }
+
+        return $criteria->where($expression);
     }
 
     /**
@@ -94,12 +102,18 @@ class CompositeFilter implements FilterInterface
     /**
      * {@inheritdoc}
      */
-    public function toExpression()
+    public function toExpression($repositoryClassName)
     {
         $expressions = array();
 
         foreach ($this->filters as $filter) {
-            $expressions[] = $filter->toExpression();
+            $expression = $filter->toExpression($repositoryClassName);
+
+            if (!$expression) {
+                continue;
+            }
+
+            $expressions[] = $expression;
         }
 
         return new CompositeExpression(CompositeExpression::TYPE_AND, $expressions);

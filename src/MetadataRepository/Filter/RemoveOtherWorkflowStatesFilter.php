@@ -47,7 +47,7 @@ class RemoveOtherWorkflowStatesFilter extends AbstractFilter
     /**
      * {@inheritdoc}
      */
-    public function toExpression()
+    public function toExpression($repositoryClassName)
     {
         return Criteria::expr()->neq('workflowState', $this->workflowState);
     }

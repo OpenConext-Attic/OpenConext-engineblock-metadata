@@ -3,6 +3,7 @@
 namespace OpenConext\Component\EngineBlockMetadata\MetadataRepository\Filter;
 
 use Doctrine\Common\Collections\Criteria;
+use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\QueryBuilder;
 use OpenConext\Component\EngineBlockMetadata\Entity\AbstractRole;
 use OpenConext\Component\EngineBlockMetadata\Entity\IdentityProvider;
@@ -56,16 +57,25 @@ class RemoveDisallowedIdentityProvidersFilter extends AbstractFilter
     public function toQueryBuilder(QueryBuilder $queryBuilder)
     {
         return $queryBuilder
-            ->andWhere("role.entityId IN(:allowedEntityIds)")
+            ->andWhere("role.type <> 'idp' OR role.entityId IN(:allowedEntityIds)")
             ->setParameter('allowedEntityIds', $this->allowedIdentityProviderEntityIds);
     }
 
     /**
      * {@inheritdoc}
      */
-    public function toExpression()
+    public function toExpression($repositoryClassName)
     {
-        return Criteria::expr()->in('entityId', $this->allowedIdentityProviderEntityIds);
+        if ($repositoryClassName !== 'OpenConext\Component\EngineBlockMetadata\Entity\IdentityProvider') {
+            return NULL;
+        }
+        return Criteria::expr()
+            ->orX(
+                new \Doctrine\Common\Collections\Expr\Comparison(
+                    'type', 'NOT INSTANCE OF', 'OpenConext\Component\EngineBlockMetadata\Entity\IdentityProvider'
+                ),
+                Criteria::expr()->in('entityId', $this->allowedIdentityProviderEntityIds)
+            );
     }
 
     /**
