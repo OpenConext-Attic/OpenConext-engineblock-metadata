@@ -69,13 +69,8 @@ class RemoveDisallowedIdentityProvidersFilter extends AbstractFilter
         if ($repositoryClassName !== 'OpenConext\Component\EngineBlockMetadata\Entity\IdentityProvider') {
             return NULL;
         }
-        return Criteria::expr()
-            ->orX(
-                new \Doctrine\Common\Collections\Expr\Comparison(
-                    'type', 'NOT INSTANCE OF', 'OpenConext\Component\EngineBlockMetadata\Entity\IdentityProvider'
-                ),
-                Criteria::expr()->in('entityId', $this->allowedIdentityProviderEntityIds)
-            );
+
+        return Criteria::expr()->in('entityId', $this->allowedIdentityProviderEntityIds);
     }
 
     /**
