@@ -201,7 +201,8 @@ class ServiceProvider extends AbstractRole
             $publishInEdugain,
             $requestsMustBeSigned,
             $responseProcessingService,
-            $workflowState
+            $workflowState,
+            $manipulation
         );
 
         $this->attributeReleasePolicy = $attributeReleasePolicy;
