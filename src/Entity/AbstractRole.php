@@ -44,7 +44,7 @@ abstract class AbstractRole
      * @ORM\Column(name="id", type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
      */
-    private $id;
+    public $id;
 
     /**
      * @var string

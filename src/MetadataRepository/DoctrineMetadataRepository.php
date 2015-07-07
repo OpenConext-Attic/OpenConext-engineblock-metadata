@@ -237,7 +237,9 @@ class DoctrineMetadataRepository extends AbstractMetadataRepository
                         $em->persist($role);
                         $result->createdIdentityProviders[] = $role->entityId;
                     } else {
-                        $em->persist($role);
+                        $identityProvider = $repository->findIdentityProviderByEntityId($role->entityId);
+                        $role->id = $identityProvider->id;
+                        $em->persist($em->merge($role));
                         $result->updatedIdentityProviders[] = $role->entityId;
                     }
                     continue;
@@ -248,7 +250,9 @@ class DoctrineMetadataRepository extends AbstractMetadataRepository
                         $em->persist($role);
                         $result->createdServiceProviders[] = $role->entityId;
                     } else {
-                        $em->persist($role);
+                        $serviceProvider = $repository->findServiceProviderByEntityId($role->entityId);
+                        $role->id = $serviceProvider->id;
+                        $em->persist($em->merge($role));
                         $result->updatedServiceProviders[] = $role->entityId;
                     }
                     continue;
