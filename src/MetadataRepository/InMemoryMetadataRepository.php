@@ -138,7 +138,7 @@ class InMemoryMetadataRepository extends AbstractMetadataRepository
     /**
      * @return AbstractRole[]
      */
-    public function findEntitiesPublishableInEdugain()
+    public function findEntitiesPublishableInEdugain(MetadataRepositoryInterface $repository = NULL)
     {
         /** @var AbstractRole[] $entities */
         $entities = $this->identityProviders + $this->serviceProviders;

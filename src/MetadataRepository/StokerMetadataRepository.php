@@ -218,7 +218,7 @@ class StokerMetadataRepository extends AbstractMetadataRepository
     /**
      * @return AbstractRole[]
      */
-    public function findEntitiesPublishableInEdugain()
+    public function findEntitiesPublishableInEdugain(MetadataRepositoryInterface $repository = NULL)
     {
         return array();
     }

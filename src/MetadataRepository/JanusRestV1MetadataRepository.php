@@ -254,13 +254,16 @@ class JanusRestV1MetadataRepository extends AbstractMetadataRepository
     /**
      * @return AbstractRole[]
      */
-    public function findEntitiesPublishableInEdugain()
+    public function findEntitiesPublishableInEdugain(MetadataRepositoryInterface $repository = NULL)
     {
-        $entityIds = $this->client->findIdentifiersByMetadata('coin:publish_in_edugain', 'yes');
+        if (!$repository) {
+            $repository = $this;
+        }
+        $entityIds = $this->client->findIdentifiersByMetadata('coin:publish_in_edugain', '1');
 
         $publishable = array();
         foreach ($entityIds as $entityId) {
-            $publishable[] = $this->fetchEntityByEntityId($entityId);
+            $publishable[] = $repository->fetchEntityByEntityId($entityId);
         }
         return $publishable;
     }
