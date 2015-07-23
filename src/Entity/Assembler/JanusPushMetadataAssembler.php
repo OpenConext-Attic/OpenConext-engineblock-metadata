@@ -7,6 +7,7 @@ use OpenConext\Component\EngineBlockMetadata\AttributeReleasePolicy;
 use OpenConext\Component\EngineBlockMetadata\ContactPerson;
 use OpenConext\Component\EngineBlockMetadata\Entity\IdentityProvider;
 use OpenConext\Component\EngineBlockMetadata\Entity\ServiceProvider;
+use OpenConext\Component\EngineBlockMetadata\IndexedService;
 use OpenConext\Component\EngineBlockMetadata\Logo;
 use OpenConext\Component\EngineBlockMetadata\Organization;
 use OpenConext\Component\EngineBlockMetadata\Service;
@@ -384,6 +385,7 @@ class JanusPushMetadataAssembler
         }
 
         $services = array();
+        $index = 0;
         foreach ($connection->metadata->AssertionConsumerService as $assertionConsumerServiceMetadata) {
             if (empty($assertionConsumerServiceMetadata->Location)) {
                 continue;
@@ -392,10 +394,17 @@ class JanusPushMetadataAssembler
                 continue;
             }
 
-            $services[] = new Service(
+            if (!empty($assertionConsumerServiceMetadata->Index)) {
+                $index = (int) $assertionConsumerServiceMetadata->Index;
+            }
+
+            $services[] = new IndexedService(
                 $assertionConsumerServiceMetadata->Location,
-                $assertionConsumerServiceMetadata->Binding
+                $assertionConsumerServiceMetadata->Binding,
+                $index
             );
+
+            $index += 1;
         }
         return array('assertionConsumerServices' => $services);
     }
