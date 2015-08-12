@@ -71,7 +71,7 @@ class CompositeFilter implements FilterInterface
 
     /**
      * @param string $repositoryClassName
-     * @return Criteria
+     * @return Criteria|NULL
      */
     public function toCriteria($repositoryClassName)
     {
@@ -82,7 +82,7 @@ class CompositeFilter implements FilterInterface
 
         $expression = $this->toExpression($repositoryClassName);
         if (!$expression) {
-            return $expression;
+            return $criteria;
         }
 
         return $criteria->where($expression);
@@ -114,6 +114,14 @@ class CompositeFilter implements FilterInterface
             }
 
             $expressions[] = $expression;
+        }
+
+        if (count($expression) == 0) {
+            return NULL;
+        }
+
+        if (count($expression) === 1) {
+            return $expression;
         }
 
         return new CompositeExpression(CompositeExpression::TYPE_AND, $expressions);
