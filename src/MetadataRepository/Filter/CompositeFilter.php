@@ -116,7 +116,7 @@ class CompositeFilter implements FilterInterface
             $expressions[] = $expression;
         }
 
-        if (count($expression) == 0) {
+        if (count($expression) === 0) {
             return NULL;
         }
 
