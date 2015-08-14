@@ -320,4 +320,22 @@ abstract class AbstractRole
     {
         return $this->manipulation;
     }
+
+    /**
+     * @return $this
+     */
+    public function toggleWorkflowState()
+    {
+        if ($this->workflowState === static::WORKFLOW_STATE_PROD) {
+            $this->workflowState = static::WORKFLOW_STATE_TEST;
+            return $this;
+        }
+
+        if ($this->workflowState === static::WORKFLOW_STATE_TEST) {
+            $this->workflowState = static::WORKFLOW_STATE_PROD;
+            return $this;
+        }
+
+        throw new \RuntimeException('Unknown workflow state');
+    }
 }
