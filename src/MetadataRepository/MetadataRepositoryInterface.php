@@ -66,7 +66,7 @@ interface MetadataRepositoryInterface
 
     /**
      * @param string $entityId
-     * @return ServiceProvider|null
+     * @return IdentityProvider|null
      */
     public function findIdentityProviderByEntityId($entityId);
 
