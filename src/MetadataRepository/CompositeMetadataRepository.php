@@ -230,10 +230,6 @@ class CompositeMetadataRepository extends AbstractMetadataRepository
      */
     public function findEntitiesPublishableInEdugain(MetadataRepositoryInterface $repository = NULL)
     {
-        if (!$repository) {
-            $repository = $this;
-        }
-
         $entityIndex = array();
         $entities = array();
         foreach ($this->orderedRepositories as $repository) {
