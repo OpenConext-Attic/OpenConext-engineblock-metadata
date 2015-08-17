@@ -29,7 +29,7 @@ cache:
     - ~/.composer
 
 before_script:
-  - mkdir -p ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/travis.ini
+  - mkdir -p ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d
   - echo 'date.timezone = "Europe/Amsterdam"' >> ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/travis.ini
   - composer self-update
   - composer install --prefer-source
