@@ -254,7 +254,7 @@ class JanusRestV1MetadataRepository extends AbstractMetadataRepository
     /**
      * @return AbstractRole[]
      */
-    public function findEntitiesPublishableInEdugain(MetadataRepositoryInterface $repository = NULL)
+    public function findEntitiesPublishableInEdugain(MetadataRepositoryInterface $repository = null)
     {
         if (!$repository) {
             $repository = $this;

@@ -71,7 +71,7 @@ class CompositeFilter implements FilterInterface
 
     /**
      * @param string $repositoryClassName
-     * @return Criteria|NULL
+     * @return Criteria|null
      */
     public function toCriteria($repositoryClassName)
     {
@@ -117,7 +117,7 @@ class CompositeFilter implements FilterInterface
         }
 
         if (count($expression) === 0) {
-            return NULL;
+            return null;
         }
 
         if (count($expression) === 1) {

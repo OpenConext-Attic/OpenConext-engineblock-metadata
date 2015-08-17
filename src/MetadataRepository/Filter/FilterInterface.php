@@ -28,7 +28,7 @@ interface FilterInterface
 
     /**
      * @param string $repositoryClassName
-     * @return Expression|NULL
+     * @return Expression|null
      */
     public function toExpression($repositoryClassName);
 

@@ -228,7 +228,7 @@ class CompositeMetadataRepository extends AbstractMetadataRepository
     /**
      * {@inheritdoc}
      */
-    public function findEntitiesPublishableInEdugain(MetadataRepositoryInterface $repository = NULL)
+    public function findEntitiesPublishableInEdugain(MetadataRepositoryInterface $repository = null)
     {
         $entityIndex = array();
         $entities = array();

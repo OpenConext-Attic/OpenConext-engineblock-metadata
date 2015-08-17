@@ -14,7 +14,7 @@ class IndexedService extends Service
     public $serviceIndex;
 
     /**
-     * Note that NULL and FALSE are NOT the same in this context.
+     * Note that null and false are NOT the same in this context.
      *
      * @var bool|null
      */

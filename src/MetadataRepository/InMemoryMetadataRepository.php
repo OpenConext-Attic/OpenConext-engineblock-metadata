@@ -12,6 +12,7 @@ use OpenConext\Component\EngineBlockMetadata\Entity\ServiceProvider;
 /**
  * Class InMemoryMetadataRepository
  * @package OpenConext\Component\EngineBlockMetadata\MetadataRepository
+ * @SuppressWarnings(PHPMD.TooManyMethods)
  */
 class InMemoryMetadataRepository extends AbstractMetadataRepository
 {
@@ -201,7 +202,7 @@ class InMemoryMetadataRepository extends AbstractMetadataRepository
     /**
      * @return AbstractRole[]
      */
-    public function findEntitiesPublishableInEdugain(MetadataRepositoryInterface $repository = NULL)
+    public function findEntitiesPublishableInEdugain(MetadataRepositoryInterface $repository = null)
     {
         /** @var AbstractRole[] $roles */
         $roles = array_merge($this->identityProviders, $this->serviceProviders);
