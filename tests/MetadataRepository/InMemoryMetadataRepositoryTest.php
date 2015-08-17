@@ -8,6 +8,7 @@ use Mockery;
 use OpenConext\Component\EngineBlockMetadata\Entity\IdentityProvider;
 use OpenConext\Component\EngineBlockMetadata\Entity\ServiceProvider;
 use OpenConext\Component\EngineBlockMetadata\Utils;
+use PHPUnit_Framework_Error;
 use PHPUnit_Framework_TestCase;
 
 /**
@@ -20,28 +21,22 @@ class MetadataRepositoryTest extends PHPUnit_Framework_TestCase
 
     public function testBreakOnInvalidIdentityProvider()
     {
-        $e = null;
-        try {
-            new InMemoryMetadataRepository(
-                array(array('EntityID'=>'http://dummy')),
-                array()
-            );
-        } catch (InvalidArgumentException $e) {
-        }
-        $this->assertNotNull($e);
+        $this->setExpectedException(get_class(new PHPUnit_Framework_Error("",0,"",1)));
+
+        new InMemoryMetadataRepository(
+            array(array('EntityID'=>'http://dummy')),
+            array()
+        );
     }
 
     public function testBreakOnInvalidServiceProvider()
     {
-        $e = null;
-        try {
-            new InMemoryMetadataRepository(
-                array(),
-                array(array('EntityID'=>'http://dummy'))
-            );
-        } catch (InvalidArgumentException $e) {
-        }
-        $this->assertNotNull($e);
+        $this->setExpectedException(get_class(new PHPUnit_Framework_Error("",0,"",1)));
+
+        new InMemoryMetadataRepository(
+            array(),
+            array(array('EntityID'=>'http://dummy'))
+        );
     }
 
     public function testCreateFromConfigStartsEmpty()

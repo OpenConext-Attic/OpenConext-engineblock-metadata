@@ -16,6 +16,11 @@ use OpenConext\Component\EngineBlockMetadata\Entity\ServiceProvider;
 class InMemoryMetadataRepository extends AbstractMetadataRepository
 {
     /**
+     * @var array<string,AbstractRole[]>
+     */
+    private $entities = array();
+
+    /**
      * @var ServiceProvider[]
      */
     private $serviceProviders = array();
@@ -35,17 +40,11 @@ class InMemoryMetadataRepository extends AbstractMetadataRepository
         parent::__construct();
 
         foreach ($identityProviders as $identityProvider) {
-            if (!$identityProvider instanceof IdentityProvider) {
-                throw new InvalidArgumentException('Gave a non-idp to InMemoryMetadataRepository idps');
-            }
-            $this->identityProviders[$identityProvider->entityId] = $identityProvider;
+            $this->registerIdentityProvider($identityProvider);
         }
 
         foreach ($serviceProviders as $serviceProvider) {
-            if (!$serviceProvider instanceof ServiceProvider) {
-                throw new InvalidArgumentException('Gave a non-sp to InMemoryMetadataRepository sps');
-            }
-            $this->serviceProviders[$serviceProvider->entityId] = $serviceProvider;
+            $this->registerServiceProvider($serviceProvider);
         }
     }
 
@@ -65,17 +64,33 @@ class InMemoryMetadataRepository extends AbstractMetadataRepository
      */
     public function registerServiceProvider(ServiceProvider $serviceProvider)
     {
-        $this->serviceProviders[$serviceProvider->entityId] = $serviceProvider;
-        return $this;
+        $this->serviceProviders[] = $serviceProvider;
+
+        return $this->registerEntityRole($serviceProvider);
     }
 
     /**
-     * @param IdentityProvider $identityProviderEntity
+     * @param IdentityProvider $identityProvider
      * @return $this
      */
-    public function registerIdentityProvider(IdentityProvider $identityProviderEntity)
+    public function registerIdentityProvider(IdentityProvider $identityProvider)
     {
-        $this->identityProviders[$identityProviderEntity->entityId] = $identityProviderEntity;
+        $this->identityProviders[] = $identityProvider;
+
+        return $this->registerEntityRole($identityProvider);
+    }
+
+    /**
+     * @param AbstractRole $serviceProvider
+     */
+    private function registerEntityRole(AbstractRole $role)
+    {
+        if (!isset($this->entities[$role->entityId])) {
+            $this->entities[$role->entityId] = array();
+        }
+
+        $this->entities[$role->entityId][] = $role;
+
         return $this;
     }
 
@@ -85,19 +100,40 @@ class InMemoryMetadataRepository extends AbstractMetadataRepository
      */
     public function findIdentityProviderByEntityId($entityId)
     {
-        if (!isset($this->identityProviders[$entityId])) {
+        $roles = $this->findIdentityProviderRolesByEntityId($entityId);
+        if (empty($roles)) {
             return null;
         }
 
-        $identityProvider = $this->compositeFilter->filterRole(
-            $this->identityProviders[$entityId]
-        );
-        if (!$identityProvider) {
+        $role = $this->findFilteredRole($roles);
+        if (!$role) {
             return null;
         }
 
-        $identityProvider->accept($this->compositeVisitor);
-        return $identityProvider;
+        $role->accept($this->compositeVisitor);
+
+        return $role;
+    }
+
+    /**
+     * @param $entityId
+     * @return array
+     */
+    private function findIdentityProviderRolesByEntityId($entityId)
+    {
+        if (empty($this->entities[$entityId])) {
+            return null;
+        }
+
+        $idpRoles = array();
+        foreach ($this->entities[$entityId] as $role) {
+            if (!$role instanceof IdentityProvider) {
+                continue;
+            }
+
+            $idpRoles[] = $role;
+        }
+        return $idpRoles;
     }
 
     /**
@@ -106,18 +142,40 @@ class InMemoryMetadataRepository extends AbstractMetadataRepository
      */
     public function findServiceProviderByEntityId($entityId)
     {
-        if (!isset($this->serviceProviders[$entityId])) {
+        $roles = $this->findServiceProviderRolesByEntityId($entityId);
+        if (empty($roles)) {
             return null;
         }
 
-        $serviceProvider = $this->serviceProviders[$entityId];
-        $serviceProvider = $this->compositeFilter->filterRole($serviceProvider);
-        if (!$serviceProvider) {
+        $role = $this->findFilteredRole($roles);
+        if (!$role) {
             return null;
         }
 
-        $serviceProvider->accept($this->compositeVisitor);
-        return $serviceProvider;
+        $role->accept($this->compositeVisitor);
+
+        return $role;
+    }
+
+    /**
+     * @param $entityId
+     * @return array
+     */
+    private function findServiceProviderRolesByEntityId($entityId)
+    {
+        if (empty($this->entities[$entityId])) {
+            return null;
+        }
+
+        $spRoles = array();
+        foreach ($this->entities[$entityId] as $role) {
+            if (!$role instanceof ServiceProvider) {
+                continue;
+            }
+
+            $spRoles[] = $role;
+        }
+        return $spRoles;
     }
 
     /**
@@ -132,7 +190,12 @@ class InMemoryMetadataRepository extends AbstractMetadataRepository
         foreach ($identityProviders as $identityProvider) {
             $identityProvider->accept($this->compositeVisitor);
         }
-        return $identityProviders;
+
+        $indexedIdentityProviders = array();
+        foreach ($identityProviders as $identityProvider) {
+            $indexedIdentityProviders[$identityProvider->entityId] = $identityProvider;
+        }
+        return $indexedIdentityProviders;
     }
 
     /**
@@ -140,25 +203,53 @@ class InMemoryMetadataRepository extends AbstractMetadataRepository
      */
     public function findEntitiesPublishableInEdugain(MetadataRepositoryInterface $repository = NULL)
     {
-        /** @var AbstractRole[] $entities */
-        $entities = $this->identityProviders + $this->serviceProviders;
+        /** @var AbstractRole[] $roles */
+        $roles = array_merge($this->identityProviders, $this->serviceProviders);
 
-        $publishableEntities = array();
-        foreach ($entities as $entity) {
-            if (!$entity->publishInEdugain) {
+        $publishableRoles = array();
+        foreach ($roles as $role) {
+            if (!$role->publishInEdugain) {
                 continue;
             }
 
-            $publishableEntities[] = $entity;
+            $publishableRoles[] = $role;
         }
 
         $roles = $this->compositeFilter->filterRoles(
-            $publishableEntities
+            $publishableRoles
         );
 
         foreach ($roles as $role) {
             $role->accept($this->compositeVisitor);
         }
         return $roles;
+    }
+
+    /**
+     * @param AbstractRole[] $roles
+     * @return AbstractRole|null
+     */
+    private function findFilteredRole(array $roles)
+    {
+        $filteredRoles = array();
+        foreach ($roles as $role) {
+            $role = $this->compositeFilter->filterRole($role);
+
+            if (!$role) {
+                continue;
+            }
+
+            $filteredRoles[] = $role;
+        }
+
+        if (empty($filteredRoles)) {
+            return null;
+        }
+
+        if (count($filteredRoles) > 2) {
+            throw new \RuntimeException('Multiple roles matching after filtering!');
+        }
+
+        return array_shift($filteredRoles);
     }
 }
