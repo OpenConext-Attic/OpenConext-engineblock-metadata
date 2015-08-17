@@ -19,10 +19,16 @@ class DoctrineMetadataRepositoryTest extends PHPUnit_Framework_TestCase
         $mockSpRepository = Mockery::mock('Doctrine\ORM\EntityRepository');
         $mockIdpRepository = Mockery::mock('Doctrine\ORM\EntityRepository');
         $mockIdpRepository
+            ->shouldReceive('getClassName')
+            ->andReturn('OpenConext\Component\EngineBlockMetadata\Entity\IdentityProvider')
             ->shouldReceive('matching')
             ->andReturn(new ArrayCollection(array(new IdentityProvider('https://idp.entity.com'))));
 
-        $repository = new DoctrineMetadataRepository($mockSpRepository, $mockIdpRepository);
+        $repository = new DoctrineMetadataRepository(
+            Mockery::mock('Doctrine\ORM\EntityManager'),
+            $mockSpRepository,
+            $mockIdpRepository
+        );
 
         $this->assertCount(1, $repository->findIdentityProviders());
     }

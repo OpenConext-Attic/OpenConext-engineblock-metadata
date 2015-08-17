@@ -13,8 +13,7 @@ class DisableDisallowedEntitiesInWayfVisitorTest extends \PHPUnit_Framework_Test
     public function testVisitor()
     {
         $vistor = new DisableDisallowedEntitiesInWayfVisitor(array(
-            'https://disabled1.entity.com',
-            'https://disabled2.entity.com',
+            'https://enabled.entity.com',
         ));
         $disabledIdentityProvider = new IdentityProvider('https://disabled1.entity.com');
         $this->assertTrue($disabledIdentityProvider->enabledInWayf);
