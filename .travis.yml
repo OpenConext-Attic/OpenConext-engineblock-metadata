@@ -27,7 +27,6 @@ cache:
 
 before_script:
   - echo 'date.timezone = "Europe/Amsterdam"' >> ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/travis.ini
-  - phpenv config-add .travis.php.ini
   - composer self-update
   - composer install --prefer-source
 
