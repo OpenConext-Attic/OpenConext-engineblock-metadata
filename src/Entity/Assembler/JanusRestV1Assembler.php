@@ -129,8 +129,8 @@ class JanusRestV1Assembler
         }
         $arguments['hidden']  = (bool) Utils::ifsetor($metadata, 'coin:hidden');
 
-        if (isset($metadata['coin:guest_qualifiers'])) {
-            if (in_array($metadata['coin:guest_qualifiers'], IdentityProvider::$GUEST_QUALIFIERS)) {
+        if (isset($metadata['coin:guest_qualifier'])) {
+            if (in_array($metadata['coin:guest_qualifier'], IdentityProvider::$GUEST_QUALIFIERS)) {
                 $metadata['guestQualifier'] = $metadata['coin:guest_qualifiers'];
             }
         }
