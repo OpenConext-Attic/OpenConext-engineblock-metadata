@@ -131,7 +131,7 @@ class JanusRestV1Assembler
 
         if (isset($metadata['coin:guest_qualifier'])) {
             if (in_array($metadata['coin:guest_qualifier'], IdentityProvider::$GUEST_QUALIFIERS)) {
-                $metadata['guestQualifier'] = $metadata['coin:guest_qualifiers'];
+                $arguments['guestQualifier'] = $metadata['coin:guest_qualifier'];
             }
         }
 
