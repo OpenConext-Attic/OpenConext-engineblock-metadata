@@ -20,7 +20,29 @@ use SAML2_Const;
  * @SuppressWarnings(PHPMD.TooManyFields)
  *
  * @ORM\Entity
- * @ORM\Table(name="sso_provider_roles")
+ * @ORM\Table(
+ *      name="sso_provider_roles",
+ *      uniqueConstraints={
+ *          @ORM\UniqueConstraint(
+ *              name="idx_sso_provider_roles_entity_id_type",
+ *              columns={"type", "entity_id"}
+ *          )
+ *      },
+ *      indexes={
+ *          @ORM\Index(
+ *              name="idx_sso_provider_roles_type",
+ *              columns={"type"}
+ *          ),
+ *          @ORM\Index(
+ *              name="idx_sso_provider_roles_entity_id",
+ *              columns={"entity_id"}
+ *          ),
+ *          @ORM\Index(
+ *              name="idx_sso_provider_roles_publish_in_edugain",
+ *              columns={"publish_in_edugain"}
+ *          ),
+ *      }
+ * )
  * @ORM\InheritanceType("SINGLE_TABLE")
  * @ORM\DiscriminatorColumn(name="type", type="string")
  * @ORM\DiscriminatorMap({
