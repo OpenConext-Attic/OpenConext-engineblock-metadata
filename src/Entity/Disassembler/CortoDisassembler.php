@@ -53,6 +53,9 @@ class CortoDisassembler
         if ($entity->skipDenormalization) {
             $cortoEntity['SkipDenormalization'] = true;
         }
+        if ($entity->policyEnforcementDecisionRequired) {
+            $cortoEntity['PolicyEnforcementDecisionRequired'] = true;
+        }
 
         return $cortoEntity;
     }

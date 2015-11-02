@@ -135,6 +135,7 @@ class JanusPushMetadataAssembler
         $properties += $this->assembleIsConsentRequired($connection);
         $properties += $this->setPathFromObject(array($connection, 'metadata:coin:eula'), 'termsOfServiceUrl');
         $properties += $this->setPathFromObject(array($connection, 'metadata:coin:do_not_add_attribute_aliases'), 'skipDenormalization');
+        $properties += $this->setPathFromObject(array($connection, 'metadata:coin:policy_enforcement_decision_required'), 'policyEnforcementDecisionRequired');
 
         return Utils::instantiate(
             'OpenConext\Component\EngineBlockMetadata\Entity\ServiceProvider',
