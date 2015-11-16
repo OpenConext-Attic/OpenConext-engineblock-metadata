@@ -15,6 +15,7 @@ use OpenConext\Component\EngineBlockMetadata\Entity\ServiceProvider;
  *
  * @package OpenConext\Component\EngineBlockMetadata\Legacy
  * @SuppressWarnings(PMD.TooManyMethods)
+ * @SuppressWarnings(PMD.ExcessiveClassComplexity)
  */
 class CortoDisassembler
 {
@@ -52,6 +53,9 @@ class CortoDisassembler
         }
         if ($entity->skipDenormalization) {
             $cortoEntity['SkipDenormalization'] = true;
+        }
+        if ($entity->policyEnforcementDecisionRequired) {
+            $cortoEntity['PolicyEnforcementDecisionRequired'] = true;
         }
 
         return $cortoEntity;

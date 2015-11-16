@@ -92,6 +92,13 @@ class ServiceProvider extends AbstractRole
     public $allowedIdpEntityIds;
 
     /**
+     * @var bool
+     *
+     * @ORM\Column(name="policy_enforcement_decision_required", type="boolean")
+     */
+    public $policyEnforcementDecisionRequired;
+
+    /**
      * @var null|RequestedAttribute[]
      *
      * @ORM\Column(name="requested_attributes", type="array")
@@ -133,6 +140,7 @@ class ServiceProvider extends AbstractRole
      * @param bool $isTrustedProxy
      * @param null $requestedAttributes
      * @param bool $skipDenormalization
+     * @param bool $policyEnforcementDecisionRequired
      * @param string $manipulation
      * @param AttributeReleasePolicy $attributeReleasePolicy
      */
@@ -174,6 +182,7 @@ class ServiceProvider extends AbstractRole
         $isTrustedProxy = false,
         $requestedAttributes = null,
         $skipDenormalization = false,
+        $policyEnforcementDecisionRequired = false,
         $manipulation = '',
         AttributeReleasePolicy $attributeReleasePolicy = null
     ) {
@@ -216,6 +225,7 @@ class ServiceProvider extends AbstractRole
         $this->isTrustedProxy = $isTrustedProxy;
         $this->requestedAttributes = $requestedAttributes;
         $this->skipDenormalization = $skipDenormalization;
+        $this->policyEnforcementDecisionRequired = $policyEnforcementDecisionRequired;
     }
 
     /**

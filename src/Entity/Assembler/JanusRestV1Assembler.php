@@ -103,13 +103,14 @@ class JanusRestV1Assembler
     public function assembleServiceProviderArguments(array $metadata)
     {
         $arguments = array();
-        if (isset($metadata['coin:transparant_issuer']))            { $arguments['isTransparentIssuer']         = (bool) $metadata['coin:transparant_issuer']; }
-        if (isset($metadata['coin:trusted_proxy']))                 { $arguments['isTrustedProxy']              = (bool) $metadata['coin:trusted_proxy']; }
-        if (isset($metadata['coin:implicit_vo_id']))                { $arguments['implicitVoId']                = $metadata['coin:implicit_vo_id']; }
-        if (isset($metadata['coin:display_unconnected_idps_wayf'])) { $arguments['displayUnconnectedIdpsWayf']  = (bool) $metadata['coin:display_unconnected_idps_wayf']; }
-        if (isset($metadata['coin:no_consent_required']))           { $arguments['isConsentRequired']           = !(bool) $metadata['coin:no_consent_required']; }
-        if (isset($metadata['coin:eula']))                          { $arguments['termsOfServiceUrl']           = $metadata['coin:eula']; }
-        if (isset($metadata['coin:do_not_add_attribute_aliases']))  { $arguments['skipDenormalization']         = (bool) $metadata['coin:do_not_add_attribute_aliases']; }
+        if (isset($metadata['coin:transparant_issuer']))                    { $arguments['isTransparentIssuer']             = (bool) $metadata['coin:transparant_issuer']; }
+        if (isset($metadata['coin:trusted_proxy']))                         { $arguments['isTrustedProxy']                  = (bool) $metadata['coin:trusted_proxy']; }
+        if (isset($metadata['coin:implicit_vo_id']))                        { $arguments['implicitVoId']                    = $metadata['coin:implicit_vo_id']; }
+        if (isset($metadata['coin:display_unconnected_idps_wayf']))         { $arguments['displayUnconnectedIdpsWayf']      = (bool) $metadata['coin:display_unconnected_idps_wayf']; }
+        if (isset($metadata['coin:no_consent_required']))                   { $arguments['isConsentRequired']               = !(bool) $metadata['coin:no_consent_required']; }
+        if (isset($metadata['coin:eula']))                                  { $arguments['termsOfServiceUrl']               = $metadata['coin:eula']; }
+        if (isset($metadata['coin:do_not_add_attribute_aliases']))          { $arguments['skipDenormalization']             = (bool) $metadata['coin:do_not_add_attribute_aliases']; }
+        if (isset($metadata['coin:policy_enforcement_decision_required']))  { $arguments['policyEnforcementDecisionRequired'] = (bool) $metadata['coin:policy_enforcement_decision_required']; }
 
         $arguments['assertionConsumerServices'] = $this->assembleIndexedServices($metadata, 'AssertionConsumerService');
 
