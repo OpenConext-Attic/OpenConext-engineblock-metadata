@@ -15,6 +15,7 @@ use OpenConext\Component\EngineBlockMetadata\Entity\ServiceProvider;
  *
  * @package OpenConext\Component\EngineBlockMetadata\Legacy
  * @SuppressWarnings(PMD.TooManyMethods)
+ * @SuppressWarnings(PMD.ExcessiveClassComplexity)
  */
 class CortoDisassembler
 {

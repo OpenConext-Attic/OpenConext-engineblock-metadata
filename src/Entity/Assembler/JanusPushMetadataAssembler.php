@@ -115,7 +115,10 @@ class JanusPushMetadataAssembler
             return $this->assembleIdp($connection);
         }
 
-        throw new RuntimeException("Unrecognized type: '{$connection->type}'" . var_export($connection, true));
+        throw new RuntimeException(
+            "Unrecognized type: '{$connection->type}'"
+            . var_export($connection, true)
+        );
     }
 
     /**
@@ -128,14 +131,58 @@ class JanusPushMetadataAssembler
 
         $properties += $this->assembleAttributeReleasePolicy($connection);
         $properties += $this->assembleAssertionConsumerServices($connection);
-        $properties += $this->setPathFromObject(array($connection, 'metadata:coin:transparant_issuer'), 'isTransparentIssuer');
-        $properties += $this->setPathFromObject(array($connection, 'metadata:coin:trusted_proxy'), 'isTrustedProxy');
-        $properties += $this->setPathFromObject(array($connection, 'metadata:coin:implicitVoId'), 'implicitVoId');
-        $properties += $this->setPathFromObject(array($connection, 'metadata:coin:display_unconnected_idps_wayf'), 'displayUnconnectedIdpsWayf');
+        $properties += $this->setPathFromObject(
+            array(
+                $connection,
+                'metadata:coin:transparant_issuer'
+            ),
+            'isTransparentIssuer'
+        );
+        $properties += $this->setPathFromObject(
+            array(
+                $connection,
+                'metadata:coin:trusted_proxy'
+            ),
+            'isTrustedProxy'
+        );
+        $properties += $this->setPathFromObject(
+            array(
+                $connection,
+                'metadata:coin:implicitVoId'
+            ),
+            'implicitVoId'
+        );
+        $properties += $this->setPathFromObject(
+            array(
+                $connection,
+                'metadata:coin:display_unconnected_idps_wayf'
+            ),
+            'displayUnconnectedIdpsWayf'
+        );
+
         $properties += $this->assembleIsConsentRequired($connection);
-        $properties += $this->setPathFromObject(array($connection, 'metadata:coin:eula'), 'termsOfServiceUrl');
-        $properties += $this->setPathFromObject(array($connection, 'metadata:coin:do_not_add_attribute_aliases'), 'skipDenormalization');
-        $properties += $this->setPathFromObject(array($connection, 'metadata:coin:policy_enforcement_decision_required'), 'policyEnforcementDecisionRequired');
+
+        $properties += $this->setPathFromObject(
+            array(
+                $connection,
+                'metadata:coin:eula'
+            ),
+            'termsOfServiceUrl'
+        );
+        $properties += $this->setPathFromObject(
+            array(
+                $connection,
+                'metadata:coin:do_not_add_attribute_aliases'
+            ),
+            'skipDenormalization'
+        );
+        $properties += $this->setPathFromObject(
+            array(
+                $connection,
+                'metadata:coin:policy_enforcement_decision_required'
+            ),
+            'policyEnforcementDecisionRequired'
+        );
 
         return Utils::instantiate(
             'OpenConext\Component\EngineBlockMetadata\Entity\ServiceProvider',
@@ -425,6 +472,10 @@ class JanusPushMetadataAssembler
             return array();
         }
 
-        return array('attributeReleasePolicy' => new AttributeReleasePolicy((array) $connection->arp_attributes));
+        return array(
+            'attributeReleasePolicy' => new AttributeReleasePolicy(
+                (array) $connection->arp_attributes
+            )
+        );
     }
 }
