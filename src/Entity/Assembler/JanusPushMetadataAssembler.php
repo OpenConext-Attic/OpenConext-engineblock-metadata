@@ -93,10 +93,16 @@ class JanusPushMetadataAssembler
                 }
 
                 $index = array_search($idpEntityId, $allowedIdpEntityIds);
+
+                if ($index === false) {
+                    continue;
+                }
+
+
                 unset($allowedIdpEntityIds[$index]);
             }
 
-            $role->allowedIdpEntityIds = $allowedIdpEntityIds;
+            $role->allowedIdpEntityIds = array_values($allowedIdpEntityIds);
         }
         return $roles;
     }
