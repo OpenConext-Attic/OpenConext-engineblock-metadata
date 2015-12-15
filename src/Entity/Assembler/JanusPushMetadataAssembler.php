@@ -170,6 +170,8 @@ class JanusPushMetadataAssembler
         $properties += $this->setPathFromObject(array($connection, 'name'), 'entityId');
         $properties += $this->setPathFromObject(array($connection, 'metadata:name:nl'), 'nameNl');
         $properties += $this->setPathFromObject(array($connection, 'metadata:name:en'), 'nameEn');
+        $properties += $this->setPathFromObject(array($connection, 'metadata:displayName:nl'), 'displayNameNl');
+        $properties += $this->setPathFromObject(array($connection, 'metadata:displayName:en'), 'displayNameEn');
         $properties += $this->setPathFromObject(array($connection, 'metadata:description:nl'), 'descriptionNl');
         $properties += $this->setPathFromObject(array($connection, 'metadata:description:en'), 'descriptionEn');
         $properties += $this->assembleLogo($connection);
