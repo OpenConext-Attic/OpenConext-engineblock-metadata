@@ -108,14 +108,14 @@ class ServiceProvider extends AbstractRole
     /**
      * @var null|string
      *
-     * @ORM\Column(name="url_en", type="string")
+     * @ORM\Column(name="url_en", type="string", nullable=true)
      */
     public $urlEn;
 
     /**
      * @var null|string
      *
-     * @ORM\Column(name="url_nl", type="string")
+     * @ORM\Column(name="url_nl", type="string", nullable=true)
      */
     public $urlNl;
 
@@ -157,8 +157,8 @@ class ServiceProvider extends AbstractRole
      * @param bool $policyEnforcementDecisionRequired
      * @param string $manipulation
      * @param AttributeReleasePolicy $attributeReleasePolicy
-     * @param string $urlEn
-     * @param string $urlNl
+     * @param string|null $urlEn
+     * @param string|null $urlNl
      */
     public function __construct(
         $entityId,
