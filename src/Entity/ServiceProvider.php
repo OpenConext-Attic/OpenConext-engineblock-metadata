@@ -110,14 +110,14 @@ class ServiceProvider extends AbstractRole
      *
      * @ORM\Column(name="url_en", type="string", nullable=true)
      */
-    public $urlEn;
+    public $supportUrlEn;
 
     /**
      * @var null|string
      *
      * @ORM\Column(name="url_nl", type="string", nullable=true)
      */
-    public $urlNl;
+    public $supportUrlNl;
 
     /**
      * @param string $entityId
@@ -157,8 +157,8 @@ class ServiceProvider extends AbstractRole
      * @param bool $policyEnforcementDecisionRequired
      * @param string $manipulation
      * @param AttributeReleasePolicy $attributeReleasePolicy
-     * @param string|null $urlEn
-     * @param string|null $urlNl
+     * @param string|null $supportUrlEn
+     * @param string|null $supportUrlNl
      */
     public function __construct(
         $entityId,
@@ -201,8 +201,8 @@ class ServiceProvider extends AbstractRole
         $policyEnforcementDecisionRequired = false,
         $manipulation = '',
         AttributeReleasePolicy $attributeReleasePolicy = null,
-        $urlEn = null,
-        $urlNl = null
+        $supportUrlEn = null,
+        $supportUrlNl = null
     ) {
         parent::__construct(
             $entityId,
@@ -244,8 +244,8 @@ class ServiceProvider extends AbstractRole
         $this->requestedAttributes = $requestedAttributes;
         $this->skipDenormalization = $skipDenormalization;
         $this->policyEnforcementDecisionRequired = $policyEnforcementDecisionRequired;
-        $this->urlEn = $urlEn;
-        $this->urlNl = $urlNl;
+        $this->supportUrlEn = $supportUrlEn;
+        $this->supportUrlNl = $supportUrlNl;
     }
 
     /**
