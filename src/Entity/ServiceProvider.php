@@ -108,14 +108,14 @@ class ServiceProvider extends AbstractRole
     /**
      * @var null|string
      *
-     * @ORM\Column(name="url_en", type="string", nullable=true)
+     * @ORM\Column(name="support_url_en", type="string", nullable=true)
      */
     public $supportUrlEn;
 
     /**
      * @var null|string
      *
-     * @ORM\Column(name="url_nl", type="string", nullable=true)
+     * @ORM\Column(name="support_url_nl", type="string", nullable=true)
      */
     public $supportUrlNl;
 
