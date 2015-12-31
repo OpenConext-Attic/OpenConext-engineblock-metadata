@@ -326,5 +326,7 @@ class JanusRestV1AssemblerTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(SAML2_Const::BINDING_HTTP_REDIRECT, $serviceProvider->singleLogoutService->binding);
         $this->assertEquals('https://example.edu', $serviceProvider->singleLogoutService->location);
         $this->assertEquals(ServiceProvider::WORKFLOW_STATE_PROD, $serviceProvider->workflowState);
+        $this->assertEquals('https://example.edu', $serviceProvider->supportUrlEn);
+        $this->assertEquals('https://example.nl', $serviceProvider->supportUrlNl);
     }
 }
