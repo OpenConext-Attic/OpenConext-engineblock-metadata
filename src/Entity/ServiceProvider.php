@@ -115,7 +115,7 @@ class ServiceProvider extends AbstractRole
     /**
      * @var null|string
      *
-     * @ORM\Column(name="urn_nl", type="string")
+     * @ORM\Column(name="url_nl", type="string")
      */
     public $urlNl;
 
