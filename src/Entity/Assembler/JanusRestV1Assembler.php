@@ -111,6 +111,7 @@ class JanusRestV1Assembler
         if (isset($metadata['coin:eula']))                                  { $arguments['termsOfServiceUrl']               = $metadata['coin:eula']; }
         if (isset($metadata['coin:do_not_add_attribute_aliases']))          { $arguments['skipDenormalization']             = (bool) $metadata['coin:do_not_add_attribute_aliases']; }
         if (isset($metadata['coin:policy_enforcement_decision_required']))  { $arguments['policyEnforcementDecisionRequired'] = (bool) $metadata['coin:policy_enforcement_decision_required']; }
+        if (isset($metadata['coin:attribute_aggregation_required']))        { $arguments['attributeAggregationRequired']    = (bool) $metadata['coin:attribute_aggregation_required']; }
 
         if (isset($metadata['url:en']))    { $arguments['supportUrlEn'] = $metadata['url:en']; }
         if (isset($metadata['url:nl']))    { $arguments['supportUrlNl'] = $metadata['url:nl']; }

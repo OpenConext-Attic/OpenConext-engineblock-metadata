@@ -232,6 +232,7 @@ class JanusRestV1AssemblerTest extends PHPUnit_Framework_TestCase
         "coin:transparant_issuer":true,
         "coin:trusted_proxy":true,
         "coin:policy_enforcement_decision_required":true,
+        "coin:attribute_aggregation_required":true,
         "contacts:0:contactType":"technical",
         "contacts:0:emailAddress":"femo@surfnet.nl",
         "contacts:0:givenName":"Femke",
@@ -292,6 +293,7 @@ class JanusRestV1AssemblerTest extends PHPUnit_Framework_TestCase
         $this->assertTrue($serviceProvider->displayUnconnectedIdpsWayf);
         $this->assertTrue($serviceProvider->skipDenormalization);
         $this->assertTrue($serviceProvider->policyEnforcementDecisionRequired);
+        $this->assertTrue($serviceProvider->attributeAggregationRequired);
         $this->assertEquals('https://example.edu/eula', $serviceProvider->termsOfServiceUrl);
         $this->assertEquals('test', $serviceProvider->implicitVoId);
         $this->assertFalse($serviceProvider->isConsentRequired);

@@ -23,6 +23,7 @@ class CortoDisassemblerTest extends PHPUnit_Framework_TestCase
         $serviceProvider->isConsentRequired = false;
         $serviceProvider->skipDenormalization = true;
         $serviceProvider->policyEnforcementDecisionRequired = true;
+        $serviceProvider->attributeAggregationRequired = true;
 
         $disassembler = new CortoDisassembler();
         $cortoServiceProvider = $disassembler->translateServiceProvider($serviceProvider);
@@ -39,6 +40,7 @@ class CortoDisassemblerTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(!$serviceProvider->isConsentRequired    , $cortoServiceProvider['NoConsentRequired']);
         $this->assertEquals($serviceProvider->skipDenormalization   , $cortoServiceProvider['SkipDenormalization']);
         $this->assertEquals($serviceProvider->policyEnforcementDecisionRequired   , $cortoServiceProvider['PolicyEnforcementDecisionRequired']);
+        $this->assertEquals($serviceProvider->attributeAggregationRequired        , $cortoServiceProvider['AttributeAggregationRequired']);
     }
 
     public function testIdpDisassemble()
