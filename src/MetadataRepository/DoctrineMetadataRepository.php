@@ -137,7 +137,7 @@ class DoctrineMetadataRepository extends AbstractMetadataRepository
                 ->andWhere(Criteria::expr()->eq('entityId', $entityId))
         );
 
-        if ($identityProviderCollection->count() === 0) {
+        if (!$identityProviderCollection->count()) {
             return null;
         }
 
@@ -166,7 +166,7 @@ class DoctrineMetadataRepository extends AbstractMetadataRepository
                 ->andWhere(Criteria::expr()->eq('entityId', $entityId))
         );
 
-        if ($serviceProviderCollection->count() === 0) {
+        if (!$serviceProviderCollection->count()) {
             return null;
         }
 
