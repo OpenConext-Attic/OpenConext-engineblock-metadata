@@ -20,6 +20,8 @@ use OpenConext\Component\EngineBlockMetadata\Entity\ServiceProvider;
 class CortoDisassembler
 {
     /**
+     * @SuppressWarnings(PMD.CyclomaticComplexity)
+     * @SuppressWarnings(PMD.NPathComplexity)
      * @param ServiceProvider $entity
      * @return array
      */
