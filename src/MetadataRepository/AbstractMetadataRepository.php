@@ -13,6 +13,7 @@ use OpenConext\Component\EngineBlockMetadata\MetadataRepository\Visitor\VisitorI
  * Class AbstractMetadataRepository
  * @package OpenConext\Component\EngineBlockMetadata\MetadataRepository
  * @SuppressWarnings(PMD.TooManyMethods)
+ * @SuppressWarnings(PMD.TooManyPublicMethods)
  */
 abstract class AbstractMetadataRepository implements MetadataRepositoryInterface
 {

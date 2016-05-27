@@ -18,6 +18,7 @@ use RuntimeException;
  *
  * @SuppressWarnings(PHPMD.ExcessiveParameterList)
  * @SuppressWarnings(PHPMD.TooManyMethods)
+ * @SuppressWarnings(PMD.TooManyPublicMethods)
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class DoctrineMetadataRepository extends AbstractMetadataRepository
@@ -137,11 +138,11 @@ class DoctrineMetadataRepository extends AbstractMetadataRepository
                 ->andWhere(Criteria::expr()->eq('entityId', $entityId))
         );
 
-        if ($identityProviderCollection->count() === 0) {
+        if ((int) $identityProviderCollection->count() === 0) {
             return null;
         }
 
-        if ($identityProviderCollection->count() > 1) {
+        if ((int) $identityProviderCollection->count() > 1) {
             throw new RuntimeException('Multiple Identity Providers found for entityId: ' . $entityId);
         }
 
@@ -166,11 +167,11 @@ class DoctrineMetadataRepository extends AbstractMetadataRepository
                 ->andWhere(Criteria::expr()->eq('entityId', $entityId))
         );
 
-        if ($serviceProviderCollection->count() === 0) {
+        if ((int) $serviceProviderCollection->count() === 0) {
             return null;
         }
 
-        if ($serviceProviderCollection->count() > 1) {
+        if ((int) $serviceProviderCollection->count() > 1) {
             throw new RuntimeException('Multiple Service Providers found for entityId: ' . $entityId);
         }
 

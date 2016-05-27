@@ -13,7 +13,6 @@
     },
     "require-dev": {
         "ibuildings/qa-tools": "~1.1",
-        "sebastian/phpcpd": "dev-master",
         "satooshi/php-coveralls": "~0.6",
         "mockery/mockery": "~0.9"
     }

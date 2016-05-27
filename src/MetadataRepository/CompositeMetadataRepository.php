@@ -14,6 +14,7 @@ use OpenConext\Component\EngineBlockMetadata\MetadataRepository\Visitor\VisitorI
  * Class CompositeMetadataRepository
  * @package OpenConext\Component\EngineBlockMetadata\MetadataRepository
  * @SuppressWarnings(PMD.TooManyMethods)
+ * @SuppressWarnings(PMD.TooManyPublicMethods)
  * @SuppressWarnings(PMD.CouplingBetweenObjects)
  */
 class CompositeMetadataRepository extends AbstractMetadataRepository

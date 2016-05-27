@@ -16,6 +16,7 @@ use RuntimeException;
  * Class JanusRestV1MetadataRepository
  * @package OpenConext\Component\EngineBlockMetadata\MetadataRepository
  * @SuppressWarnings(PMD.TooManyMethods)
+ * @SuppressWarnings(PMD.TooManyPublicMethods)
  * @SuppressWarnings(PMD.CouplingBetweenObjects)
  */
 class JanusRestV1MetadataRepository extends AbstractMetadataRepository
