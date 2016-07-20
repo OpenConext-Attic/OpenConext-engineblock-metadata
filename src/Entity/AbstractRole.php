@@ -20,8 +20,9 @@ use SAML2_Const;
  * @SuppressWarnings(PHPMD.TooManyFields)
  *
  * @ORM\Entity
+ * @ORM\ChangeTrackingPolicy("DEFERRED_EXPLICIT")
  * @ORM\Table(
- *      name="sso_provider_roles",
+ *      name="sso_provider_roles_eb5",
  *      uniqueConstraints={
  *          @ORM\UniqueConstraint(
  *              name="idx_sso_provider_roles_entity_id_type",
