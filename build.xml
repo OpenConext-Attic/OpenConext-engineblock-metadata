@@ -55,7 +55,7 @@
     </target>
 
     <target name="php-security-checker" description="Check your composer dependencies for insecure components">
-        <exec executable="vendor/bin/security-checker" failonerror="false">
+        <exec executable="vendor/bin/security-checker" failonerror="true">
             <arg value="security:check"/>
             <arg value="--verbose"/>
             <arg value="composer.lock"/>
