@@ -19,7 +19,6 @@ class CortoDisassemblerTest extends PHPUnit_Framework_TestCase
         $serviceProvider->displayNameEn = 'DisplayName';
         $serviceProvider->isTransparentIssuer = true;
         $serviceProvider->displayUnconnectedIdpsWayf = true;
-        $serviceProvider->implicitVoId = 'implicit';
         $serviceProvider->isConsentRequired = false;
         $serviceProvider->skipDenormalization = true;
         $serviceProvider->policyEnforcementDecisionRequired = true;
@@ -36,7 +35,6 @@ class CortoDisassemblerTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($serviceProvider->displayNameNl         , $cortoServiceProvider['DisplayName']['en']);
         $this->assertEquals('yes'                                   , $cortoServiceProvider['TransparentIssuer']);
         $this->assertEquals('yes'                                   , $cortoServiceProvider['DisplayUnconnectedIdpsWayf']);
-        $this->assertEquals($serviceProvider->implicitVoId          , $cortoServiceProvider['VoContext']);
         $this->assertEquals(!$serviceProvider->isConsentRequired    , $cortoServiceProvider['NoConsentRequired']);
         $this->assertEquals($serviceProvider->skipDenormalization   , $cortoServiceProvider['SkipDenormalization']);
         $this->assertEquals($serviceProvider->policyEnforcementDecisionRequired   , $cortoServiceProvider['PolicyEnforcementDecisionRequired']);

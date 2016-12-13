@@ -154,13 +154,6 @@ class JanusPushMetadataAssembler
         $properties += $this->setPathFromObject(
             array(
                 $connection,
-                'metadata:coin:implicit_vo_id'
-            ),
-            'implicitVoId'
-        );
-        $properties += $this->setPathFromObject(
-            array(
-                $connection,
                 'metadata:coin:display_unconnected_idps_wayf'
             ),
             'displayUnconnectedIdpsWayf'
