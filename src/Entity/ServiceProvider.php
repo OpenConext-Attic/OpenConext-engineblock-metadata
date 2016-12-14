@@ -50,13 +50,6 @@ class ServiceProvider extends AbstractRole
     public $isTrustedProxy;
 
     /**
-     * @var string
-     *
-     * @ORM\Column(name="implicit_vo_id", type="string")
-     */
-    public $implicitVoId;
-
-    /**
      * @var bool
      *
      * @ORM\Column(name="display_unconnected_idps_wayf", type="boolean")
@@ -155,7 +148,6 @@ class ServiceProvider extends AbstractRole
      * @param array $assertionConsumerServices
      * @param bool $displayUnconnectedIdpsWayf
      * @param null $termsOfServiceUrl
-     * @param null $implicitVoId
      * @param bool $isConsentRequired
      * @param bool $isTransparentIssuer
      * @param bool $isTrustedProxy
@@ -200,7 +192,6 @@ class ServiceProvider extends AbstractRole
         array $assertionConsumerServices = array(),
         $displayUnconnectedIdpsWayf = false,
         $termsOfServiceUrl = null,
-        $implicitVoId = null,
         $isConsentRequired = true,
         $isTransparentIssuer = false,
         $isTrustedProxy = false,
@@ -246,7 +237,6 @@ class ServiceProvider extends AbstractRole
         $this->assertionConsumerServices = $assertionConsumerServices;
         $this->displayUnconnectedIdpsWayf = $displayUnconnectedIdpsWayf;
         $this->termsOfServiceUrl = $termsOfServiceUrl;
-        $this->implicitVoId = $implicitVoId;
         $this->isConsentRequired = $isConsentRequired;
         $this->isTransparentIssuer = $isTransparentIssuer;
         $this->isTrustedProxy = $isTrustedProxy;

@@ -34,9 +34,6 @@ class CortoDisassembler
         if ($entity->isTransparentIssuer) {
             $cortoEntity['TransparentIssuer'] = 'yes';
         }
-        if ($entity->implicitVoId) {
-            $cortoEntity['VoContext'] = $entity->implicitVoId;
-        }
         if ($entity->displayUnconnectedIdpsWayf) {
             $cortoEntity['DisplayUnconnectedIdpsWayf'] = 'yes';
         }

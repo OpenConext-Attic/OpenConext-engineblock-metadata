@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "d073ee80a40f402b04b5d39c515b1594",
-    "content-hash": "c454df6d747d4886d84a33f9e891821a",
+    "hash": "536c2c8b09610c13fe3cdd73efcdc5bc",
+    "content-hash": "4a22f33e0bd50edaca8e2a06bb2cfc6f",
     "packages": [
         {
             "name": "doctrine/annotations",
@@ -727,16 +727,16 @@
         },
         {
             "name": "simplesamlphp/saml2",
-            "version": "v1.10",
+            "version": "v1.10.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/simplesamlphp/saml2.git",
-                "reference": "6a4b1eece19b067b17fff718176689b82dc89fb9"
+                "reference": "3f268c25ca5e9748652834faad04525746227ef7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/simplesamlphp/saml2/zipball/6a4b1eece19b067b17fff718176689b82dc89fb9",
-                "reference": "6a4b1eece19b067b17fff718176689b82dc89fb9",
+                "url": "https://api.github.com/repos/simplesamlphp/saml2/zipball/3f268c25ca5e9748652834faad04525746227ef7",
+                "reference": "3f268c25ca5e9748652834faad04525746227ef7",
                 "shasum": ""
             },
             "require": {
@@ -772,7 +772,7 @@
                 }
             ],
             "description": "SAML2 PHP library from SimpleSAMLphp",
-            "time": "2016-09-15 06:14:20"
+            "time": "2016-12-02 12:15:53"
         },
         {
             "name": "symfony/console",
@@ -4010,7 +4010,7 @@
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
-        "php": ">=5.3.3"
+        "php": ">=5.6,<7"
     },
     "platform-dev": []
 }

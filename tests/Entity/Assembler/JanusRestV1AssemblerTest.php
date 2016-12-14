@@ -204,7 +204,6 @@ class JanusRestV1AssemblerTest extends PHPUnit_Framework_TestCase
         "coin:do_not_add_attribute_aliases":true,
         "coin:eula":"https://example.edu/eula",
         "coin:gadgetbaseurl":"https://example.edu",
-        "coin:implicit_vo_id":"test",
         "coin:institution_id":"test",
         "coin:is_provision_sp":true,
         "coin:is_provision_sp_groups":true,
@@ -295,7 +294,6 @@ class JanusRestV1AssemblerTest extends PHPUnit_Framework_TestCase
         $this->assertTrue($serviceProvider->policyEnforcementDecisionRequired);
         $this->assertTrue($serviceProvider->attributeAggregationRequired);
         $this->assertEquals('https://example.edu/eula', $serviceProvider->termsOfServiceUrl);
-        $this->assertEquals('test', $serviceProvider->implicitVoId);
         $this->assertFalse($serviceProvider->isConsentRequired);
         $this->assertTrue($serviceProvider->publishInEdugain);
         $this->assertEquals('2012-09-01', $serviceProvider->publishInEduGainDate->format('Y-m-d'));
