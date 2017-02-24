@@ -30,7 +30,6 @@ class IndexedService extends Service
     {
         $this->isDefault    = $isDefault;
         $this->serviceIndex = $serviceIndex;
-        $this->isDefault    = $isDefault;
 
         parent::__construct($location, $binding);
     }
