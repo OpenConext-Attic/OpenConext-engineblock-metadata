@@ -11,36 +11,93 @@ class AttributeReleasePolicy
     const WILDCARD_CHARACTER = '*';
 
     /**
+     * Holds attribute rule values with optional 'source'.
+     *
+     * Non-aggregated attributes are stored in the format:
+     *
+     *   attribute name => [value, value, value]
+     *
+     * Attributes aggregated from different sources specify a source along with the value:
+     *
+     *   attribute name => [
+     *      [ 'soure' => '...', 'value' => '...' ]
+     *   ]
+     *
      * @var array
      */
-    private $attributesWithValues;
+    private $attributeRules;
 
     /**
-     * @param array $attributesWithValues
+     * @param array $attributeRules
      */
-    public function __construct(array $attributesWithValues)
+    public function __construct(array $attributeRules)
     {
-        foreach ($attributesWithValues as $key => $values) {
+        foreach ($attributeRules as $key => $rules) {
             if (!is_string($key)) {
                 throw new \InvalidArgumentException('Invalid key: ' . var_export($key, true));
             }
 
-            if (!is_array($values)) {
+            if (!is_array($rules)) {
                 throw new \InvalidArgumentException(
-                    "Invalid values for attribute '$key', not an array: " . var_export($values, true)
+                    "Invalid values for attribute '$key', not an array: " . var_export($rules, true)
                 );
             }
 
-            foreach ($values as $value) {
-                if (!is_string($value)) {
-                    throw new \InvalidArgumentException(
-                        "Invalid value for attribute '$key', not an array: " . var_export($value, true)
-                    );
-                }
+            foreach ($rules as $rule) {
+                $this->validateRule($key, $rule);
             }
         }
 
-        $this->attributesWithValues = $attributesWithValues;
+        $this->attributeRules = $attributeRules;
+    }
+
+    /**
+     * @param string $key
+     * @param mixed $rule
+     * @throws \InvalidArgumentException
+     */
+    private function validateRule($key, $rule)
+    {
+        if (is_array($rule)) {
+            if (!isset($rule['source']) || !isset($rule['value'])) {
+                throw new \InvalidArgumentException(
+                    "Invalid value for attribute '$key', rule must be a string value, or a source/value pair, got: " . var_export($rule, true)
+                );
+            }
+
+            $value = $rule['value'];
+        } else {
+            $value = $rule;
+        }
+
+        if (!is_string($value)) {
+            throw new \InvalidArgumentException(
+                "Invalid value for attribute '$key', not an array: " . var_export($value, true)
+            );
+        }
+    }
+
+    /**
+     * Return all attribute rules eligible for attribute aggregation.
+     *
+     * A rule is eligible for attribute aggregation if it contains a source.
+     *
+     * @return array
+     */
+    public function getRulesWithSourceSpecification()
+    {
+        $rulesWithSource = [];
+
+        foreach ($this->attributeRules as $name => $rules) {
+            $rulesWithSource[$name] = array_filter(
+                $rules,
+                function ($rule) {
+                    return isset($rule['source']);
+                }
+            );
+        }
+
+        return array_filter($rulesWithSource);
     }
 
     /**
@@ -48,7 +105,7 @@ class AttributeReleasePolicy
      */
     public function getAttributeNames()
     {
-        return array_keys($this->attributesWithValues);
+        return array_keys($this->attributeRules);
     }
 
     /**
@@ -57,7 +114,7 @@ class AttributeReleasePolicy
      */
     public function hasAttribute($attributeName)
     {
-        return isset($this->attributesWithValues[$attributeName]);
+        return isset($this->attributeRules[$attributeName]);
     }
 
     /**
@@ -71,7 +128,9 @@ class AttributeReleasePolicy
             return false;
         }
 
-        foreach ($this->attributesWithValues[$attributeName] as $allowedValue) {
+        foreach ($this->attributeRules[$attributeName] as $rule) {
+            $allowedValue = $this->getRuleValue($rule);
+
             if ($attributeValue === $allowedValue) {
                 // Literal match.
                 return true;
@@ -97,5 +156,20 @@ class AttributeReleasePolicy
             }
         }
         return false;
+    }
+
+    /**
+     * Read the value of an ARP rule, ignoring the source.
+     *
+     * @param $rule
+     * @return string
+     */
+    private function getRuleValue($rule)
+    {
+        if (isset($rule['value'])) {
+            return (string) $rule['value'];
+        }
+
+        return (string) $rule;
     }
 }
