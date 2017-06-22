@@ -58,6 +58,7 @@
         <exec executable="vendor/bin/security-checker" failonerror="true">
             <arg value="security:check"/>
             <arg value="--verbose"/>
+            <arg value="--end-point=http://security.sensiolabs.org/check_lock" />
             <arg value="composer.lock"/>
         </exec>
     </target>
