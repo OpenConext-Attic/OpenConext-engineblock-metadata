@@ -72,7 +72,7 @@ class AttributeReleasePolicy
 
         if (!is_string($value)) {
             throw new \InvalidArgumentException(
-                "Invalid value for attribute '$key', not an array: " . var_export($value, true)
+                "Invalid value for attribute '$key', not a string: " . var_export($value, true)
             );
         }
     }
