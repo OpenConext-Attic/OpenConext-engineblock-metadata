@@ -480,6 +480,17 @@ class JanusPushMetadataAssembler
             return array();
         }
 
+        // EngineBlock expects objects in the metadata in many places so we
+        // can't decode the metadata with assoc=true. ARP rules should always
+        // be arrays so we explicitly cast the ARP rules to arrays here.
+        foreach ($connection->arp_attributes as &$rules) {
+            foreach ($rules as &$rule) {
+                if (is_object($rule)) {
+                    $rule = (array) $rule;
+                }
+            }
+        }
+
         return array(
             'attributeReleasePolicy' => new AttributeReleasePolicy(
                 (array) $connection->arp_attributes
