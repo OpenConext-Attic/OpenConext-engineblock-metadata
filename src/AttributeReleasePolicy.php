@@ -59,9 +59,9 @@ class AttributeReleasePolicy
     private function validateRule($key, $rule)
     {
         if (is_array($rule)) {
-            if (!isset($rule['source']) || !isset($rule['value'])) {
+            if (!isset($rule['value'])) {
                 throw new \InvalidArgumentException(
-                    "Invalid value for attribute '$key', rule must be a string value, or a source/value pair, got: " . var_export($rule, true)
+                    "Invalid value for attribute '$key', rule must contain a 'value' key, got: " . var_export($rule, true)
                 );
             }
 

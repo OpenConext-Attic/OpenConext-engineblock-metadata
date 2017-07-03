@@ -122,6 +122,11 @@ class AttributeReleasePolicyTest extends PHPUnit_Framework_TestCase
                         'source' => 'b',
                     ),
                 ),
+                'c' => array(
+                    array(
+                        'value' => 'c',
+                    ),
+                ),
             )
         );
 
