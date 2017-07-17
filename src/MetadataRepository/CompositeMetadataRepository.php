@@ -2,13 +2,12 @@
 
 namespace OpenConext\Component\EngineBlockMetadata\MetadataRepository;
 
-use OpenConext\Component\EngineBlockMetadata\AttributeReleasePolicy;
 use OpenConext\Component\EngineBlockMetadata\Container\ContainerInterface;
 use OpenConext\Component\EngineBlockMetadata\Entity\AbstractRole;
-use OpenConext\Component\EngineBlockMetadata\Entity\IdentityProvider;
-use OpenConext\Component\EngineBlockMetadata\MetadataRepository\Filter\FilterInterface;
 use OpenConext\Component\EngineBlockMetadata\Entity\ServiceProvider;
+use OpenConext\Component\EngineBlockMetadata\MetadataRepository\Filter\FilterInterface;
 use OpenConext\Component\EngineBlockMetadata\MetadataRepository\Visitor\VisitorInterface;
+use Psr\Log\LoggerInterface;
 
 /**
  * Class CompositeMetadataRepository
@@ -163,7 +162,7 @@ class CompositeMetadataRepository extends AbstractMetadataRepository
     /**
      * {@inheritdoc}
      */
-    public function findServiceProviderByEntityId($entityId)
+    public function findServiceProviderByEntityId($entityId, LoggerInterface $logger = null)
     {
         foreach ($this->orderedRepositories as $repository) {
             $entity = $repository->findServiceProviderByEntityId($entityId);

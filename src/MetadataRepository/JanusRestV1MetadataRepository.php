@@ -10,6 +10,7 @@ use OpenConext\Component\EngineBlockMetadata\Entity\IdentityProvider;
 use OpenConext\Component\EngineBlockMetadata\Entity\ServiceProvider;
 use OpenConext\Component\EngineBlockMetadata\Entity\Assembler\JanusRestV1Assembler;
 use OpenConext\Component\EngineBlockMetadata\JanusRestV1\RestClientInterface;
+use Psr\Log\LoggerInterface;
 use RuntimeException;
 
 /**
@@ -190,9 +191,10 @@ class JanusRestV1MetadataRepository extends AbstractMetadataRepository
 
     /**
      * @param $entityId
-     * @return ServiceProvider|null
+     * @param LoggerInterface|null $logger
+     * @return null|ServiceProvider
      */
-    public function findServiceProviderByEntityId($entityId)
+    public function findServiceProviderByEntityId($entityId, LoggerInterface $logger = null)
     {
         $metadata = $this->client->findServiceProviderMetadataByEntityId($entityId);
         if (empty($metadata)) {
@@ -214,7 +216,7 @@ class JanusRestV1MetadataRepository extends AbstractMetadataRepository
 
         $this->entityCache[$entityId] = $entity;
 
-        return $this->postProcessCachedEntity($entityId);
+        return $this->postProcessCachedEntity($entityId, $logger);
     }
 
     /**
@@ -309,10 +311,10 @@ class JanusRestV1MetadataRepository extends AbstractMetadataRepository
      * @param $entityId
      * @return null|AbstractRole
      */
-    private function postProcessCachedEntity($entityId)
+    private function postProcessCachedEntity($entityId, LoggerInterface $logger = null)
     {
         // Filter
-        $entity = $this->compositeFilter->filterRole($this->entityCache[$entityId]);
+        $entity = $this->compositeFilter->filterRole($this->entityCache[$entityId], $logger);
         if (!$entity) {
             return null;
         }

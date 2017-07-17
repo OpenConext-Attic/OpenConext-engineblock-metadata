@@ -3,10 +3,10 @@
 namespace OpenConext\Component\EngineBlockMetadata\MetadataRepository\Filter;
 
 use Doctrine\Common\Collections\Criteria;
-use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\QueryBuilder;
 use OpenConext\Component\EngineBlockMetadata\Entity\AbstractRole;
 use OpenConext\Component\EngineBlockMetadata\Entity\IdentityProvider;
+use Psr\Log\LoggerInterface;
 
 /**
  * Class RemoveDisallowedIdentityProvidersFilter
@@ -38,7 +38,7 @@ class RemoveDisallowedIdentityProvidersFilter extends AbstractFilter
     /**
      * {@inheritdoc}
      */
-    public function filterRole(AbstractRole $role)
+    public function filterRole(AbstractRole $role, LoggerInterface $logger = null)
     {
         if (!$role instanceof IdentityProvider) {
             return $role;
@@ -46,6 +46,10 @@ class RemoveDisallowedIdentityProvidersFilter extends AbstractFilter
 
         if (in_array($role->entityId, $this->allowedIdentityProviderEntityIds)) {
             return $role;
+        }
+
+        if (!is_null($logger)) {
+            $logger->debug(sprintf('Identity Provider is not allowed (%s)', $this->__toString()));
         }
 
         return null;

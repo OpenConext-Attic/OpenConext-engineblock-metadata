@@ -3,9 +3,9 @@
 namespace OpenConext\Component\EngineBlockMetadata\MetadataRepository\Filter;
 
 use Doctrine\Common\Collections\Expr\Expression;
-use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\QueryBuilder;
 use OpenConext\Component\EngineBlockMetadata\Entity\AbstractRole;
+use Psr\Log\LoggerInterface;
 
 /**
  * Interface FilterInterface
@@ -15,9 +15,10 @@ interface FilterInterface
 {
     /**
      * @param AbstractRole $role
-     * @return AbstractRole|null
+     * @param LoggerInterface|null $logger
+     * @return null|AbstractRole
      */
-    public function filterRole(AbstractRole $role);
+    public function filterRole(AbstractRole $role, LoggerInterface $logger = null);
 
     /**
      * @param string $repositoryClassName

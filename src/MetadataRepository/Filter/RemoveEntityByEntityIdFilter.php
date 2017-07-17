@@ -5,6 +5,7 @@ namespace OpenConext\Component\EngineBlockMetadata\MetadataRepository\Filter;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\QueryBuilder;
 use OpenConext\Component\EngineBlockMetadata\Entity\AbstractRole;
+use Psr\Log\LoggerInterface;
 
 /**
  * Class RemoveEntityByEntityIdFilter
@@ -28,9 +29,15 @@ class RemoveEntityByEntityIdFilter extends AbstractFilter
     /**
      * {@inheritdoc}
      */
-    public function filterRole(AbstractRole $role)
+    public function filterRole(AbstractRole $role, LoggerInterface $logger = null)
     {
-        return $role->entityId === $this->entityId ? null : $role;
+        $result = $role->entityId === $this->entityId ? null : $role;
+
+        if (!is_null($logger) && is_null($result)) {
+            $logger->debug(sprintf('Invalid EntityId found (%s)', $this->__toString()));
+        }
+
+        return $result;
     }
 
     /**

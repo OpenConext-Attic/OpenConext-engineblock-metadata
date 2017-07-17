@@ -3,11 +3,11 @@
 namespace OpenConext\Component\EngineBlockMetadata\MetadataRepository;
 
 use InvalidArgumentException;
-use OpenConext\Component\EngineBlockMetadata\AttributeReleasePolicy;
 use OpenConext\Component\EngineBlockMetadata\Container\ContainerInterface;
 use OpenConext\Component\EngineBlockMetadata\Entity\AbstractRole;
 use OpenConext\Component\EngineBlockMetadata\Entity\IdentityProvider;
 use OpenConext\Component\EngineBlockMetadata\Entity\ServiceProvider;
+use Psr\Log\LoggerInterface;
 
 /**
  * Class InMemoryMetadataRepository
@@ -139,9 +139,10 @@ class InMemoryMetadataRepository extends AbstractMetadataRepository
 
     /**
      * @param $entityId
-     * @return ServiceProvider|null
+     * @param LoggerInterface|null $logger
+     * @return null|ServiceProvider
      */
-    public function findServiceProviderByEntityId($entityId)
+    public function findServiceProviderByEntityId($entityId, LoggerInterface $logger = null)
     {
         $roles = $this->findServiceProviderRolesByEntityId($entityId);
         if (empty($roles)) {

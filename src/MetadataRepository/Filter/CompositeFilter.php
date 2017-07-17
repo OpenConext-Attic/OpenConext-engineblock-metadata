@@ -4,9 +4,9 @@ namespace OpenConext\Component\EngineBlockMetadata\MetadataRepository\Filter;
 
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\Common\Collections\Expr\CompositeExpression;
-use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\QueryBuilder;
 use OpenConext\Component\EngineBlockMetadata\Entity\AbstractRole;
+use Psr\Log\LoggerInterface;
 
 /**
  * Class CompositeFilter
@@ -46,10 +46,10 @@ class CompositeFilter implements FilterInterface
     /**
      * {@inheritdoc}
      */
-    public function filterRole(AbstractRole $role)
+    public function filterRole(AbstractRole $role, LoggerInterface $logger = null)
     {
         foreach ($this->filters as $filter) {
-            $role = $filter->filterRole($role);
+            $role = $filter->filterRole($role, $logger);
 
             if (!$role) {
                 $this->disallowedByFilter = $filter->__toString();
