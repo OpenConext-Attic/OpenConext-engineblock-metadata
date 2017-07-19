@@ -196,9 +196,18 @@ class DoctrineMetadataRepository extends AbstractMetadataRepository
      */
     public function findIdentityProviders()
     {
-        return $this->idpRepository->matching(
+        $identityProviders = $this->idpRepository->matching(
             $this->compositeFilter->toCriteria($this->idpRepository->getClassName())
         )->toArray();
+
+        foreach ($identityProviders as $identityProvider) {
+            if (!$identityProvider instanceof IdentityProvider) {
+                throw new RuntimeException('Non-IdentityProvider found');
+            }
+            $identityProvider->accept($this->compositeVisitor);
+        }
+
+        return $identityProviders;
     }
 
     /**
