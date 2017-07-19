@@ -7,6 +7,7 @@ use OpenConext\Component\EngineBlockMetadata\Entity\IdentityProvider;
 use OpenConext\Component\EngineBlockMetadata\Entity\ServiceProvider;
 use OpenConext\Component\EngineBlockMetadata\Utils;
 use PHPUnit_Framework_TestCase;
+use Psr\Log\LoggerInterface;
 
 /**
  * Class RemoveDisallowedIdentityProvidersFilter
@@ -52,5 +53,24 @@ class RemoveOtherWorkflowStatesTest extends PHPUnit_Framework_TestCase
             array('entityId' => 'https://buggy.idp.example.edu', 'workflowState' => '')
         );
         $this->assertNull($filter->filterRole($buggyIdp));
+    }
+
+    public function testLogging()
+    {
+        $mockLogger = Mockery::mock(LoggerInterface::class);
+        $mockLogger
+            ->shouldReceive('debug')
+            ->with('Dissimilar workflow states (OpenConext\Component\EngineBlockMetadata\MetadataRepository\Filter\RemoveOtherWorkflowStatesFilter -> prodaccepted)');
+
+        $prodSp = Utils::instantiate(
+            'OpenConext\Component\EngineBlockMetadata\Entity\ServiceProvider',
+            array('entityId' => 'https://prod.sp.example.edu', 'workflowState' => ServiceProvider::WORKFLOW_STATE_PROD)
+        );
+        $filter = new RemoveOtherWorkflowStatesFilter($prodSp);
+        $buggyIdp = Utils::instantiate(
+            'OpenConext\Component\EngineBlockMetadata\Entity\ServiceProvider',
+            array('entityId' => 'https://buggy.idp.example.edu', 'workflowState' => '')
+        );
+        $this->assertNull($filter->filterRole($buggyIdp, $mockLogger));
     }
 }

@@ -6,6 +6,7 @@ use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\QueryBuilder;
 use OpenConext\Component\EngineBlockMetadata\Entity\AbstractRole;
 use OpenConext\Component\EngineBlockMetadata\Entity\ServiceProvider;
+use Psr\Log\LoggerInterface;
 
 /**
  * Class RemoveOtherWorkflowStatesFilter
@@ -29,9 +30,13 @@ class RemoveOtherWorkflowStatesFilter extends AbstractFilter
     /**
      * {@inheritdoc}
      */
-    public function filterRole(AbstractRole $role)
+    public function filterRole(AbstractRole $role, LoggerInterface $logger = null)
     {
-        return $role->workflowState === $this->workflowState ? $role : null;
+        $result = $role->workflowState === $this->workflowState ? $role : null;
+        if (!is_null($logger) && is_null($result)) {
+            $logger->debug(sprintf('Dissimilar workflow states (%s)', $this->__toString()));
+        }
+        return $result;
     }
 
     /**

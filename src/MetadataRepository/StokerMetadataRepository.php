@@ -9,6 +9,7 @@ use OpenConext\Component\EngineBlockMetadata\Entity\ServiceProvider;
 use OpenConext\Component\EngineBlockMetadata\Entity\Assembler\StokerAssembler;
 use OpenConext\Component\StokerMetadata\MetadataEntitySource;
 use OpenConext\Component\StokerMetadata\MetadataIndex;
+use Psr\Log\LoggerInterface;
 
 /**
  * Class StokerMetadataRepository
@@ -171,9 +172,10 @@ class StokerMetadataRepository extends AbstractMetadataRepository
 
     /**
      * @param $entityId
-     * @return ServiceProvider|null
+     * @param LoggerInterface|null $logger
+     * @return null|ServiceProvider
      */
-    public function findServiceProviderByEntityId($entityId)
+    public function findServiceProviderByEntityId($entityId, LoggerInterface $logger = null)
     {
         $entity = $this->findEntityByEntityId($entityId);
 

@@ -9,6 +9,7 @@ use OpenConext\Component\EngineBlockMetadata\Entity\IdentityProvider;
 use OpenConext\Component\EngineBlockMetadata\MetadataRepository\Filter\FilterInterface;
 use OpenConext\Component\EngineBlockMetadata\Entity\ServiceProvider;
 use OpenConext\Component\EngineBlockMetadata\MetadataRepository\Visitor\VisitorInterface;
+use Psr\Log\LoggerInterface;
 
 /**
  * Interface MetadataRepositoryInterface
@@ -72,9 +73,10 @@ interface MetadataRepositoryInterface
 
     /**
      * @param $entityId
-     * @return ServiceProvider|null
+     * @param LoggerInterface|null $logger
+     * @return null|ServiceProvider
      */
-    public function findServiceProviderByEntityId($entityId);
+    public function findServiceProviderByEntityId($entityId, LoggerInterface $logger = null);
 
     /**
      * @return IdentityProvider[]
