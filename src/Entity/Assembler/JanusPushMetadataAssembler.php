@@ -336,6 +336,9 @@ class JanusPushMetadataAssembler
             if (!empty($contactMetadata->emailAddress)) {
                 $contactPerson->emailAddress = $contactMetadata->emailAddress;
             }
+            if (!empty($contactMetadata->telephoneNumber)) {
+                $contactPerson->telephoneNumber = $contactMetadata->telephoneNumber;
+            }
             if (!empty($contactMetadata->givenName)) {
                 $contactPerson->givenName = $contactMetadata->givenName;
             }

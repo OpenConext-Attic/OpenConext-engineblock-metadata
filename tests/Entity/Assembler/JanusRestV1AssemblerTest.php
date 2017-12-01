@@ -175,7 +175,7 @@ class JanusRestV1AssemblerTest extends PHPUnit_Framework_TestCase
             . 'pqPmXOGde+uXC4ipk9GXHm7ZVTYCOuPKMoLk87H6yzRqoVe1XZvYY9dYIT0YJxxj'
             . 'bLAetQmU33PYPOJWfnKzRLQI5yNQgWFAKf9KTcc6N2gI6NkB3CHqMwcH0mdapriq'
             . '+lCiaVxdZw==';
-        
+
         $entity = json_decode('{
         "AssertionConsumerService:0:Binding":"urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST",
         "AssertionConsumerService:0:index":0,

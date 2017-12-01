@@ -2,6 +2,7 @@
 
 namespace OpenConext\Component\EngineBlockMetadata\Entity\Disassembler;
 
+use OpenConext\Component\EngineBlockMetadata\ContactPerson;
 use OpenConext\Component\EngineBlockMetadata\Entity\IdentityProvider;
 use OpenConext\Component\EngineBlockMetadata\Entity\ServiceProvider;
 use PHPUnit_Framework_TestCase;
@@ -24,6 +25,12 @@ class CortoDisassemblerTest extends PHPUnit_Framework_TestCase
         $serviceProvider->policyEnforcementDecisionRequired = true;
         $serviceProvider->attributeAggregationRequired = true;
 
+        $contact = new ContactPerson('support');
+        $contact->emailAddress = 't@t.t';
+        $contact->telephoneNumber = '0611';
+
+        $serviceProvider->contactPersons[] = $contact;
+
         $disassembler = new CortoDisassembler();
         $cortoServiceProvider = $disassembler->translateServiceProvider($serviceProvider);
 
@@ -39,11 +46,20 @@ class CortoDisassemblerTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($serviceProvider->skipDenormalization   , $cortoServiceProvider['SkipDenormalization']);
         $this->assertEquals($serviceProvider->policyEnforcementDecisionRequired   , $cortoServiceProvider['PolicyEnforcementDecisionRequired']);
         $this->assertEquals($serviceProvider->attributeAggregationRequired        , $cortoServiceProvider['AttributeAggregationRequired']);
+        $this->assertEquals($contact->contactType, $cortoServiceProvider['ContactPersons'][0]['ContactType']);
+        $this->assertEquals($contact->emailAddress, $cortoServiceProvider['ContactPersons'][0]['EmailAddress']);
+        $this->assertEquals($contact->telephoneNumber, $cortoServiceProvider['ContactPersons'][0]['TelephoneNumber']);
     }
 
     public function testIdpDisassemble()
     {
         $identityProvider = new IdentityProvider('https://idp.example.edu');
+
+        $contact = new ContactPerson('support');
+        $contact->emailAddress = 't@t.t';
+        $contact->telephoneNumber = '0611';
+
+        $identityProvider->contactPersons[] = $contact;
 
         $disassembler = new CortoDisassembler();
         $cortoIdentityProvider = $disassembler->translateIdentityProvider($identityProvider);
@@ -56,5 +72,8 @@ class CortoDisassemblerTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($identityProvider->spsEntityIdsWithoutConsent, $cortoIdentityProvider['SpsWithoutConsent']);
         $this->assertEquals($identityProvider->hidden, $cortoIdentityProvider['isHidden']);
         $this->assertEmpty($cortoIdentityProvider['shibmd:scopes']);
+        $this->assertEquals($contact->contactType, $cortoIdentityProvider['ContactPersons'][0]['ContactType']);
+        $this->assertEquals($contact->emailAddress, $cortoIdentityProvider['ContactPersons'][0]['EmailAddress']);
+        $this->assertEquals($contact->telephoneNumber, $cortoIdentityProvider['ContactPersons'][0]['TelephoneNumber']);
     }
 }

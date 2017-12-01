@@ -347,6 +347,7 @@ class JanusRestV1Assembler
             if ($contactType) {
                 $contactPerson = new ContactPerson($contactType);
                 $contactPerson->emailAddress = Utils::ifsetor($metadata, "contacts:$i:emailAddress", '');
+                $contactPerson->telephoneNumber = Utils::ifsetor($metadata, "contacts:$i:telephoneNumber", '');
                 $contactPerson->givenName    = Utils::ifsetor($metadata, "contacts:$i:givenName", '');
                 $contactPerson->surName      = Utils::ifsetor($metadata, "contacts:$i:surName", '');
                 $contactPersons[] = $contactPerson;
