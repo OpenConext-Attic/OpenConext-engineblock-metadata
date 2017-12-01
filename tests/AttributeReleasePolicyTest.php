@@ -142,4 +142,27 @@ class AttributeReleasePolicyTest extends PHPUnit_Framework_TestCase
             $policy->getRulesWithSourceSpecification()
         );
     }
+    public function testGetSource()
+    {
+        $policy = new AttributeReleasePolicy(
+            array(
+                'a' => array('a'),
+                'b' => array(
+                    array(
+                        'value' => 'b',
+                        'source' => 'b',
+                    ),
+                ),
+                'c' => array(
+                    array(
+                        'value' => 'c',
+                    ),
+                ),
+            )
+        );
+
+        $this->assertEquals('idp', $policy->getSource('a'), 'Default source should equal idp');
+        $this->assertEquals('b', $policy->getSource('b'));
+        $this->assertEquals('idp', $policy->getSource('c'), 'Default source should equal idp');
+    }
 }
