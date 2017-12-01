@@ -10,6 +10,7 @@ class ContactPerson
 {
     public $contactType;
     public $emailAddress = '';
+    public $telephoneNumber = '';
     public $givenName = '';
     public $surName = '';
 

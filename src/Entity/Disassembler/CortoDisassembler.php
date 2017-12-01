@@ -301,6 +301,7 @@ class CortoDisassembler
             $cortoEntity['ContactPersons'][] = array(
                 'ContactType' => $contactPerson->contactType,
                 'EmailAddress' => $contactPerson->emailAddress,
+                'TelephoneNumber' => $contactPerson->telephoneNumber,
                 'GivenName' => $contactPerson->givenName,
                 'SurName' => $contactPerson->surName,
             );
