@@ -172,4 +172,18 @@ class AttributeReleasePolicy
 
         return (string) $rule;
     }
+
+    /**
+     * Loads the first source it finds in the list of attribute rules for the given attributeName.
+     *
+     * @param $attributeName
+     * @return string
+     */
+    public function getSource($attributeName)
+    {
+        if ($this->hasAttribute($attributeName) && isset($this->attributeRules[$attributeName][0]['source'])) {
+            return $this->attributeRules[$attributeName][0]['source'];
+        }
+        return 'idp';
+    }
 }
