@@ -186,4 +186,12 @@ class AttributeReleasePolicy
         }
         return 'idp';
     }
+
+    /**
+     * @return array
+     */
+    public function getAttributeRules()
+    {
+        return $this->attributeRules;
+    }
 }
