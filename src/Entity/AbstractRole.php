@@ -11,7 +11,7 @@ use OpenConext\Component\EngineBlockMetadata\Organization;
 use OpenConext\Component\EngineBlockMetadata\ContactPerson;
 use OpenConext\Component\EngineBlockMetadata\Service;
 use OpenConext\Component\EngineBlockMetadata\X509\X509Certificate;
-use SAML2_Const;
+use SAML2\Constants;
 
 /**
  * Abstract base class for configuration entities.
@@ -290,8 +290,8 @@ abstract class AbstractRole
         $nameNl = '',
         $nameIdFormat = null,
         $supportedNameIdFormats = array(
-            SAML2_Const::NAMEID_TRANSIENT,
-            SAML2_Const::NAMEID_PERSISTENT,
+            Constants::NAMEID_TRANSIENT,
+            Constants::NAMEID_PERSISTENT,
         ),
         $publishInEduGainDate = null,
         $publishInEdugain = false,

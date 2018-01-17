@@ -11,13 +11,13 @@ use OpenConext\Component\EngineBlockMetadata\Logo;
 use OpenConext\Component\EngineBlockMetadata\Service;
 use OpenConext\Component\StokerMetadata\MetadataIndex;
 use RuntimeException;
-use SAML2_Const;
-use SAML2_XML_md_EntityDescriptor;
-use SAML2_XML_md_IDPSSODescriptor;
-use SAML2_XML_md_RoleDescriptor;
-use SAML2_XML_md_SPSSODescriptor;
-use SAML2_XML_mdui_Logo;
-use SAML2_XML_mdui_UIInfo;
+use SAML2\Constants;
+use SAML2\XML\md\EntityDescriptor;
+use SAML2\XML\md\IDPSSODescriptor;
+use SAML2\XML\md\RoleDescriptor;
+use SAML2\XML\md\SPSSODescriptor;
+use SAML2\XML\mdui\Logo as UILogo;
+use SAML2\XML\mdui\UIInfo;
 
 /**
  * Class StokerAssembler
@@ -39,18 +39,18 @@ class StokerAssembler
         $document = new DOMDocument();
         $document->loadXML($entityXml);
 
-        $entityDescriptor = new SAML2_XML_md_EntityDescriptor($document->documentElement);
+        $entityDescriptor = new EntityDescriptor($document->documentElement);
 
         $idpDescriptor = null;
         $spDescriptor = null;
         foreach ($entityDescriptor->RoleDescriptor as $role) {
-            if ($role instanceof SAML2_XML_md_IDPSSODescriptor) {
+            if ($role instanceof IDPSSODescriptor) {
                 if ($idpDescriptor) {
                     throw new RuntimeException('More than 1 IDPSSODescriptor found');
                 }
                 $idpDescriptor = $role;
             }
-            if ($role instanceof SAML2_XML_md_SPSSODescriptor) {
+            if ($role instanceof SPSSODescriptor) {
                 if ($spDescriptor) {
                     throw new RuntimeException('More than 1 SPSSODescriptor found');
                 }
@@ -78,19 +78,19 @@ class StokerAssembler
     /**
      * @param MetadataIndex\Entity $metadataIndexEntity
      * @param AbstractRole $entity
-     * @param SAML2_XML_md_RoleDescriptor $role
+     * @param RoleDescriptor $role
      * @return AbstractRole
      */
     private function assembleCommon(
         MetadataIndex\Entity $metadataIndexEntity,
         AbstractRole $entity,
-        SAML2_XML_md_RoleDescriptor $role
+        RoleDescriptor $role
     ) {
         $entity->displayNameNl = $metadataIndexEntity->displayNameNl;
         $entity->displayNameEn = $metadataIndexEntity->displayNameEn;
 
         foreach ($role->Extensions as $extension) {
-            if (!$extension instanceof SAML2_XML_mdui_UIInfo) {
+            if (!$extension instanceof UIInfo) {
                 continue;
             }
 
@@ -98,7 +98,7 @@ class StokerAssembler
                 continue;
             }
 
-            /** @var SAML2_XML_mdui_Logo $logo */
+            /** @var UILogo $logo */
             $logo = $extension->Logo[0];
             $entity->logo = new Logo($logo->url);
             $entity->logo->height = $logo->height;
@@ -110,14 +110,14 @@ class StokerAssembler
 
     /**
      * @param MetadataIndex\Entity $metadataIndexEntity
-     * @param SAML2_XML_md_EntityDescriptor $entityDescriptor
-     * @param SAML2_XML_md_IDPSSODescriptor $idpDescriptor
+     * @param EntityDescriptor $entityDescriptor
+     * @param IDPSSODescriptor $idpDescriptor
      * @return AbstractRole|IdentityProvider
      */
     protected function assembleIdentityProvider(
         MetadataIndex\Entity $metadataIndexEntity,
-        SAML2_XML_md_EntityDescriptor $entityDescriptor,
-        SAML2_XML_md_IDPSSODescriptor $idpDescriptor
+        EntityDescriptor $entityDescriptor,
+        IDPSSODescriptor $idpDescriptor
     ) {
         $entity = new IdentityProvider($entityDescriptor->entityID);
 
@@ -125,7 +125,7 @@ class StokerAssembler
 
         $singleSignOnServices = array();
         foreach ($idpDescriptor->SingleSignOnService as $ssos) {
-            if (!in_array($ssos->Binding, array(SAML2_Const::BINDING_HTTP_POST, SAML2_Const::BINDING_HTTP_REDIRECT))) {
+            if (!in_array($ssos->Binding, array(Constants::BINDING_HTTP_POST, Constants::BINDING_HTTP_REDIRECT))) {
                 continue;
             }
 
@@ -136,14 +136,15 @@ class StokerAssembler
     }
 
     /**
-     * @param SAML2_XML_md_EntityDescriptor $entityDescriptor
-     * @param SAML2_XML_md_SPSSODescriptor $spDescriptor
-     * @return ServiceProvider
+     * @param MetadataIndex\Entity $metadataIndexEntity
+     * @param EntityDescriptor $entityDescriptor
+     * @param SPSSODescriptor $spDescriptor
+     * @return AbstractRole
      */
     protected function assembleServiceProvider(
         MetadataIndex\Entity $metadataIndexEntity,
-        SAML2_XML_md_EntityDescriptor $entityDescriptor,
-        SAML2_XML_md_SPSSODescriptor $spDescriptor
+        EntityDescriptor $entityDescriptor,
+        SPSSODescriptor $spDescriptor
     ) {
         $entity = new ServiceProvider($entityDescriptor->entityID);
 
@@ -151,7 +152,7 @@ class StokerAssembler
 
         $assertionConsumerServices = array();
         foreach ($spDescriptor->AssertionConsumerService as $acs) {
-            if (!in_array($acs->Binding, array(SAML2_Const::BINDING_HTTP_POST, SAML2_Const::BINDING_HTTP_REDIRECT))) {
+            if (!in_array($acs->Binding, array(Constants::BINDING_HTTP_POST, Constants::BINDING_HTTP_REDIRECT))) {
                 continue;
             }
 

@@ -9,7 +9,7 @@ use OpenConext\Component\EngineBlockMetadata\Organization;
 use OpenConext\Component\EngineBlockMetadata\RequestedAttribute;
 use OpenConext\Component\EngineBlockMetadata\IndexedService;
 use OpenConext\Component\EngineBlockMetadata\Service;
-use SAML2_Const;
+use SAML2\Constants;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -180,8 +180,8 @@ class ServiceProvider extends AbstractRole
         $nameNl = '',
         $nameIdFormat = null,
         $supportedNameIdFormats = array(
-            SAML2_Const::NAMEID_TRANSIENT,
-            SAML2_Const::NAMEID_PERSISTENT,
+            Constants::NAMEID_TRANSIENT,
+            Constants::NAMEID_PERSISTENT,
         ),
         $publishInEduGainDate = null,
         $publishInEdugain = false,
