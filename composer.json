@@ -9,7 +9,7 @@
         "php": ">=5.6,<7",
         "doctrine/orm": "~2.3",
         "openconext/stoker-metadata": "~0.1",
-        "simplesamlphp/saml2": "~1.7"
+        "simplesamlphp/saml2": "^3.1"
     },
     "require-dev": {
         "ibuildings/qa-tools": "~1.1",
