@@ -243,6 +243,7 @@ class JanusPushMetadataAssembler
         $properties += $this->assemblePublishInEdugainDate($connection);
         $properties += $this->setPathFromObject(array($connection, 'metadata:coin:disable_scoping'), 'disableScoping');
         $properties += $this->setPathFromObject(array($connection, 'metadata:coin:additional_logging'), 'additionalLogging');
+        $properties += $this->setPathFromObject(array($connection, 'metadata:coin:signature_method'), 'signatureMethod');
         $properties += $this->setPathFromObject(array($connection, 'metadata:redirect:sign'), 'requestsMustBeSigned');
         $properties += $this->setPathFromObject(array($connection, 'manipulation_code'), 'manipulation');
 
