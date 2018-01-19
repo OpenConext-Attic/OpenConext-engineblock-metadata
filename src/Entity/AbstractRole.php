@@ -11,6 +11,7 @@ use OpenConext\Component\EngineBlockMetadata\Organization;
 use OpenConext\Component\EngineBlockMetadata\ContactPerson;
 use OpenConext\Component\EngineBlockMetadata\Service;
 use OpenConext\Component\EngineBlockMetadata\X509\X509Certificate;
+use RobRichards\XMLSecLibs\XMLSecurityKey;
 use SAML2\Constants;
 
 /**
@@ -232,6 +233,13 @@ abstract class AbstractRole
     /**
      * @var string
      *
+     * @ORM\Column(name="signature_method", type="string")
+     */
+    public $signatureMethod;
+
+    /**
+     * @var string
+     *
      * @ORM\Column(name="response_processing_service_binding", type="string", nullable=true)
      */
     public $responseProcessingService;
@@ -266,6 +274,7 @@ abstract class AbstractRole
      * @param null $publishInEduGainDate
      * @param bool $publishInEdugain
      * @param bool $requestsMustBeSigned
+     * @param string $signatureMethod
      * @param Service $responseProcessingService
      * @param string $workflowState
      * @param string $manipulation
@@ -296,6 +305,7 @@ abstract class AbstractRole
         $publishInEduGainDate = null,
         $publishInEdugain = false,
         $requestsMustBeSigned = false,
+        $signatureMethod = XMLSecurityKey::RSA_SHA1,
         Service $responseProcessingService = null,
         $workflowState = self::WORKFLOW_STATE_DEFAULT,
         $manipulation = ''
@@ -321,6 +331,7 @@ abstract class AbstractRole
         $this->publishInEduGainDate = $publishInEduGainDate;
         $this->publishInEdugain = $publishInEdugain;
         $this->requestsMustBeSigned = $requestsMustBeSigned;
+        $this->signatureMethod = $signatureMethod;
         $this->responseProcessingService = $responseProcessingService;
         $this->singleLogoutService = $singleLogoutService;
         $this->workflowState = $workflowState;

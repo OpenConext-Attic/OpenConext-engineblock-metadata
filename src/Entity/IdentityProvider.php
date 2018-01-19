@@ -8,6 +8,7 @@ use OpenConext\Component\EngineBlockMetadata\MetadataRepository\Visitor\VisitorI
 use OpenConext\Component\EngineBlockMetadata\Organization;
 use OpenConext\Component\EngineBlockMetadata\ShibMdScope;
 use OpenConext\Component\EngineBlockMetadata\Service;
+use RobRichards\XMLSecLibs\XMLSecurityKey;
 use SAML2\Constants;
 
 /**
@@ -106,6 +107,7 @@ class IdentityProvider extends AbstractRole
      * @param null $publishInEduGainDate
      * @param bool $publishInEdugain
      * @param bool $requestsMustBeSigned
+     * @param string $signatureMethod
      * @param Service $responseProcessingService
      * @param string $workflowState
      * @param bool $enabledInWayf
@@ -142,6 +144,7 @@ class IdentityProvider extends AbstractRole
         $publishInEduGainDate = null,
         $publishInEdugain = false,
         $requestsMustBeSigned = false,
+        $signatureMethod = XMLSecurityKey::RSA_SHA1,
         Service $responseProcessingService = null,
         $workflowState = self::WORKFLOW_STATE_DEFAULT,
         $manipulation = '',
@@ -177,6 +180,7 @@ class IdentityProvider extends AbstractRole
             $publishInEduGainDate,
             $publishInEdugain,
             $requestsMustBeSigned,
+            $signatureMethod,
             $responseProcessingService,
             $workflowState,
             $manipulation
