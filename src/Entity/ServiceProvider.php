@@ -11,6 +11,7 @@ use OpenConext\Component\EngineBlockMetadata\IndexedService;
 use OpenConext\Component\EngineBlockMetadata\Service;
 use SAML2_Const;
 use Doctrine\ORM\Mapping as ORM;
+use XMLSecurityKey;
 
 /**
  * Class ServiceProvider
@@ -142,6 +143,7 @@ class ServiceProvider extends AbstractRole
      * @param null $publishInEduGainDate
      * @param bool $publishInEdugain
      * @param bool $requestsMustBeSigned
+     * @param string $signatureMethod
      * @param Service $responseProcessingService
      * @param string $workflowState
      * @param array $allowedIdpEntityIds
@@ -186,6 +188,7 @@ class ServiceProvider extends AbstractRole
         $publishInEduGainDate = null,
         $publishInEdugain = false,
         $requestsMustBeSigned = false,
+        $signatureMethod = XMLSecurityKey::RSA_SHA1,
         Service $responseProcessingService = null,
         $workflowState = self::WORKFLOW_STATE_DEFAULT,
         array $allowedIdpEntityIds = array(),
@@ -227,6 +230,7 @@ class ServiceProvider extends AbstractRole
             $publishInEduGainDate,
             $publishInEdugain,
             $requestsMustBeSigned,
+            $signatureMethod,
             $responseProcessingService,
             $workflowState,
             $manipulation

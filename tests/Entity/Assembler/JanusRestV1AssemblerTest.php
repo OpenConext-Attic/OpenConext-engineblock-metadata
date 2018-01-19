@@ -52,6 +52,7 @@ class JanusRestV1AssemblerTest extends PHPUnit_Framework_TestCase
     "logo:0:width": 120,
     "NameIDFormat": "urn:oasis:names:tc:SAML:2.0:nameid-format:persistent",
     "redirect.sign": false,
+    "coin:signature_method":"http://www.w3.org/2001/04/xmldsig-more#rsa-sha256",
     "workflowState": "prodaccepted"
 }', true);
 
@@ -98,6 +99,7 @@ class JanusRestV1AssemblerTest extends PHPUnit_Framework_TestCase
         $this->assertEquals('https://.png', $serviceProvider->logo->url);
         $this->assertEquals(SAML2_Const::NAMEID_PERSISTENT, $serviceProvider->nameIdFormat);
         $this->assertFalse($serviceProvider->requestsMustBeSigned);
+        $this->assertEquals('http://www.w3.org/2001/04/xmldsig-more#rsa-sha256', $serviceProvider->signatureMethod);
         $this->assertEquals(AbstractRole::WORKFLOW_STATE_PROD, $serviceProvider->workflowState);
     }
 
@@ -124,6 +126,7 @@ class JanusRestV1AssemblerTest extends PHPUnit_Framework_TestCase
             "name:nl":"",
             "OrganizationDisplayName:nl":"",
             "redirect.sign":false,
+            "coin:signature_method":"http://www.w3.org/2001/04/xmldsig-more#rsa-sha256",
             "SingleSignOnService:0:Binding":"urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect",
             "SingleSignOnService:0:Location":"",
             "UIInfo:Keywords:en":"",
@@ -147,6 +150,7 @@ class JanusRestV1AssemblerTest extends PHPUnit_Framework_TestCase
         $this->assertNull($identityProvider->organizationEn);
         $this->assertNull($identityProvider->organizationNl);
         $this->assertFalse($identityProvider->requestsMustBeSigned);
+        $this->assertEquals('http://www.w3.org/2001/04/xmldsig-more#rsa-sha256', $identityProvider->signatureMethod);
         $this->assertEmpty($identityProvider->singleSignOnServices);
         $this->assertEmpty($identityProvider->keywordsEn);
         $this->assertEmpty($identityProvider->keywordsNl);
@@ -267,6 +271,7 @@ class JanusRestV1AssemblerTest extends PHPUnit_Framework_TestCase
         "OrganizationURL:en":"https://example.edu",
         "OrganizationURL:nl":"https://example.edu",
         "redirect.sign":true,
+        "coin:signature_method":"http://www.w3.org/2001/04/xmldsig-more#rsa-sha256",
         "SingleLogoutService_Binding":"urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect",
         "SingleLogoutService_Location":"https://example.edu",
         "UIInfo:DisplayName:en":"Test",
@@ -323,6 +328,7 @@ class JanusRestV1AssemblerTest extends PHPUnit_Framework_TestCase
         $this->assertEquals('https://example.edu', $serviceProvider->organizationEn->url);
         $this->assertEquals('https://example.edu', $serviceProvider->organizationNl->url);
         $this->assertTrue($serviceProvider->requestsMustBeSigned);
+        $this->assertEquals('http://www.w3.org/2001/04/xmldsig-more#rsa-sha256', $serviceProvider->signatureMethod);
         $this->assertEquals(SAML2_Const::BINDING_HTTP_REDIRECT, $serviceProvider->singleLogoutService->binding);
         $this->assertEquals('https://example.edu', $serviceProvider->singleLogoutService->location);
         $this->assertEquals(ServiceProvider::WORKFLOW_STATE_PROD, $serviceProvider->workflowState);

@@ -78,6 +78,7 @@ class JanusRestV1Assembler
         if (isset($metadata['coin:disable_scoping']))    { $arguments['disableScoping'] = (bool) $metadata['coin:disable_scoping']; }
         if (isset($metadata['coin:additional_logging'])) { $arguments['additionalLogging'] = (bool) $metadata['coin:additional_logging']; }
 
+        if (isset($metadata['coin:signature_method'])) { $arguments['signatureMethod'] = $metadata['coin:signature_method']; }
         if (isset($metadata['redirect.sign'])) { $arguments['requestsMustBeSigned'] = (bool) $metadata['redirect.sign']; }
         if (isset($metadata['NameIDFormat']))  { $arguments['nameIdFormat'] = $metadata['NameIDFormat']; }
         if (isset($metadata['workflowState'])) { $arguments['workflowState'] = $metadata['workflowState']; }
