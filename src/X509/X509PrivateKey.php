@@ -3,7 +3,7 @@
 namespace OpenConext\Component\EngineBlockMetadata\X509;
 
 use RuntimeException;
-use XMLSecurityKey;
+use RobRichards\XMLSecLibs\XMLSecurityKey;
 
 /**
  * X.509 private key representation.

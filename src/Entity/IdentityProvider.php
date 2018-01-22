@@ -8,8 +8,8 @@ use OpenConext\Component\EngineBlockMetadata\MetadataRepository\Visitor\VisitorI
 use OpenConext\Component\EngineBlockMetadata\Organization;
 use OpenConext\Component\EngineBlockMetadata\ShibMdScope;
 use OpenConext\Component\EngineBlockMetadata\Service;
-use SAML2_Const;
-use XMLSecurityKey;
+use RobRichards\XMLSecLibs\XMLSecurityKey;
+use SAML2\Constants;
 
 /**
  * Class IdentityProvider
@@ -138,8 +138,8 @@ class IdentityProvider extends AbstractRole
         $nameNl = '',
         $nameIdFormat = null,
         $supportedNameIdFormats = array(
-            SAML2_Const::NAMEID_TRANSIENT,
-            SAML2_Const::NAMEID_PERSISTENT,
+            Constants::NAMEID_TRANSIENT,
+            Constants::NAMEID_PERSISTENT,
         ),
         $publishInEduGainDate = null,
         $publishInEdugain = false,
