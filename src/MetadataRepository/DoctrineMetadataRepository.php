@@ -245,10 +245,13 @@ class DoctrineMetadataRepository extends AbstractMetadataRepository
 
             foreach ($roles as $role) {
                 if ($role instanceof IdentityProvider) {
-                    if (!in_array($role->entityId, $identityProviderEntityIds)) {
+                    $index = array_search($role->entityId, $identityProviderEntityIds);
+                    if ($index === false) {
                         $em->persist($role);
                         $result->createdIdentityProviders[] = $role->entityId;
                     } else {
+                        unset($identityProviderEntityIds[$index]);
+
                         $identityProvider = $repository->findIdentityProviderByEntityId($role->entityId);
                         $role->id = $identityProvider->id;
                         $em->persist($em->merge($role));
@@ -258,10 +261,13 @@ class DoctrineMetadataRepository extends AbstractMetadataRepository
                 }
 
                 if ($role instanceof ServiceProvider) {
-                    if (!in_array($role->entityId, $serviceProviderEntityIds)) {
+                    $index = array_search($role->entityId, $serviceProviderEntityIds);
+                    if ($index === false) {
                         $em->persist($role);
                         $result->createdServiceProviders[] = $role->entityId;
                     } else {
+                        unset($serviceProviderEntityIds[$index]);
+
                         $serviceProvider = $repository->findServiceProviderByEntityId($role->entityId);
                         $role->id = $serviceProvider->id;
                         $em->persist($em->merge($role));
@@ -273,32 +279,36 @@ class DoctrineMetadataRepository extends AbstractMetadataRepository
                 throw new RuntimeException('Unsupported role provided to synchonization: ' . var_export($role, true));
             }
 
-            // Always remove ALL Identity Providers, way easier than trying to update.
-            foreach ($identityProviderEntityIds as $identityProviderEntityId) {
-                $identityProvider = $em->getPartialReference(
-                    'OpenConext\Component\EngineBlockMetadata\Entity\IdentityProvider',
-                    array('entityId' => $identityProviderEntityId)
-                );
+            if ($identityProviderEntityIds) {
+                $this->deleteRolesByEntityIds($this->idpRepository, $identityProviderEntityIds);
 
-                $em->remove($identityProvider);
-
-                $result->removedIdentityProviders[] = $identityProviderEntityId;
+                $result->removedIdentityProviders = $identityProviderEntityIds;
             }
 
-            // Always remove ALL Service Providers, way easier than trying to update.
-            foreach ($serviceProviderEntityIds as $serviceProviderEntityId) {
-                $serviceProvider = $em->getPartialReference(
-                    'OpenConext\Component\EngineBlockMetadata\Entity\ServiceProvider',
-                    array('entityId' => $serviceProviderEntityId)
-                );
+            if ($serviceProviderEntityIds) {
+                $this->deleteRolesByEntityIds($this->spRepository, $serviceProviderEntityIds);
 
-                $em->remove($serviceProvider);
-
-                $result->removedServiceProviders[] = $serviceProviderEntityId;
+                $result->removedServiceProviders = $serviceProviderEntityIds;
             }
         });
 
         return $result;
+    }
+
+    /**
+     * @param EntityRepository $repository
+     * @param array $entityIds
+     *
+     * @throws \Doctrine\ORM\Query\QueryException
+     */
+    private function deleteRolesByEntityIds(EntityRepository $repository, array $entityIds)
+    {
+        $qb = $repository->createQueryBuilder('role')
+            ->delete()
+            ->where('role.entityId IN (:ids)')
+            ->setParameter('ids', $entityIds);
+
+        $qb->getQuery()->execute();
     }
 
     public function findAllServiceProviderEntityIds()
