@@ -231,6 +231,13 @@ class DoctrineMetadataRepository extends AbstractMetadataRepository
     }
 
     /**
+     * Synchronize the database with the provided roles.
+     *
+     * Any roles (idp or sp) already existing the database are updated. New
+     * roles are created. All identity- or service providers in the database
+     * which are NOT in the provided roles are deleted at the end of the
+     * synchronization process.
+     *
      * @param AbstractRole[] $roles
      * @return SynchronizationResult
      */
@@ -240,18 +247,23 @@ class DoctrineMetadataRepository extends AbstractMetadataRepository
 
         $repository = $this;
         $this->entityManager->transactional(function (EntityManager $em) use ($roles, $repository, $result) {
-            $identityProviderEntityIds = $repository->findAllIdentityProviderEntityIds();
-            $serviceProviderEntityIds  = $repository->findAllServiceProviderEntityIds();
+            $idpsToBeRemoved = $repository->findAllIdentityProviderEntityIds();
+            $spsToBeRemoved = $repository->findAllServiceProviderEntityIds();
 
             foreach ($roles as $role) {
                 if ($role instanceof IdentityProvider) {
-                    $index = array_search($role->entityId, $identityProviderEntityIds);
+                    // Does the IDP already exist in the database?
+                    $index = array_search($role->entityId, $idpsToBeRemoved);
+
                     if ($index === false) {
+                        // The IDP is new: create it.
                         $em->persist($role);
                         $result->createdIdentityProviders[] = $role->entityId;
                     } else {
-                        unset($identityProviderEntityIds[$index]);
+                        // Remove from the list of entity ids so it won't get deleted later on.
+                        unset($idpsToBeRemoved[$index]);
 
+                        // The IDP already exists: update it.
                         $identityProvider = $repository->findIdentityProviderByEntityId($role->entityId);
                         $role->id = $identityProvider->id;
                         $em->persist($em->merge($role));
@@ -261,13 +273,17 @@ class DoctrineMetadataRepository extends AbstractMetadataRepository
                 }
 
                 if ($role instanceof ServiceProvider) {
-                    $index = array_search($role->entityId, $serviceProviderEntityIds);
+                    // Does the SP already exist in the database?
+                    $index = array_search($role->entityId, $spsToBeRemoved);
                     if ($index === false) {
+                        // The SP is new: create it.
                         $em->persist($role);
                         $result->createdServiceProviders[] = $role->entityId;
                     } else {
-                        unset($serviceProviderEntityIds[$index]);
+                        // Remove from the list of entity ids so it won't get deleted later on.
+                        unset($spsToBeRemoved[$index]);
 
+                        // The SP already exists: update it.
                         $serviceProvider = $repository->findServiceProviderByEntityId($role->entityId);
                         $role->id = $serviceProvider->id;
                         $em->persist($em->merge($role));
@@ -279,16 +295,16 @@ class DoctrineMetadataRepository extends AbstractMetadataRepository
                 throw new RuntimeException('Unsupported role provided to synchonization: ' . var_export($role, true));
             }
 
-            if ($identityProviderEntityIds) {
-                $this->deleteRolesByEntityIds($this->idpRepository, $identityProviderEntityIds);
+            if ($idpsToBeRemoved) {
+                $this->deleteRolesByEntityIds($this->idpRepository, $idpsToBeRemoved);
 
-                $result->removedIdentityProviders = $identityProviderEntityIds;
+                $result->removedIdentityProviders = $idpsToBeRemoved;
             }
 
-            if ($serviceProviderEntityIds) {
-                $this->deleteRolesByEntityIds($this->spRepository, $serviceProviderEntityIds);
+            if ($spsToBeRemoved) {
+                $this->deleteRolesByEntityIds($this->spRepository, $spsToBeRemoved);
 
-                $result->removedServiceProviders = $serviceProviderEntityIds;
+                $result->removedServiceProviders = $spsToBeRemoved;
             }
         });
 
