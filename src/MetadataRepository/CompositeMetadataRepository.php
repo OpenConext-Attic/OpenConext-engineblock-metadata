@@ -293,8 +293,13 @@ class CompositeMetadataRepository extends AbstractMetadataRepository
     public function findAllowedIdpEntityIdsForSp(ServiceProvider $serviceProvider)
     {
         $allowed = array();
+
         foreach ($this->orderedRepositories as $repository) {
-            $allowed += $repository->findAllowedIdpEntityIdsForSp($serviceProvider);
+            if ($repository->findServiceProviderByEntityId($serviceProvider->entityId)) {
+                $allowed = $repository->findAllowedIdpEntityIdsForSp($serviceProvider);
+
+                break;
+            }
         }
 
         return array_values(array_unique($allowed));
